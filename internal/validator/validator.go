@@ -1,9 +1,9 @@
 package validator
 
 import (
+	"github.com/GabrielHCataldo/go-asaas/internal/enum"
+	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"github.com/go-playground/validator/v10"
-	"go-asaas/internal/enum"
-	"go-asaas/internal/util"
 	"log"
 	"reflect"
 	"time"

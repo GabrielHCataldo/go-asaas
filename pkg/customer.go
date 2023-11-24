@@ -3,7 +3,7 @@ package asaas
 import (
 	"context"
 	"encoding/json"
-	"go-asaas/internal/validator"
+	"github.com/GabrielHCataldo/go-asaas/internal/validator"
 	"io"
 	"net/http"
 )
