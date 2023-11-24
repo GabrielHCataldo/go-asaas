@@ -40,6 +40,10 @@ func Validate() *validator.Validate {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = customValidate.RegisterValidation("postal_code", validatePostalCode)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return customValidate
 }
 
@@ -75,6 +79,10 @@ func validateBirthDate(fl validator.FieldLevel) bool {
 
 func validateDocument(fl validator.FieldLevel) bool {
 	return util.IsCPF(fl.Field().String())
+}
+
+func validatePostalCode(fl validator.FieldLevel) bool {
+	return util.ValidatePostalCode(fl.Field().String())
 }
 
 func validateEnum(fl validator.FieldLevel) bool {

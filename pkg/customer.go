@@ -9,18 +9,18 @@ import (
 )
 
 type customer struct {
-	asaasEnv   Env
-	accessCode string
+	asaasEnv    Env
+	accessToken string
 }
 
 type Customer interface {
 	Create(ctx context.Context, body CreateCustomerRequest) (*CreateCustomerResponse, Error)
 }
 
-func NewCustomer(assasEnv Env, accessCode string) Customer {
+func NewCustomer(assasEnv Env, accessToken string) Customer {
 	return customer{
-		asaasEnv:   assasEnv,
-		accessCode: accessCode,
+		asaasEnv:    assasEnv,
+		accessToken: accessToken,
 	}
 }
 
@@ -31,7 +31,7 @@ func (c customer) Create(ctx context.Context, body CreateCustomerRequest) (
 	} else if ctx.Err() != nil {
 		return nil, NewByError(ctx.Err())
 	}
-	req, err := CreateHttpRequest(ctx, c.asaasEnv, c.accessCode, http.MethodPost, "/v3/customers", body)
+	req, err := CreateHttpRequest(ctx, c.asaasEnv, c.accessToken, http.MethodPost, "/v3/customers", body)
 	if err != nil {
 		return nil, NewByError(err)
 	}

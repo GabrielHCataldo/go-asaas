@@ -12,7 +12,7 @@ import (
 func CreateHttpRequest(
 	ctx context.Context,
 	asaasEnv Env,
-	accessCode string,
+	accessToken string,
 	method string,
 	path string,
 	payload any,
@@ -28,7 +28,7 @@ func CreateHttpRequest(
 	req, _ := http.NewRequestWithContext(ctx, method, asaasEnv.BaseURL()+path, payloadToSend)
 	req.Header.Add("Accept", "application/json")
 	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("access_token", accessCode)
+	req.Header.Add("access_token", accessToken)
 	return req, nil
 }
 

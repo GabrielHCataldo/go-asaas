@@ -33,6 +33,11 @@ func ValidateBirthDate(values time.Time) bool {
 	return time.Now().After(values)
 }
 
+func ValidatePostalCode(v string) bool {
+	regex := regexp.MustCompile(`^\d{5}-\d{3}?$`)
+	return regex.MatchString(v)
+}
+
 func IsBlank(value *string) bool {
 	return value == nil || len(strings.TrimSpace(*value)) == 0
 }

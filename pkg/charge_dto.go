@@ -1,14 +1,10 @@
 package asaas
 
-import (
-	"time"
-)
-
 type CreateChargeRequest struct {
 	Customer             string                       `json:"customer,omitempty" validate:"required"`
 	BillingType          BillingType                  `json:"billingType,omitempty" validate:"required,enum"`
 	Value                float64                      `json:"value,omitempty" validate:"required"`
-	DueDate              time.Time                    `json:"dueDate,omitempty" validate:"required"`
+	DueDate              Date                         `json:"dueDate,omitempty" validate:"required"`
 	Description          string                       `json:"description,omitempty"`
 	ExternalReference    string                       `json:"externalReference,omitempty"`
 	Discount             *DiscountRequest             `json:"discount,omitempty"`
@@ -23,23 +19,24 @@ type CreateChargeRequest struct {
 	InstallmentCount     int                          `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
 	InstallmentValue     float64                      `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
 	AuthorizeOnly        bool                         `json:"authorizeOnly,omitempty"`
-	RemoteIP             string                       `json:"remoteIP,omitempty" validate:"required,ip"`
+	RemoteIP             string                       `json:"remoteIp,omitempty" validate:"required,ip"`
 }
 
 type CreditCardRequest struct {
-	HolderName  string `json:"holderName,omitempty" validate:"required,full-name"`
+	HolderName  string `json:"holderName,omitempty" validate:"required,full_name"`
 	Number      string `json:"number,omitempty" validate:"required,numeric,min=10,max=19"`
 	ExpiryMonth string `json:"expiryMonth,omitempty" validate:"required,numeric,len=2"`
 	ExpiryYear  string `json:"expiryYear,omitempty" validate:"required,numeric,len=4"`
-	CVV         string `json:"cvv,omitempty" validate:"required,numeric,min=3,max=4"`
+	CCV         string `json:"ccv,omitempty" validate:"required,numeric,min=3,max=4"`
 }
 
 type CreditCardHolderInfoRequest struct {
-	Name              string `json:"name,omitempty" validate:"required,full-name"`
+	Name              string `json:"name,omitempty" validate:"required,full_name"`
 	CpfCnpj           string `json:"cpfCnpj,omitempty" validate:"required,document"`
 	Email             string `json:"email,omitempty" validate:"required,email"`
 	Phone             string `json:"phone,omitempty" validate:"required,phone"`
-	PostalCode        string `json:"postalCode,omitempty" validate:"required,postal-code"`
+	MobilePhone       string `json:"mobilePhone,omitempty" validate:"omitempty,phone"`
+	PostalCode        string `json:"postalCode,omitempty" validate:"required,postal_code"`
 	AddressNumber     string `json:"addressNumber,omitempty" validate:"required,numeric"`
 	AddressComplement string `json:"addressComplement,omitempty"`
 }
@@ -77,7 +74,7 @@ type CreateChargeResponse struct {
 	Customer              string            `json:"customer,omitempty"`
 	CreditCardToken       string            `json:"creditCardToken,omitempty"`
 	PaymentLink           string            `json:"paymentLink,omitempty"`
-	DueDate               time.Time         `json:"dueDate,omitempty"`
+	DueDate               Date              `json:"dueDate,omitempty"`
 	Value                 float64           `json:"value,omitempty"`
 	NetValue              float64           `json:"netValue,omitempty"`
 	BillingType           BillingType       `json:"billingType,omitempty"`
@@ -88,9 +85,9 @@ type CreateChargeResponse struct {
 	ExternalReference     string            `json:"externalReference,omitempty"`
 	OriginalValue         string            `json:"originalValue,omitempty"`
 	InterestValue         string            `json:"interestValue,omitempty"`
-	OriginalDueDate       time.Time         `json:"originalDueDate,omitempty"`
-	PaymentDate           time.Time         `json:"paymentDate,omitempty"`
-	ClientPaymentDate     time.Time         `json:"clientPaymentDate,omitempty"`
+	OriginalDueDate       Date              `json:"originalDueDate,omitempty"`
+	PaymentDate           Date              `json:"paymentDate,omitempty"`
+	ClientPaymentDate     Date              `json:"clientPaymentDate,omitempty"`
 	InstallmentNumber     int               `json:"installmentCount,omitempty"`
 	TransactionReceiptURL string            `json:"transactionReceiptUrl,omitempty"`
 	NossoNumero           string            `json:"nossoNumero,omitempty"`
@@ -106,7 +103,7 @@ type CreateChargeResponse struct {
 	Anticipable           bool              `json:"anticipable,omitempty"`
 	Refunds               []RefundResponse  `json:"refunds,omitempty"`
 	Errors                []ErrorResponse   `json:"errors,omitempty"`
-	DateCreated           time.Time         `json:"dateCreated,omitempty"`
+	DateCreated           Date              `json:"dateCreated,omitempty"`
 }
 
 type DiscountResponse struct {
@@ -127,5 +124,39 @@ type RefundResponse struct {
 	Value                 float64      `json:"value,omitempty"`
 	Description           string       `json:"description,omitempty"`
 	TransactionReceiptURL string       `json:"transactionReceiptUrl,omitempty"`
-	DateCreated           time.Time    `json:"dateCreated,omitempty"`
+	DateCreated           Date         `json:"dateCreated,omitempty"`
+}
+
+func getTestCustomerIdDefault() string {
+	return "cus_000005791749"
+}
+
+func getTestRemoteIPDefault() string {
+	return "191.253.125.194"
+}
+
+func getTestChargeDescriptionDefault() string {
+	return "unit test golang"
+}
+
+func getTestCreditCardRequestDefault() *CreditCardRequest {
+	return &CreditCardRequest{
+		HolderName:  "unit test go",
+		Number:      "4000000000000010",
+		ExpiryMonth: "05",
+		ExpiryYear:  "2035",
+		CCV:         "318",
+	}
+}
+
+func getTestCreditCardHolderInfoRequestDefault() *CreditCardHolderInfoRequest {
+	return &CreditCardHolderInfoRequest{
+		Name:          "Unit Test Go",
+		CpfCnpj:       "24971563792",
+		Email:         "unittest@gmail.com",
+		Phone:         "4738010919",
+		MobilePhone:   "47998781877",
+		PostalCode:    "89223-005",
+		AddressNumber: "277",
+	}
 }
