@@ -11,7 +11,7 @@ import (
 
 func CreateHttpRequest(
 	ctx context.Context,
-	asaasEnv AsaasEnv,
+	asaasEnv Env,
 	accessCode string,
 	method string,
 	path string,

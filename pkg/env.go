@@ -1,13 +1,13 @@
 package asaas
 
-type AsaasEnv int
+type Env int
 
 const (
-	SANDBOX    AsaasEnv = iota
-	PRODUCTION AsaasEnv = iota
+	SANDBOX    Env = iota
+	PRODUCTION Env = iota
 )
 
-func (a AsaasEnv) IsEnumValid() bool {
+func (a Env) IsEnumValid() bool {
 	switch a {
 	case SANDBOX, PRODUCTION:
 		return true
@@ -15,6 +15,6 @@ func (a AsaasEnv) IsEnumValid() bool {
 	return false
 }
 
-func (a AsaasEnv) BaseURL() string {
+func (a Env) BaseURL() string {
 	return []string{"https://sandbox.asaas.com/api/", "https://api.asaas.com/"}[a]
 }

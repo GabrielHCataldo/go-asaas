@@ -12,7 +12,7 @@ import (
 )
 
 type charge struct {
-	assasEnv   AsaasEnv
+	assasEnv   Env
 	accessCode string
 }
 
@@ -20,7 +20,7 @@ type Charge interface {
 	Create(ctx context.Context, body CreateChargeRequest) (*CreateChargeResponse, Error)
 }
 
-func NewCharge(assasEnv AsaasEnv, accessCode string) Charge {
+func NewCharge(assasEnv Env, accessCode string) Charge {
 	return charge{
 		assasEnv:   assasEnv,
 		accessCode: accessCode,

@@ -9,7 +9,7 @@ import (
 )
 
 type customer struct {
-	asaasEnv   AsaasEnv
+	asaasEnv   Env
 	accessCode string
 }
 
@@ -17,7 +17,7 @@ type Customer interface {
 	Create(ctx context.Context, body CreateCustomerRequest) (*CreateCustomerResponse, Error)
 }
 
-func NewCustomer(assasEnv AsaasEnv, accessCode string) Customer {
+func NewCustomer(assasEnv Env, accessCode string) Customer {
 	return customer{
 		asaasEnv:   assasEnv,
 		accessCode: accessCode,
