@@ -1,7 +1,48 @@
 package asaas
 
-type ChargebackReason string
+type BaseEnum interface {
+	IsEnumValid() bool
+}
 
+type BillingType string
+type ChargeStatus string
+type ChargebackReason string
+type ChargebackStatus string
+type DiscountType string
+type Env int
+type ErrorType string
+type FineType string
+type InterestType string
+type RefundStatus string
+type SplitRefusalReason string
+type SplitStatus string
+type TypeOfDocument string
+
+const (
+	BOLETO      BillingType = "BOLETO"
+	CREDIT_CARD BillingType = "CREDIT_CARD"
+	UNDEFINED   BillingType = "UNDEFINED"
+	DEBIT_CARD  BillingType = "DEBIT_CARD"
+	TRANSFER    BillingType = "TRANSFER"
+	DEPOSIT     BillingType = "DEPOSIT"
+	PIX         BillingType = "PIX"
+)
+const (
+	CHARGE_PENDING                      ChargeStatus = "PENDING"
+	CHARGE_RECEIVED                     ChargeStatus = "RECEIVED"
+	CHARGE_CONFIRMED                    ChargeStatus = "CONFIRMED"
+	CHARGE_OVERDUE                      ChargeStatus = "OVERDUE"
+	CHARGE_REFUNDED                     ChargeStatus = "REFUNDED"
+	CHARGE_RECEIVED_IN_CASH             ChargeStatus = "RECEIVED_IN_CASH"
+	CHARGE_REFUND_REQUESTED             ChargeStatus = "REFUND_REQUESTED"
+	CHARGE_REFUND_IN_PROGRESS           ChargeStatus = "REFUND_IN_PROGRESS"
+	CHARGE_CHARGEBACK_REQUESTED         ChargeStatus = "CHARGEBACK_REQUESTED"
+	CHARGE_CHARGEBACK_DISPUTE           ChargeStatus = "CHARGEBACK_DISPUTE"
+	CHARGE_AWAITING_CHARGEBACK_REVERSAL ChargeStatus = "AWAITING_CHARGEBACK_REVERSAL"
+	CHARGE_DUNNING_REQUESTED            ChargeStatus = "DUNNING_REQUESTED"
+	CHARGE_DUNNING_RECEIVED             ChargeStatus = "DUNNING_RECEIVED"
+	CHARGE_AWAITING_RISK_ANALYSIS       ChargeStatus = "AWAITING_RISK_ANALYSIS"
+)
 const (
 	ABSENCE_OF_PRINT                          ChargebackReason = "ABSENCE_OF_PRINT"
 	ABSENT_CARD_FRAUD                         ChargebackReason = "ABSENT_CARD_FRAUD"
@@ -36,6 +77,56 @@ const (
 	VISA_FRAUD_MONITORING_PROGRAM             ChargebackReason = "VISA_FRAUD_MONITORING_PROGRAM"
 	WARNING_BULLETIN_FILE                     ChargebackReason = "WARNING_BULLETIN_FILE"
 )
+const (
+	CHARGEBACK_REQUESTED  ChargebackStatus = "REQUESTED"
+	CHARGEBACK_IN_DISPUTE ChargebackStatus = "IN_DISPUTE"
+	CHARGEBACK_LOST       ChargebackStatus = "LOST"
+	CHARGEBACK_REVERSED   ChargebackStatus = "REVERSED"
+	CHARGEBACK_DONE       ChargebackStatus = "DONE"
+)
+const (
+	DISCOUNT_FIXED      DiscountType = "FIXED"
+	DISCOUNT_PERCENTAGE DiscountType = "PERCENTAGE"
+)
+const (
+	SANDBOX    Env = iota
+	PRODUCTION Env = iota
+)
+const (
+	ERROR_VALIDATION ErrorType = "VALIDATION"
+	ERROR_UNEXPECTED ErrorType = "UNEXPECTED"
+)
+const (
+	FINE_FIXED      FineType = "FIXED"
+	FINE_PERCENTAGE FineType = "PERCENTAGE"
+)
+const (
+	INTEREST_FIXED      InterestType = "FIXED"
+	INTEREST_PERCENTAGE InterestType = "PERCENTAGE"
+)
+const (
+	REFUND_PENDING   RefundStatus = "PENDING"
+	REFUND_CANCELLED RefundStatus = "CANCELLED"
+	REFUND_DONE      RefundStatus = "DONE"
+)
+const (
+	RECEIVABLE_UNIT_AFFECTED_BY_EXTERNAL_CONTRACTUAL_EFFECT SplitRefusalReason = "RECEIVABLE_UNIT_AFFECTED_BY_EXTERNAL_CONTRACTUAL_EFFECT"
+)
+const (
+	SPLIT_PENDING         SplitStatus = "PENDING"
+	SPLIT_AWAITING_CREDIT SplitStatus = "AWAITING_CREDIT"
+	SPLIT_CANCELLED       SplitStatus = "CANCELLED"
+	SPLIT_DONE            SplitStatus = "DONE"
+	SPLIT_REFUSED         SplitStatus = "REFUSED"
+)
+const (
+	INVOICE     TypeOfDocument = "INVOICE"
+	CONTRACT    TypeOfDocument = "CONTRACT"
+	DOCUMENT    TypeOfDocument = "DOCUMENT"
+	SPREADSHEET TypeOfDocument = "SPREADSHEET"
+	PROGRAM     TypeOfDocument = "PROGRAM"
+	OTHER       TypeOfDocument = "OTHER"
+)
 
 func (c ChargebackReason) IsEnumValid() bool {
 	switch c {
@@ -47,6 +138,105 @@ func (c ChargebackReason) IsEnumValid() bool {
 		RIGHT_OF_FULL_RECOURSE_FOR_FRAUD, SALE_CANCELED, SERVICE_DISAGREEMENT_OR_DEFECTIVE_PRODUCT, SERVICE_NOT_RECEIVED,
 		SPLIT_SALE, TRANSFERS_OF_DIVERSE_RESPONSIBILITIES, UNQUALIFIED_CAR_RENTAL_DEBIT, USA_CARDHOLDER_DISPUTE,
 		VISA_FRAUD_MONITORING_PROGRAM, WARNING_BULLETIN_FILE:
+		return true
+	}
+	return false
+}
+
+func (c BillingType) IsEnumValid() bool {
+	switch c {
+	case BOLETO, CREDIT_CARD, UNDEFINED, DEBIT_CARD, TRANSFER, DEPOSIT, PIX:
+		return true
+	}
+	return false
+}
+
+func (c ChargeStatus) IsEnumValid() bool {
+	switch c {
+	case CHARGE_PENDING, CHARGE_RECEIVED, CHARGE_CONFIRMED, CHARGE_OVERDUE, CHARGE_REFUNDED, CHARGE_RECEIVED_IN_CASH,
+		CHARGE_REFUND_REQUESTED, CHARGE_REFUND_IN_PROGRESS, CHARGE_CHARGEBACK_REQUESTED, CHARGE_CHARGEBACK_DISPUTE,
+		CHARGE_AWAITING_CHARGEBACK_REVERSAL, CHARGE_DUNNING_REQUESTED, CHARGE_DUNNING_RECEIVED,
+		CHARGE_AWAITING_RISK_ANALYSIS:
+		return true
+	}
+	return false
+}
+
+func (c ChargebackStatus) IsEnumValid() bool {
+	switch c {
+	case CHARGEBACK_REQUESTED, CHARGEBACK_IN_DISPUTE, CHARGEBACK_LOST, CHARGEBACK_REVERSED, CHARGEBACK_DONE:
+		return true
+	}
+	return false
+}
+
+func (d DiscountType) IsEnumValid() bool {
+	switch d {
+	case DISCOUNT_FIXED, DISCOUNT_PERCENTAGE:
+		return true
+	}
+	return false
+}
+
+func (a Env) IsEnumValid() bool {
+	switch a {
+	case SANDBOX, PRODUCTION:
+		return true
+	}
+	return false
+}
+
+func (e ErrorType) IsEnumValid() bool {
+	switch e {
+	case ERROR_VALIDATION, ERROR_UNEXPECTED:
+		return true
+	}
+	return false
+}
+
+func (f FineType) IsEnumValid() bool {
+	switch f {
+	case FINE_FIXED, FINE_PERCENTAGE:
+		return true
+	}
+	return false
+}
+
+func (i InterestType) IsEnumValid() bool {
+	switch i {
+	case INTEREST_FIXED, INTEREST_PERCENTAGE:
+		return true
+	}
+	return false
+}
+
+func (r RefundStatus) IsEnumValid() bool {
+	switch r {
+	case REFUND_PENDING, REFUND_CANCELLED, REFUND_DONE:
+		return true
+	}
+	return false
+}
+
+func (s SplitRefusalReason) IsEnumValid() bool {
+	switch s {
+	case RECEIVABLE_UNIT_AFFECTED_BY_EXTERNAL_CONTRACTUAL_EFFECT:
+		return true
+	}
+	return false
+}
+
+func (s SplitStatus) IsEnumValid() bool {
+	switch s {
+	case SPLIT_PENDING, SPLIT_AWAITING_CREDIT, SPLIT_CANCELLED, SPLIT_DONE, SPLIT_REFUSED:
+		return true
+	}
+	return false
+}
+
+func (t TypeOfDocument) IsEnumValid() bool {
+	switch t {
+	case INVOICE, CONTRACT, DOCUMENT, SPREADSHEET, PROGRAM, OTHER:
 		return true
 	}
 	return false
@@ -120,4 +310,8 @@ func (c ChargebackReason) String() string {
 		return "Arquivo boletim de advertência"
 	}
 	return ""
+}
+
+func (a Env) BaseURL() string {
+	return []string{"https://sandbox.asaas.com/api/", "https://api.asaas.com/"}[a]
 }

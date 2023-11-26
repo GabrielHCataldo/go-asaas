@@ -5,11 +5,6 @@ import (
 	"runtime"
 )
 
-type ErrorResponse struct {
-	Code        string `json:"code,omitempty"`
-	Description string `json:"description,omitempty"`
-}
-
 type Error *errorAsaas
 
 type errorAsaas struct {
@@ -19,24 +14,19 @@ type errorAsaas struct {
 	Msg  string    `json:"err,omitempty"`
 }
 
+type ErrorResponse struct {
+	Code        string `json:"code,omitempty"`
+	Description string `json:"description,omitempty"`
+}
+
 func NewError(typeError ErrorType, v ...any) Error {
+	if typeError == ERROR_UNEXPECTED {
+		logErrorSkipCaller(5, v...)
+	}
 	_, file, line, _ := runtime.Caller(1)
 	return &errorAsaas{
 		Type: typeError,
 		Msg:  fmt.Sprint(v...),
-		Line: line,
-		File: file,
-	}
-}
-
-func NewByErrorType(typeError ErrorType, err error) Error {
-	if err == nil {
-		return nil
-	}
-	_, file, line, _ := runtime.Caller(1)
-	return &errorAsaas{
-		Type: typeError,
-		Msg:  err.Error(),
 		Line: line,
 		File: file,
 	}
@@ -47,6 +37,7 @@ func NewByError(err error) Error {
 		return nil
 	}
 	_, file, line, _ := runtime.Caller(1)
+	logErrorSkipCaller(5, "error unexpected:", err)
 	return &errorAsaas{
 		Type: ERROR_UNEXPECTED,
 		Msg:  err.Error(),

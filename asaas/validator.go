@@ -1,7 +1,6 @@
-package validator
+package asaas
 
 import (
-	"github.com/GabrielHCataldo/go-asaas/internal/enum"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"github.com/go-playground/validator/v10"
 	"log"
@@ -9,42 +8,38 @@ import (
 	"time"
 )
 
-var customValidate *validator.Validate
+var v *validator.Validate
 
 func Validate() *validator.Validate {
-	if customValidate != nil {
-		return customValidate
+	if v != nil {
+		return v
 	}
-	customValidate = validator.New()
-	err := customValidate.RegisterValidation("enum", validateEnum)
+	v = validator.New()
+	err := v.RegisterValidation("enum", validateEnum)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = customValidate.RegisterValidation("phone", validatePhone)
+	err = v.RegisterValidation("phone", validatePhone)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = customValidate.RegisterValidation("full_name", validateFullName)
+	err = v.RegisterValidation("full_name", validateFullName)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = customValidate.RegisterValidation("password", validatePassword)
+	err = v.RegisterValidation("birth-date", validateBirthDate)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = customValidate.RegisterValidation("birth-date", validateBirthDate)
+	err = v.RegisterValidation("document", validateDocument)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = customValidate.RegisterValidation("document", validateDocument)
+	err = v.RegisterValidation("postal_code", validatePostalCode)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = customValidate.RegisterValidation("postal_code", validatePostalCode)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return customValidate
+	return v
 }
 
 func validatePhone(fl validator.FieldLevel) bool {
@@ -53,10 +48,6 @@ func validatePhone(fl validator.FieldLevel) bool {
 
 func validateFullName(fl validator.FieldLevel) bool {
 	return util.ValidateFullName(fl.Field().String())
-}
-
-func validatePassword(fl validator.FieldLevel) bool {
-	return util.ValidatePassword(fl.Field().String())
 }
 
 func validateBirthDate(fl validator.FieldLevel) bool {
@@ -86,6 +77,6 @@ func validatePostalCode(fl validator.FieldLevel) bool {
 }
 
 func validateEnum(fl validator.FieldLevel) bool {
-	value := fl.Field().Interface().(enum.BaseEnum)
+	value := fl.Field().Interface().(BaseEnum)
 	return value.IsEnumValid()
 }
