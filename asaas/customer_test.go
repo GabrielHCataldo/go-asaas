@@ -13,28 +13,9 @@ func TestCustomerCreate(t *testing.T) {
 	AssertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
+	req := &CreateCustomerRequest{}
+	err = json.Unmarshal(test.GetCreateCustomerRequestDefault(), req)
 	nCustomer := NewCustomer(SANDBOX, *accessToken)
-	resp, errAsaas := nCustomer.Create(ctx, CreateCustomerRequest{
-		Name:                 "Unit Test Golang",
-		CpfCnpj:              "24971563792",
-		Email:                "unittest@gmail.com",
-		Phone:                "",
-		MobilePhone:          "",
-		Address:              "",
-		AddressNumber:        "",
-		Complement:           "",
-		Province:             "",
-		PostalCode:           "",
-		ExternalReference:    "",
-		NotificationDisabled: false,
-		AdditionalEmails:     "",
-		MunicipalInscription: "",
-	})
-	if errAsaas != nil {
-		logDebug("unexpect response: err is not nil:", errAsaas)
-		t.Fail()
-	} else {
-		respJson, _ := json.Marshal(resp)
-		logDebug("result success response:", string(respJson))
-	}
+	resp, errAsaas := nCustomer.Create(ctx, *req)
+	AssertAsaasResponseSuccess(t, resp, errAsaas)
 }

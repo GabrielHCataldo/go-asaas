@@ -24,11 +24,11 @@ func TestChangeCreateCreditCardSuccess(t *testing.T) {
 	AssertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	var chargeReq *CreateChargeRequest
-	err = json.Unmarshal(test.GetChargeCreditCardRequestDefault(), chargeReq)
+	req := &CreateChargeRequest{}
+	err = json.Unmarshal(test.GetCreateChargeCreditCardRequestDefault(), req)
 	AssertFatalErrorNonnull(t, err)
 	nCharge := NewCharge(SANDBOX, *accessToken)
-	resp, errAsaas := nCharge.Create(ctx, *chargeReq)
+	resp, errAsaas := nCharge.Create(ctx, *req)
 	AssertAsaasResponseSuccess(t, resp, errAsaas)
 }
 
@@ -37,11 +37,11 @@ func TestChangeCreateCreditCardFailure(t *testing.T) {
 	AssertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	chargeReq := &CreateChargeRequest{}
-	err = json.Unmarshal(test.GetChargeCreditCardFailureRequestDefault(), chargeReq)
+	req := &CreateChargeRequest{}
+	err = json.Unmarshal(test.GetCreateChargeCreditCardFailureRequestDefault(), req)
 	AssertFatalErrorNonnull(t, err)
 	nCharge := NewCharge(SANDBOX, *accessToken)
-	resp, errAsaas := nCharge.Create(ctx, *chargeReq)
+	resp, errAsaas := nCharge.Create(ctx, *req)
 	AssertAsaasResponseFailure(t, resp, errAsaas)
 }
 
@@ -50,11 +50,11 @@ func TestChangeCreatePixSuccess(t *testing.T) {
 	AssertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	var chargeReq *CreateChargeRequest
-	err = json.Unmarshal(test.GetChargePixRequestDefault(), chargeReq)
+	req := &CreateChargeRequest{}
+	err = json.Unmarshal(test.GetCreateChargePixRequestDefault(), req)
 	AssertFatalErrorNonnull(t, err)
 	nCharge := NewCharge(SANDBOX, *accessToken)
-	resp, errAsaas := nCharge.Create(ctx, *chargeReq)
+	resp, errAsaas := nCharge.Create(ctx, *req)
 	AssertAsaasResponseSuccess(t, resp, errAsaas)
 }
 
@@ -63,11 +63,11 @@ func TestChangeCreateBoletoSuccess(t *testing.T) {
 	AssertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	var chargeReq *CreateChargeRequest
-	err = json.Unmarshal(test.GetChargeBoletoRequestDefault(), chargeReq)
+	req := &CreateChargeRequest{}
+	err = json.Unmarshal(test.GetCreateChargeBoletoRequestDefault(), req)
 	AssertFatalErrorNonnull(t, err)
 	nCharge := NewCharge(SANDBOX, *accessToken)
-	resp, errAsaas := nCharge.Create(ctx, *chargeReq)
+	resp, errAsaas := nCharge.Create(ctx, *req)
 	AssertAsaasResponseSuccess(t, resp, errAsaas)
 }
 
@@ -98,8 +98,6 @@ func TestChargeGetAll(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(SANDBOX, *accessToken)
-	resp, errAsaas := nCharge.GetAll(ctx, GetAllChargesRequest{
-		Status: CHARGE_CONFIRMED,
-	})
+	resp, errAsaas := nCharge.GetAll(ctx, GetAllChargesRequest{})
 	AssertAsaasResponseSuccess(t, resp, errAsaas)
 }

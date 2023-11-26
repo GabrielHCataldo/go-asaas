@@ -22,7 +22,7 @@ func GetChargeIdDefault() string {
 	return "pay_0190206161077023"
 }
 
-func GetChargePixRequestDefault() []byte {
+func GetCreateChargePixRequestDefault() []byte {
 	return []byte(`
 		{
 			"billingType": "PIX",
@@ -34,7 +34,7 @@ func GetChargePixRequestDefault() []byte {
 	`)
 }
 
-func GetChargeBoletoRequestDefault() []byte {
+func GetCreateChargeBoletoRequestDefault() []byte {
 	return []byte(`
 		{
 			"customer": "cus_000005791749",
@@ -56,7 +56,7 @@ func GetChargeBoletoRequestDefault() []byte {
 	`)
 }
 
-func GetChargeCreditCardRequestDefault() []byte {
+func GetCreateChargeCreditCardRequestDefault() []byte {
 	return []byte(`
 		{
 			"customer": "cus_000005791749",
@@ -85,7 +85,7 @@ func GetChargeCreditCardRequestDefault() []byte {
 	`)
 }
 
-func GetChargeCreditCardFailureRequestDefault() []byte {
+func GetCreateChargeCreditCardFailureRequestDefault() []byte {
 	return []byte(`
 		{
 			"customer": "cus_000005791749",
@@ -176,4 +176,27 @@ func GetSimpleFile() (*os.File, error) {
 		return nil, err
 	}
 	return os.Open("test.txt")
+}
+
+func GetCreateCustomerRequestDefault() []byte {
+	return []byte(`
+		{
+			"name": "Unit Test Goland",
+			"email": "unittestgolang@gmail.com",
+			"phone": "4738010920",
+			"mobilePhone": "47999376637",
+			"cpfCnpj": "07207283040",
+			"postalCode": "01310-000",
+			"address": "Av. Paulista",
+			"addressNumber": "150",
+			"complement": "Sala 201",
+			"province": "Centro",
+			"externalReference": "12987382",
+			"notificationDisabled": false,
+			"additionalEmails": "unittestgolang2@gmail.com,unittestgolang3@gmail.com",
+			"municipalInscription": "46683695908",
+			"stateInscription": "646681195275",
+			"observations": "unit test golang"
+		}
+	`)
 }

@@ -13,7 +13,7 @@ func TestCreditCardTokenizeSuccess(t *testing.T) {
 	AssertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	var req *CreditCardTokenizeRequest
+	req := &CreditCardTokenizeRequest{}
 	err = json.Unmarshal(test.GetCreditCardRequestDefault(), req)
 	AssertFatalErrorNonnull(t, err)
 	nCreditCard := NewCreditCard(SANDBOX, *accessToken)
@@ -26,7 +26,7 @@ func TestCreditCardTokenizeFailure(t *testing.T) {
 	AssertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	var req *CreditCardTokenizeRequest
+	req := &CreditCardTokenizeRequest{}
 	err = json.Unmarshal(test.GetCreditCardFailureRequestDefault(), req)
 	AssertFatalErrorNonnull(t, err)
 	nCreditCard := NewCreditCard(SANDBOX, *accessToken)

@@ -38,7 +38,6 @@ func (r request[T]) make(method string, path string, payload any) (*T, Error) {
 	if err != nil {
 		return nil, NewByError(err)
 	}
-	logInfoSkipCaller(6, r.env, "request url:", req.URL.String())
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
@@ -65,7 +64,6 @@ func (r request[T]) makeMultipartForm(method string, path string, payload any) (
 	if err != nil {
 		return nil, NewByError(err)
 	}
-	logInfoSkipCaller(6, r.env, "request url:", req.URL.String())
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
@@ -85,16 +83,18 @@ func (r request[T]) makeMultipartForm(method string, path string, payload any) (
 
 func (r request[T]) createHttpRequest(ctx context.Context, method string, path string, payload any) (
 	*http.Request, error) {
+	rUrl := r.env.BaseURL() + path
+	logInfoSkipCaller(5, r.env, "request url:", rUrl, "method:", method)
 	var payloadToSend io.Reader
 	if payload != nil {
 		payloadBytes, err := json.Marshal(payload)
 		if err != nil {
 			return nil, err
 		}
-		logInfoSkipCaller(6, r.env, "sending request body:", string(payloadBytes))
+		logInfoSkipCaller(5, r.env, "request body:", string(payloadBytes))
 		payloadToSend = bytes.NewReader(payloadBytes)
 	}
-	req, err := http.NewRequestWithContext(ctx, method, r.env.BaseURL()+path, payloadToSend)
+	req, err := http.NewRequestWithContext(ctx, method, rUrl, payloadToSend)
 	if err != nil {
 		return nil, err
 	}
@@ -110,6 +110,8 @@ func (r request[T]) createHttpRequestMultipartForm(
 	path string,
 	values map[string]io.Reader,
 ) (req *http.Request, err error) {
+	rUrl := r.env.BaseURL() + path
+	logInfoSkipCaller(5, r.env, "request url:", rUrl, "method:", method)
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
 	for k, v := range values {
@@ -119,8 +121,8 @@ func (r request[T]) createHttpRequestMultipartForm(
 		}
 	}
 	defer r.closeWriter(w)
-	logInfoSkipCaller(6, r.env, "request body:", strings.ReplaceAll(b.String(), "\n", ""))
-	req, err = http.NewRequestWithContext(ctx, method, r.env.BaseURL()+path, &b)
+	logInfoSkipCaller(5, r.env, "request body:", strings.ReplaceAll(b.String(), "\n", ""))
+	req, err = http.NewRequestWithContext(ctx, method, rUrl, &b)
 	if err != nil {
 		return nil, err
 	}

@@ -39,7 +39,7 @@ func AssertAsaasResponseSuccess(t *testing.T, resp any, err any) {
 		vJson, _ := json.Marshal(resp)
 		respStruct := structs.New(resp)
 		errorsField := respStruct.Field("Errors")
-		if errorsField != nil {
+		if errorsField != nil && !errorsField.IsZero() && errorsField.Value() != nil {
 			logErrorSkipCaller(4, "unexpect result: errors result from Asaas:", string(vJson))
 			t.Fail()
 		} else {
@@ -62,7 +62,7 @@ func AssertAsaasResponseFailure(t *testing.T, resp any, err any) {
 		vJson, _ := json.Marshal(resp)
 		respStruct := structs.New(resp)
 		errorsField := respStruct.Field("Errors")
-		if errorsField == nil {
+		if errorsField == nil || errorsField.IsZero() || errorsField.Value() == nil {
 			logDebugSkipCaller(4, "unexpect result: errors result from Asaas is empty")
 			t.Fail()
 		} else {

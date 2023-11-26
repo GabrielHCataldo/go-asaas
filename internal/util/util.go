@@ -14,7 +14,7 @@ import (
 func IsPhoneNumber(value string) bool {
 	num, err := phonenumbers.Parse(value, "BR")
 	if err == nil {
-		return phonenumbers.IsValidNumberForRegion(num, "BR")
+		return phonenumbers.IsValidNumber(num)
 	}
 	return false
 }
