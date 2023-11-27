@@ -25,6 +25,20 @@ func (p PixTransactionResponse) IsNoContent() bool {
 	return len(p.Errors) == 0 && util.IsBlank(&p.ID)
 }
 
+func (f FileTextPlainResponse) IsSuccess() bool {
+	s := f.String()
+	return util.IsNotBlank(&s)
+}
+
+func (f FileTextPlainResponse) IsFailure() bool {
+	return !f.IsSuccess()
+}
+
+func (f FileTextPlainResponse) IsNoContent() bool {
+	s := f.String()
+	return util.IsBlank(&s)
+}
+
 func (p PixCancelTransactionResponse) IsSuccess() bool {
 	return len(p.Errors) == 0 && util.IsNotBlank(&p.ID)
 }

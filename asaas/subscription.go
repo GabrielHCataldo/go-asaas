@@ -64,11 +64,11 @@ type GetAllChargesBySubscriptionRequest struct {
 	Status ChargeStatus `json:"status,omitempty"`
 }
 
-type CreatePaymentBookRequest struct {
-	Month int                   `json:"month,omitempty" validate:"required,gte=1,lte=12"`
-	Year  int                   `json:"year,omitempty" validate:"required,gt=0"`
-	Sort  SortSubscriptionField `json:"sort,omitempty" validate:"omitempty,enum"`
-	Order Order                 `json:"order,omitempty" validate:"omitempty,enum"`
+type SubscriptionPaymentBookRequest struct {
+	Month int                  `json:"month,omitempty" validate:"required,gte=1,lte=12"`
+	Year  int                  `json:"year,omitempty" validate:"required,gt=0"`
+	Sort  SortPaymentBookField `json:"sort,omitempty" validate:"omitempty,enum"`
+	Order Order                `json:"order,omitempty" validate:"omitempty,enum"`
 }
 
 type SubscriptionResponse struct {
@@ -101,7 +101,6 @@ type Subscription interface {
 	Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, Error)
 	CreateInvoiceSettingByID(ctx context.Context, subscriptionID string, body CreateInvoiceSettingRequest) (
 		*InvoiceSettingResponse, Error)
-
 	UpdateByID(ctx context.Context, subscriptionID string, body UpdateSubscriptionRequest) (*SubscriptionResponse, Error)
 	UpdateInvoiceSettingsByID(ctx context.Context, subscriptionID string, body UpdateInvoiceSettingRequest) (
 		*InvoiceSettingResponse, Error)
@@ -113,7 +112,7 @@ type Subscription interface {
 		*Pageable[ChargeResponse], Error)
 	GetAllInvoicesBySubscription(ctx context.Context, subscriptionID string, filter GetAllInvoicesRequest) (
 		*Pageable[InvoiceResponse], Error)
-	GetPaymentBookByID(ctx context.Context, subscriptionID string, filter CreatePaymentBookRequest) (
+	GetPaymentBookByID(ctx context.Context, subscriptionID string, filter SubscriptionPaymentBookRequest) (
 		*FileTextPlainResponse, Error)
 	GetAll(ctx context.Context, filter GetAllSubscriptionsRequest) (*Pageable[SubscriptionResponse], Error)
 }
@@ -182,7 +181,7 @@ func (s subscription) GetInvoiceSettingByID(ctx context.Context, subscriptionID 
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionID), nil)
 }
 
-func (s subscription) GetPaymentBookByID(ctx context.Context, subscriptionID string, filter CreatePaymentBookRequest) (
+func (s subscription) GetPaymentBookByID(ctx context.Context, subscriptionID string, filter SubscriptionPaymentBookRequest) (
 	*FileTextPlainResponse, Error) {
 	if err := Validate().Struct(filter); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)

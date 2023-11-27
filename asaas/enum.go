@@ -33,7 +33,7 @@ type PixTransactionStatus string
 type PixTransactionFinality string
 type PixTransactionType string
 type PixTransactionOriginType string
-type BankAccountType string
+type AccountType string
 type SortPaymentBookField string
 type PersonType string
 
@@ -49,10 +49,10 @@ const (
 	SortPaymentBookDueDate = "dueDate"
 )
 const (
-	BankTypeCheckingAccount    BankAccountType = "CHECKING_ACCOUNT"
-	BankTypeSalaryAccount      BankAccountType = "SALARY_ACCOUNT"
-	BankTypeInvestimentAccount BankAccountType = "INVESTIMENT_ACCOUNT"
-	BankTypePaymentAccount     BankAccountType = "PAYMENT_ACCOUNT"
+	AccountTypeCheckingAccount    AccountType = "CHECKING_ACCOUNT"
+	AccountTypeSalaryAccount      AccountType = "SALARY_ACCOUNT"
+	AccountTypeInvestimentAccount AccountType = "INVESTIMENT_ACCOUNT"
+	AccountTypeTypePaymentAccount AccountType = "PAYMENT_ACCOUNT"
 )
 const (
 	PixQrCodeTypeStatic  PixQrCodeType = "STATIC"
@@ -275,9 +275,9 @@ func (p PersonType) IsEnumValid() bool {
 	return false
 }
 
-func (b BankAccountType) IsEnumValid() bool {
+func (b AccountType) IsEnumValid() bool {
 	switch b {
-	case BankTypeSalaryAccount, BankTypePaymentAccount, BankTypeInvestimentAccount, BankTypeCheckingAccount:
+	case AccountTypeSalaryAccount, AccountTypeTypePaymentAccount, AccountTypeInvestimentAccount, AccountTypeCheckingAccount:
 		return true
 	}
 	return false

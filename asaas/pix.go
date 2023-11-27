@@ -127,15 +127,15 @@ type DecodePixQrCodeResponse struct {
 }
 
 type PixReceiverResponse struct {
-	Ispb        int             `json:"ispb,omitempty"`
-	IspbName    string          `json:"ispbName,omitempty"`
-	Name        string          `json:"name,omitempty"`
-	TradingName string          `json:"tradingName,omitempty"`
-	CpfCnpj     string          `json:"cpfCnpj,omitempty"`
-	PersonType  PersonType      `json:"personType,omitempty"`
-	Agency      string          `json:"agency,omitempty"`
-	Account     string          `json:"account,omitempty"`
-	AccountType BankAccountType `json:"accountType,omitempty"`
+	Ispb        int         `json:"ispb,omitempty"`
+	IspbName    string      `json:"ispbName,omitempty"`
+	Name        string      `json:"name,omitempty"`
+	TradingName string      `json:"tradingName,omitempty"`
+	CpfCnpj     string      `json:"cpfCnpj,omitempty"`
+	PersonType  PersonType  `json:"personType,omitempty"`
+	Agency      string      `json:"agency,omitempty"`
+	Account     string      `json:"account,omitempty"`
+	AccountType AccountType `json:"accountType,omitempty"`
 }
 
 type PixExternalAccountResponse struct {

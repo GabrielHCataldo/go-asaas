@@ -6,6 +6,11 @@ import (
 	"net/http"
 )
 
+type InstallmentPaymentBookRequest struct {
+	Sort  SortPaymentBookField `json:"sort,omitempty" validate:"omitempty,enum"`
+	Order Order                `json:"order,omitempty" validate:"omitempty,enum"`
+}
+
 type InstallmentResponse struct {
 	ID                    string                         `json:"id,omitempty"`
 	Value                 float64                        `json:"value,omitempty"`
@@ -44,6 +49,8 @@ type Installment interface {
 	RefundByID(ctx context.Context, installmentID string) (*InstallmentResponse, Error)
 	DeleteByID(ctx context.Context, installmentID string) (*DeleteResponse, Error)
 	GetByID(ctx context.Context, installmentID string) (*InstallmentResponse, Error)
+	GetPaymentBookByID(ctx context.Context, installmentID string, filter InstallmentPaymentBookRequest) (
+		*FileTextPlainResponse, Error)
 	GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[InstallmentResponse], Error)
 }
 
@@ -77,6 +84,11 @@ func (i installment) DeleteByID(ctx context.Context, installmentID string) (*Del
 func (i installment) GetByID(ctx context.Context, installmentID string) (*InstallmentResponse, Error) {
 	req := NewRequest[InstallmentResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/installments/%s", installmentID), nil)
+}
+
+func (i installment) GetPaymentBookByID(ctx context.Context, installmentID string, filter InstallmentPaymentBookRequest) (*FileTextPlainResponse, Error) {
+	req := NewRequest[FileTextPlainResponse](ctx, i.env, i.accessToken)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/installments/%s/paymentBook", installmentID), filter)
 }
 
 func (i installment) GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[InstallmentResponse], Error) {
