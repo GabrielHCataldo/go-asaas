@@ -87,7 +87,7 @@ func validateBillingBody(
 	cCard *CreditCardRequest,
 	cCardHolderInfoBody *CreditCardHolderInfoRequest,
 	cCardToken,
-	remoteIP string,
+	remoteIp string,
 ) error {
 	switch billingType {
 	case CREDIT_CARD:
@@ -95,7 +95,7 @@ func validateBillingBody(
 			return berrors.New("charge by credit card, enter the credit card or credit card token")
 		} else if cCard != nil && !util.ValidateExpirationCreditCard(cCard.ExpiryYear, cCard.ExpiryMonth) {
 			return berrors.New("expired card")
-		} else if util.IsBlank(&remoteIP) && !util.ValidateIP(remoteIP) {
+		} else if util.IsBlank(&remoteIp) && !util.ValidateIp(remoteIp) {
 			return berrors.New("invalid remoteIp")
 		}
 		break

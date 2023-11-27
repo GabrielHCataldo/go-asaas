@@ -70,6 +70,7 @@ type Notification interface {
 }
 
 func NewNotification(env Env, accessToken string) Notification {
+	logWarning("Notification service running on", env.String())
 	return notification{
 		env:         env,
 		accessToken: accessToken,

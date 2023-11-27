@@ -10,7 +10,7 @@ type CreditCardRequest struct {
 	Number      string `json:"number,omitempty" validate:"required,numeric,min=10,max=19"`
 	ExpiryMonth string `json:"expiryMonth,omitempty" validate:"required,numeric,len=2"`
 	ExpiryYear  string `json:"expiryYear,omitempty" validate:"required,numeric,len=4"`
-	CCV         string `json:"ccv,omitempty" validate:"required,numeric,min=3,max=4"`
+	Ccv         string `json:"ccv,omitempty" validate:"required,numeric,min=3,max=4"`
 }
 
 type CreditCardHolderInfoRequest struct {

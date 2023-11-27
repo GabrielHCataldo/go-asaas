@@ -20,8 +20,8 @@ type InstallmentResponse struct {
 	Customer              string                         `json:"customer,omitempty"`
 	PaymentLink           string                         `json:"paymentLink,omitempty"`
 	TransactionReceiptUrl string                         `json:"transactionReceiptUrl,omitempty"`
-	DateCreated           *Date                          `json:"dateCreated,omitempty"`
 	Chargeback            *InstallmentChargebackResponse `json:"chargeback,omitempty"`
+	DateCreated           *DateTime                      `json:"dateCreated,omitempty"`
 }
 
 type InstallmentChargebackResponse struct {
@@ -48,6 +48,7 @@ type Installment interface {
 }
 
 func NewInstallment(env Env, accessToken string) Installment {
+	logWarning("Installment service running on", env.String())
 	return installment{
 		env:         env,
 		accessToken: accessToken,

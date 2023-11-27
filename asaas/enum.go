@@ -25,7 +25,30 @@ type SortSubscriptionField string
 type InvoiceStatus string
 type InvoiceDatePeriod string
 type InvoiceDaysBeforeDueDate int
+type PixKeyStatus string
+type PixKeyType string
+type QRCodeFormat string
 
+const (
+	QR_CODE_FORMAT_ALL     QRCodeFormat = "ALL"
+	QR_CODE_FORMAT_IMAGE   QRCodeFormat = "IMAGE"
+	QR_CODE_FORMAT_PAYLOAD QRCodeFormat = "PAYLOAD"
+)
+const (
+	PIX_KEY_TYPE_CPF   PixKeyType = "CPF"
+	PIX_KEY_TYPE_CNPJ  PixKeyType = "CNPJ"
+	PIX_KEY_TYPE_EMAIL PixKeyType = "EMAIL"
+	PIX_KEY_TYPE_PHONE PixKeyType = "PHONE"
+	PIX_KEY_TYPE_EVP   PixKeyType = "EVP"
+)
+const (
+	PIX_KEY_AWAITING_ACTIVATION       PixKeyStatus = "AWAITING_ACTIVATION"
+	PIX_KEY_AWAITING_ACTIVE           PixKeyStatus = "ACTIVE"
+	PIX_KEY_AWAITING_DELETION         PixKeyStatus = "AWAITING_DELETION"
+	PIX_KEY_AWAITING_ACCOUNT_DELETION PixKeyStatus = "AWAITING_ACCOUNT_DELETION"
+	PIX_KEY_AWAITING_DELETED          PixKeyStatus = "AWAITING_DELETED"
+	PIX_KEY_AWAITING_ERROR            PixKeyStatus = "AWAITING_ERROR"
+)
 const (
 	INVOICE_DAYS_BEFORE_DUEDATE_FIVE    InvoiceDaysBeforeDueDate = 5
 	INVOICE_DAYS_BEFORE_DUEDATE_TEN     InvoiceDaysBeforeDueDate = 10
@@ -50,16 +73,16 @@ const (
 	INVOICE_ERROR                   InvoiceStatus = "ERROR"
 )
 const (
-	SORT_SUBSCRIPTION_DATE_CREATED SortSubscriptionField = "dateCreated"
+	SORT_SUBSCRIpTION_DATE_CREATED SortSubscriptionField = "dateCreated"
 )
 const (
 	ORDER_DESC Order = "desc"
 	ORDER_ASC  Order = "asc"
 )
 const (
-	SUBSCRIPTION_ACTIVE   SubscriptionStatus = "ACTIVE"
-	SUBSCRIPTION_INACTIVE SubscriptionStatus = "INACTIVE"
-	SUBSCRIPTION_EXPIRED  SubscriptionStatus = "EXPIRED"
+	SUBSCRIpTION_ACTIVE   SubscriptionStatus = "ACTIVE"
+	SUBSCRIpTION_INACTIVE SubscriptionStatus = "INACTIVE"
+	SUBSCRIpTION_EXPIRED  SubscriptionStatus = "EXPIRED"
 )
 const (
 	WEEKLY       SubscriptionCycle = "WEEKLY"
@@ -111,7 +134,7 @@ const (
 	INVALID_DATA                              ChargebackReason = "INVALID_DATA"
 	LATE_PRESENTATION                         ChargebackReason = "LATE_PRESENTATION"
 	LOCAL_REGULATORY_OR_LEGAL_DISPUTE         ChargebackReason = "LOCAL_REGULATORY_OR_LEGAL_DISPUTE"
-	MULTIPLE_ROCS                             ChargebackReason = "MULTIPLE_ROCS"
+	MULTIpLE_ROCS                             ChargebackReason = "MULTIpLE_ROCS"
 	ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED  ChargebackReason = "ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED"
 	OTHER_ABSENT_CARD_FRAUD                   ChargebackReason = "OTHER_ABSENT_CARD_FRAUD"
 	PROCESS_ERROR                             ChargebackReason = "PROCESS_ERROR"
@@ -188,6 +211,31 @@ const (
 	PAYMENT_UPDATED         NotificationEvent = "PAYMENT_UPDATED"
 )
 
+func (q QRCodeFormat) IsEnumValid() bool {
+	switch q {
+	case QR_CODE_FORMAT_ALL, QR_CODE_FORMAT_IMAGE, QR_CODE_FORMAT_PAYLOAD:
+		return true
+	}
+	return false
+}
+
+func (p PixKeyStatus) IsEnumValid() bool {
+	switch p {
+	case PIX_KEY_AWAITING_ACTIVE, PIX_KEY_AWAITING_ACTIVATION, PIX_KEY_AWAITING_DELETED, PIX_KEY_AWAITING_ACCOUNT_DELETION,
+		PIX_KEY_AWAITING_DELETION, PIX_KEY_AWAITING_ERROR:
+		return true
+	}
+	return false
+}
+
+func (p PixKeyType) IsEnumValid() bool {
+	switch p {
+	case PIX_KEY_TYPE_CNPJ, PIX_KEY_TYPE_CPF, PIX_KEY_TYPE_EMAIL, PIX_KEY_TYPE_PHONE, PIX_KEY_TYPE_EVP:
+		return true
+	}
+	return false
+}
+
 func (i InvoiceDaysBeforeDueDate) IsEnumValid() bool {
 	switch i {
 	case INVOICE_DAYS_BEFORE_DUEDATE_FIVE, INVOICE_DAYS_BEFORE_DUEDATE_TEN, INVOICE_DAYS_BEFORE_DUEDATE_FIFTEEN,
@@ -218,7 +266,7 @@ func (i InvoiceDatePeriod) IsEnumValid() bool {
 
 func (s SortSubscriptionField) IsEnumValid() bool {
 	switch s {
-	case SORT_SUBSCRIPTION_DATE_CREATED:
+	case SORT_SUBSCRIpTION_DATE_CREATED:
 		return true
 	}
 	return false
@@ -226,7 +274,7 @@ func (s SortSubscriptionField) IsEnumValid() bool {
 
 func (s SubscriptionStatus) IsEnumValid() bool {
 	switch s {
-	case SUBSCRIPTION_ACTIVE, SUBSCRIPTION_INACTIVE, SUBSCRIPTION_EXPIRED:
+	case SUBSCRIpTION_ACTIVE, SUBSCRIpTION_INACTIVE, SUBSCRIpTION_EXPIRED:
 		return true
 	}
 	return false
@@ -262,7 +310,7 @@ func (c ChargebackReason) IsEnumValid() bool {
 	case ABSENCE_OF_PRINT, ABSENT_CARD_FRAUD, CARD_ACTIVATED_PHONE_TRANSACTION, CARD_FRAUD, CARD_RECOVERY_BULLETIN,
 		COMMERCIAL_DISAGREEMENT, COPY_NOT_RECEIVED, CREDIT_OR_DEBIT_PRESENTATION_ERROR, DIFFERENT_PAY_METHOD, FRAUD,
 		INCORRECT_TRANSACTION_VALUE, INVALID_CURRENCY, INVALID_DATA, LATE_PRESENTATION, LOCAL_REGULATORY_OR_LEGAL_DISPUTE,
-		MULTIPLE_ROCS, ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED, OTHER_ABSENT_CARD_FRAUD, PROCESS_ERROR,
+		MULTIpLE_ROCS, ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED, OTHER_ABSENT_CARD_FRAUD, PROCESS_ERROR,
 		RECEIVED_COPY_ILLEGIBLE_OR_INCOMPLETE, RECURRENCE_CANCELED, REQUIRED_AUTHORIZATION_NOT_GRANTED,
 		RIGHT_OF_FULL_RECOURSE_FOR_FRAUD, SALE_CANCELED, SERVICE_DISAGREEMENT_OR_DEFECTIVE_PRODUCT, SERVICE_NOT_RECEIVED,
 		SPLIT_SALE, TRANSFERS_OF_DIVERSE_RESPONSIBILITIES, UNQUALIFIED_CAR_RENTAL_DEBIT, USA_CARDHOLDER_DISPUTE,
@@ -403,7 +451,7 @@ func (c ChargebackReason) String() string {
 		return "Apresentação tardia"
 	case LOCAL_REGULATORY_OR_LEGAL_DISPUTE:
 		return "Contestação regulatória / legal local"
-	case MULTIPLE_ROCS:
+	case MULTIpLE_ROCS:
 		return "ROCs múltiplos"
 	case ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED:
 		return "Transação de crédito original não aceita"

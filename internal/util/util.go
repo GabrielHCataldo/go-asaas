@@ -37,7 +37,7 @@ func ValidatePostalCode(v string) bool {
 	return regex.MatchString(v)
 }
 
-func ValidateIP(v string) bool {
+func ValidateIp(v string) bool {
 	regex := regexp.MustCompile(`\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}\b`)
 	return regex.MatchString(v)
 }

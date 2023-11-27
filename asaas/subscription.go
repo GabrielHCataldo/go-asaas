@@ -25,7 +25,7 @@ type CreateSubscriptionRequest struct {
 	MaxPayments          int                          `json:"maxPayments,omitempty" validate:"omitempty,gt=0"`
 	ExternalReference    string                       `json:"externalReference,omitempty"`
 	Split                []SplitRequest               `json:"split,omitempty"`
-	RemoteIP             string                       `json:"remoteIp,omitempty"`
+	RemoteIp             string                       `json:"remoteIp,omitempty"`
 }
 
 type UpdateSubscriptionRequest struct {
@@ -82,7 +82,7 @@ type SubscriptionResponse struct {
 	MaxPayments       int                `json:"maxPayments,omitempty"`
 	ExternalReference string             `json:"externalReference,omitempty"`
 	Deleted           bool               `json:"deleted,omitempty"`
-	DateCreated       *Date              `json:"dateCreated,omitempty"`
+	DateCreated       *DateTime          `json:"dateCreated,omitempty"`
 }
 
 type subscription struct {
@@ -109,6 +109,7 @@ type Subscription interface {
 }
 
 func NewSubscription(env Env, accessToken string) Subscription {
+	logWarning("Subscription service running on", env.String())
 	return subscription{
 		env:         env,
 		accessToken: accessToken,
@@ -200,7 +201,7 @@ func (s subscription) validateCreateBodyRequest(body CreateSubscriptionRequest) 
 		return berrors.New("invalid endDate")
 	}
 	return validateBillingBody(body.BillingType, body.CreditCard, body.CreditCardHolderInfo, body.CreditCardToken,
-		body.RemoteIP)
+		body.RemoteIp)
 }
 
 func (s subscription) prepareCreateBodyRequest(body *CreateSubscriptionRequest) {
@@ -216,6 +217,6 @@ func (s subscription) prepareCreateBodyRequest(body *CreateSubscriptionRequest) 
 		body.CreditCard = nil
 		body.CreditCardHolderInfo = nil
 		body.CreditCardToken = ""
-		body.RemoteIP = ""
+		body.RemoteIp = ""
 	}
 }

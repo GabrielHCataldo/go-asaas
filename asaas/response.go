@@ -13,6 +13,30 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (p PixKeyResponse) IsSuccess() bool {
+	return len(p.Errors) == 0 && util.IsNotBlank(&p.ID)
+}
+
+func (p PixKeyResponse) IsFailure() bool {
+	return !p.IsSuccess()
+}
+
+func (p PixKeyResponse) IsNoContent() bool {
+	return len(p.Errors) == 0 && util.IsBlank(&p.ID)
+}
+
+func (q QrCodeResponse) IsSuccess() bool {
+	return len(q.Errors) == 0 && util.IsNotBlank(&q.ID)
+}
+
+func (q QrCodeResponse) IsFailure() bool {
+	return !q.IsSuccess()
+}
+
+func (q QrCodeResponse) IsNoContent() bool {
+	return len(q.Errors) == 0 && util.IsBlank(&q.ID)
+}
+
 func (s SubscriptionResponse) IsSuccess() bool {
 	return len(s.Errors) == 0 && util.IsNotBlank(&s.ID)
 }

@@ -28,7 +28,7 @@ type CreateChargeRequest struct {
 	InstallmentCount     int                          `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
 	InstallmentValue     float64                      `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
 	AuthorizeOnly        bool                         `json:"authorizeOnly,omitempty"`
-	RemoteIP             string                       `json:"remoteIp,omitempty"`
+	RemoteIp             string                       `json:"remoteIp,omitempty"`
 }
 
 type UpdateChargeRequest struct {
@@ -127,7 +127,7 @@ type ChargeResponse struct {
 	Anticipable           bool                `json:"anticipable,omitempty"`
 	Refunds               []RefundResponse    `json:"refunds,omitempty"`
 	Errors                []ErrorResponse     `json:"errors,omitempty"`
-	DateCreated           *Date               `json:"dateCreated,omitempty"`
+	DateCreated           *DateTime           `json:"dateCreated,omitempty"`
 }
 
 type ChargeStatusResponse struct {
@@ -358,7 +358,7 @@ func (c charge) validateCreateBodyRequest(body CreateChargeRequest) error {
 		}
 	}
 	return validateBillingBody(body.BillingType, body.CreditCard, body.CreditCardHolderInfo, body.CreditCardToken,
-		body.RemoteIP)
+		body.RemoteIp)
 }
 
 func (c charge) prepareCreateBodyRequest(body *CreateChargeRequest) {
@@ -374,6 +374,6 @@ func (c charge) prepareCreateBodyRequest(body *CreateChargeRequest) {
 		body.CreditCard = nil
 		body.CreditCardHolderInfo = nil
 		body.CreditCardToken = ""
-		body.RemoteIP = ""
+		body.RemoteIp = ""
 	}
 }
