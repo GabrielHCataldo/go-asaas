@@ -14,7 +14,7 @@ func TestChargeCreateError(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 5*time.Second)
 	defer cancel()
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	_, errAsaas := nCharge.Create(ctx, CreateChargeRequest{})
 	assertSuccessNonnull(t, errAsaas)
 }
@@ -27,7 +27,7 @@ func TestChangeCreateCreditCardSuccess(t *testing.T) {
 	req := &CreateChargeRequest{}
 	err = json.Unmarshal(test.GetCreateChargeCreditCardRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.Create(ctx, *req)
 	assertResponseSuccess(t, resp, errAsaas)
 }
@@ -40,7 +40,7 @@ func TestChangeCreateCreditCardFailure(t *testing.T) {
 	req := &CreateChargeRequest{}
 	err = json.Unmarshal(test.GetCreateChargeCreditCardFailureRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.Create(ctx, *req)
 	assertResponseFailure(t, resp, errAsaas)
 }
@@ -53,7 +53,7 @@ func TestChangeCreatePixSuccess(t *testing.T) {
 	req := &CreateChargeRequest{}
 	err = json.Unmarshal(test.GetCreateChargePixRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.Create(ctx, *req)
 	assertResponseSuccess(t, resp, errAsaas)
 }
@@ -66,7 +66,7 @@ func TestChangeCreateBoletoSuccess(t *testing.T) {
 	req := &CreateChargeRequest{}
 	err = json.Unmarshal(test.GetCreateChargeBoletoRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.Create(ctx, *req)
 	assertResponseSuccess(t, resp, errAsaas)
 }
@@ -84,10 +84,10 @@ func TestChargeUploadDocumentByID(t *testing.T) {
 			logError("error remove file test:", err)
 		}
 	}(f.Name())
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.UploadDocumentByID(ctx, test.GetChargeIdDefault(), UploadChargeDocumentRequest{
 		AvailableAfterPayment: false,
-		Type:                  DOCUMENT,
+		Type:                  DocumentTypeDocument,
 		File:                  f,
 	})
 	assertResponseSuccess(t, resp, errAsaas)
@@ -98,7 +98,7 @@ func TestChargeGetDocumentByIDSuccess(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.GetDocumentByID(ctx, test.GetChargeIdDefault(), test.GetDocumentIdDefault())
 	assertResponseSuccess(t, resp, errAsaas)
 }
@@ -108,7 +108,7 @@ func TestChargeGetDocumentByIDNoContent(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.GetDocumentByID(ctx, test.GetChargeIdDefault(), "test")
 	assertResponseNoContent(t, resp, errAsaas)
 }
@@ -118,7 +118,7 @@ func TestChargeGetCreationLimit(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.GetCreationLimit(ctx)
 	assertResponseSuccess(t, resp, errAsaas)
 }
@@ -128,7 +128,7 @@ func TestChargeGetAllDocumentsByIDSuccess(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.GetAllDocumentsByID(ctx, test.GetChargeIdDefault(), PageableDefaultRequest{})
 	assertResponseSuccess(t, resp, errAsaas)
 }
@@ -138,7 +138,7 @@ func TestChargeGetAllDocumentsByIDNoContent(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.GetAllDocumentsByID(ctx, test.GetChargeIdDefault(), PageableDefaultRequest{})
 	assertResponseSuccess(t, resp, errAsaas)
 }
@@ -148,7 +148,7 @@ func TestChargeGetAllSuccess(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.GetAll(ctx, GetAllChargesRequest{})
 	assertResponseSuccess(t, resp, errAsaas)
 }
@@ -158,9 +158,9 @@ func TestChargeGetAllNoContent(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nCharge := NewCharge(SANDBOX, *accessToken)
+	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.GetAll(ctx, GetAllChargesRequest{
-		Status: CHARGE_RECEIVED,
+		Status: ChargeStatusReceived,
 	})
 	assertResponseNoContent(t, resp, errAsaas)
 }

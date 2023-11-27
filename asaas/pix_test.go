@@ -12,7 +12,7 @@ func TestPixGetAllKeysSuccess(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nPix := NewPix(SANDBOX, *accessToken)
+	nPix := NewPix(EnvSandbox, *accessToken)
 	resp, errAsaas := nPix.GetAllKeys(ctx, GetAllPixKeysRequest{})
 	assertResponseSuccess(t, resp, errAsaas)
 }

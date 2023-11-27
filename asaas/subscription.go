@@ -64,6 +64,13 @@ type GetAllChargesBySubscriptionRequest struct {
 	Status ChargeStatus `json:"status,omitempty"`
 }
 
+type CreatePaymentBookRequest struct {
+	Month int                   `json:"month,omitempty" validate:"required,gte=1,lte=12"`
+	Year  int                   `json:"year,omitempty" validate:"required,gt=0"`
+	Sort  SortSubscriptionField `json:"sort,omitempty" validate:"omitempty,enum"`
+	Order Order                 `json:"order,omitempty" validate:"omitempty,enum"`
+}
+
 type SubscriptionResponse struct {
 	ID                string             `json:"id,omitempty"`
 	Customer          string             `json:"customer,omitempty"`
@@ -94,6 +101,7 @@ type Subscription interface {
 	Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, Error)
 	CreateInvoiceSettingByID(ctx context.Context, subscriptionID string, body CreateInvoiceSettingRequest) (
 		*InvoiceSettingResponse, Error)
+
 	UpdateByID(ctx context.Context, subscriptionID string, body UpdateSubscriptionRequest) (*SubscriptionResponse, Error)
 	UpdateInvoiceSettingsByID(ctx context.Context, subscriptionID string, body UpdateInvoiceSettingRequest) (
 		*InvoiceSettingResponse, Error)
@@ -105,6 +113,8 @@ type Subscription interface {
 		*Pageable[ChargeResponse], Error)
 	GetAllInvoicesBySubscription(ctx context.Context, subscriptionID string, filter GetAllInvoicesRequest) (
 		*Pageable[InvoiceResponse], Error)
+	GetPaymentBookByID(ctx context.Context, subscriptionID string, filter CreatePaymentBookRequest) (
+		*FileTextPlainResponse, Error)
 	GetAll(ctx context.Context, filter GetAllSubscriptionsRequest) (*Pageable[SubscriptionResponse], Error)
 }
 
@@ -118,7 +128,7 @@ func NewSubscription(env Env, accessToken string) Subscription {
 
 func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, Error) {
 	if err := s.validateCreateBodyRequest(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	s.prepareCreateBodyRequest(&body)
 	req := NewRequest[SubscriptionResponse](ctx, s.env, s.accessToken)
@@ -128,7 +138,7 @@ func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest
 func (s subscription) CreateInvoiceSettingByID(ctx context.Context, subscriptionID string, body CreateInvoiceSettingRequest) (
 	*InvoiceSettingResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionID), body)
@@ -137,7 +147,7 @@ func (s subscription) CreateInvoiceSettingByID(ctx context.Context, subscription
 func (s subscription) UpdateByID(ctx context.Context, subscriptionID string, body UpdateSubscriptionRequest) (
 	*SubscriptionResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[SubscriptionResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s", subscriptionID), body)
@@ -146,7 +156,7 @@ func (s subscription) UpdateByID(ctx context.Context, subscriptionID string, bod
 func (s subscription) UpdateInvoiceSettingsByID(ctx context.Context, subscriptionID string, body UpdateInvoiceSettingRequest) (
 	*InvoiceSettingResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionID), body)
@@ -170,6 +180,15 @@ func (s subscription) GetByID(ctx context.Context, subscriptionID string) (*Subs
 func (s subscription) GetInvoiceSettingByID(ctx context.Context, subscriptionID string) (*InvoiceSettingResponse, Error) {
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionID), nil)
+}
+
+func (s subscription) GetPaymentBookByID(ctx context.Context, subscriptionID string, filter CreatePaymentBookRequest) (
+	*FileTextPlainResponse, Error) {
+	if err := Validate().Struct(filter); err != nil {
+		return nil, NewError(ErrorTypeValidation, err)
+	}
+	req := NewRequest[FileTextPlainResponse](ctx, s.env, s.accessToken)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/paymentBook", subscriptionID), filter)
 }
 
 func (s subscription) GetAllChargesBySubscription(
@@ -208,7 +227,7 @@ func (s subscription) prepareCreateBodyRequest(body *CreateSubscriptionRequest) 
 	body.NextDueDate = NewDate(body.NextDueDate.Year(), body.NextDueDate.Month(), body.NextDueDate.Day(),
 		23, 59, 0, 0, body.NextDueDate.Location())
 	switch body.BillingType {
-	case CREDIT_CARD:
+	case BillingTypeCreditCard:
 		if body.Fine != nil {
 			body.Fine.DueDateLimitDays = 0
 		}

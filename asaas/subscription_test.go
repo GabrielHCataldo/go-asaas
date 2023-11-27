@@ -12,7 +12,7 @@ func TestSubscriptionGetAllNoContent(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nSubscription := NewSubscription(SANDBOX, *accessToken)
+	nSubscription := NewSubscription(EnvSandbox, *accessToken)
 	resp, errAsaas := nSubscription.GetAll(ctx, GetAllSubscriptionsRequest{})
 	assertResponseNoContent(t, resp, errAsaas)
 }

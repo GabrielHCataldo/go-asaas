@@ -90,7 +90,7 @@ func validateBillingBody(
 	remoteIp string,
 ) error {
 	switch billingType {
-	case CREDIT_CARD:
+	case BillingTypeCreditCard:
 		if util.IsBlank(&cCardToken) && (cCard == nil || cCardHolderInfoBody == nil) {
 			return berrors.New("charge by credit card, enter the credit card or credit card token")
 		} else if cCard != nil && !util.ValidateExpirationCreditCard(cCard.ExpiryYear, cCard.ExpiryMonth) {

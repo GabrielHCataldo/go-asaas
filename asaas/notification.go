@@ -80,7 +80,7 @@ func NewNotification(env Env, accessToken string) Notification {
 func (n notification) UpdateByID(ctx context.Context, notificationID string, body UpdateNotificationRequest) (
 	*NotificationResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[NotificationResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/notifications/%s", notificationID), body)
@@ -89,7 +89,7 @@ func (n notification) UpdateByID(ctx context.Context, notificationID string, bod
 func (n notification) UpdateManyByCustomer(ctx context.Context, body UpdateManyNotificationsRequest) (
 	*UpdateManyNotificationsResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[UpdateManyNotificationsResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPut, "/v3/notifications/batch", body)

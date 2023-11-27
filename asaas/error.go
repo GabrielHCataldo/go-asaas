@@ -20,7 +20,7 @@ type ErrorResponse struct {
 }
 
 func NewError(typeError ErrorType, v ...any) Error {
-	if typeError == ERROR_UNEXPECTED {
+	if typeError == ErrorTypeUnexpected {
 		logErrorSkipCaller(5, v...)
 	}
 	_, file, line, _ := runtime.Caller(1)
@@ -39,7 +39,7 @@ func NewByError(err error) Error {
 	_, file, line, _ := runtime.Caller(1)
 	logErrorSkipCaller(5, "error unexpected:", err)
 	return &errorAsaas{
-		Type: ERROR_UNEXPECTED,
+		Type: ErrorTypeUnexpected,
 		Msg:  err.Error(),
 		Line: line,
 		File: file,

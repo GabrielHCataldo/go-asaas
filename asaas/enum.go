@@ -16,7 +16,7 @@ type InterestType string
 type RefundStatus string
 type SplitRefusalReason string
 type SplitStatus string
-type TypeOfDocument string
+type DocumentType string
 type NotificationEvent string
 type SubscriptionCycle string
 type SubscriptionStatus string
@@ -34,230 +34,250 @@ type PixTransactionFinality string
 type PixTransactionType string
 type PixTransactionOriginType string
 type BankAccountType string
+type SortPaymentBookField string
 type PersonType string
 
 const (
-	BANK_TYPE_CHECKING_ACCOUNT    BankAccountType = "CHECKING_ACCOUNT"
-	BANK_TYPE_SALARY_ACCOUNT      BankAccountType = "SALARY_ACCOUNT"
-	BANK_TYPE_INVESTIMENT_ACCOUNT BankAccountType = "INVESTIMENT_ACCOUNT"
-	BANK_TYPE_PAYMENT_ACCOUNT     BankAccountType = "PAYMENT_ACCOUNT"
+	PersonTypePhysical  PersonType = "FISICA"
+	PersonTypeJuridical PersonType = "JURIDICA"
 )
 const (
-	PIX_QR_CODE_TYPE_STATIC  PixQrCodeType = "STATIC"
-	PIX_QR_CODE_TYPE_DYNAMIC PixQrCodeType = "DYNAMIC"
+	HttpContentTypeJSON = "application/json"
+	HttpContentTypeText = "text/plain; charset=utf-8"
 )
 const (
-	PIX_TRANSACTION_ORIGIN_MANUAL         PixTransactionOriginType = "MANUAL"
-	PIX_TRANSACTION_ORIGIN_ADDRESS_KEY    PixTransactionOriginType = "ADDRESS_KEY"
-	PIX_TRANSACTION_ORIGIN_STATIC_QRCODE  PixTransactionOriginType = "STATIC_QRCODE"
-	PIX_TRANSACTION_ORIGIN_DYNAMIC_QRCODE PixTransactionOriginType = "DYNAMIC_QRCODE"
-	PIX_TRANSACTION_ORIGIN_EXTERNAL_DEBIT PixTransactionOriginType = "EXTERNAL_DEBIT"
+	SortPaymentBookDueDate = "dueDate"
 )
 const (
-	PIX_TRANSACTION_TYPE_DEBIT                     PixTransactionType = "DEBIT"
-	PIX_TRANSACTION_TYPE_CREDIT                    PixTransactionType = "CREDIT"
-	PIX_TRANSACTION_TYPE_CREDIT_REFUND             PixTransactionType = "CREDIT_REFUND"
-	PIX_TRANSACTION_TYPE_DEBIT_REFUND              PixTransactionType = "DEBIT_REFUND"
-	PIX_TRANSACTION_TYPE_DEBIT_REFUND_CANCELLATION PixTransactionType = "DEBIT_REFUND_CANCELLATION"
+	BankTypeCheckingAccount    BankAccountType = "CHECKING_ACCOUNT"
+	BankTypeSalaryAccount      BankAccountType = "SALARY_ACCOUNT"
+	BankTypeInvestimentAccount BankAccountType = "INVESTIMENT_ACCOUNT"
+	BankTypePaymentAccount     BankAccountType = "PAYMENT_ACCOUNT"
 )
 const (
-	PIX_TRANSACTION_FINALITY_WITHDRAWAL PixTransactionFinality = "WITHDRAWAL"
-	PIX_TRANSACTION_FINALITY_CHANGE     PixTransactionFinality = "CHANGE"
+	PixQrCodeTypeStatic  PixQrCodeType = "STATIC"
+	PixQrCodeTypeDynamic PixQrCodeType = "DYNAMIC"
 )
 const (
-	PIX_TRANSACTION_AWAITING_REQUEST PixTransactionStatus = "AWAITING_REQUEST"
-	PIX_TRANSACTION_DONE             PixTransactionStatus = "DONE"
-	PIX_TRANSACTION_REQUESTED        PixTransactionStatus = "REQUESTED"
-	PIX_TRANSACTION_SCHEDULED        PixTransactionStatus = "SCHEDULED"
-	PIX_TRANSACTION_REFUSED          PixTransactionStatus = "REFUSED"
-	PIX_TRANSACTION_ERROR            PixTransactionStatus = "ERROR"
-	PIX_TRANSACTION_CANCELLED        PixTransactionStatus = "CANCELLED"
+	PixTransactionOriginManual        PixTransactionOriginType = "MANUAL"
+	PixTransactionOriginAddressKey    PixTransactionOriginType = "ADDRESS_KEY"
+	PixTransactionOriginStaticQrcode  PixTransactionOriginType = "STATIC_QRCODE"
+	PixTransactionOriginDynamicQrcode PixTransactionOriginType = "DYNAMIC_QRCODE"
+	PixTransactionOriginExternalDebit PixTransactionOriginType = "EXTERNAL_DEBIT"
 )
 const (
-	QR_CODE_FORMAT_ALL     QrCodeFormat = "ALL"
-	QR_CODE_FORMAT_IMAGE   QrCodeFormat = "IMAGE"
-	QR_CODE_FORMAT_PAYLOAD QrCodeFormat = "PAYLOAD"
+	PixTransactionTypeDebit                   PixTransactionType = "DEBIT"
+	PixTransactionTypeCredit                  PixTransactionType = "CREDIT"
+	PixTransactionTypeCreditRefund            PixTransactionType = "CREDIT_REFUND"
+	PixTransactionTypeDebitRefund             PixTransactionType = "DEBIT_REFUND"
+	PixTransactionTypeDebitRefundCancellation PixTransactionType = "DEBIT_REFUND_CANCELLATION"
 )
 const (
-	PIX_KEY_TYPE_CPF   PixKeyType = "CPF"
-	PIX_KEY_TYPE_CNPJ  PixKeyType = "CNPJ"
-	PIX_KEY_TYPE_EMAIL PixKeyType = "EMAIL"
-	PIX_KEY_TYPE_PHONE PixKeyType = "PHONE"
-	PIX_KEY_TYPE_EVP   PixKeyType = "EVP"
+	PixTransactionFinalityWithdrawal PixTransactionFinality = "WITHDRAWAL"
+	PixTransactionFinalityChange     PixTransactionFinality = "CHANGE"
 )
 const (
-	PIX_KEY_AWAITING_ACTIVATION       PixKeyStatus = "AWAITING_ACTIVATION"
-	PIX_KEY_AWAITING_ACTIVE           PixKeyStatus = "ACTIVE"
-	PIX_KEY_AWAITING_DELETION         PixKeyStatus = "AWAITING_DELETION"
-	PIX_KEY_AWAITING_ACCOUNT_DELETION PixKeyStatus = "AWAITING_ACCOUNT_DELETION"
-	PIX_KEY_AWAITING_DELETED          PixKeyStatus = "AWAITING_DELETED"
-	PIX_KEY_AWAITING_ERROR            PixKeyStatus = "AWAITING_ERROR"
+	PixTransactionAwaitingRequest PixTransactionStatus = "AWAITING_REQUEST"
+	PixTransactionDone            PixTransactionStatus = "DONE"
+	PixTransactionRequested       PixTransactionStatus = "REQUESTED"
+	PixTransactionScheduled       PixTransactionStatus = "SCHEDULED"
+	PixTransactionRefused         PixTransactionStatus = "REFUSED"
+	PixTransactionError           PixTransactionStatus = "ERROR"
+	PixTransactionCancelled       PixTransactionStatus = "CANCELLED"
 )
 const (
-	INVOICE_DAYS_BEFORE_DUEDATE_FIVE    InvoiceDaysBeforeDueDate = 5
-	INVOICE_DAYS_BEFORE_DUEDATE_TEN     InvoiceDaysBeforeDueDate = 10
-	INVOICE_DAYS_BEFORE_DUEDATE_FIFTEEN InvoiceDaysBeforeDueDate = 15
-	INVOICE_DAYS_BEFORE_DUEDATE_THIRTY  InvoiceDaysBeforeDueDate = 30
-	INVOICE_DAYS_BEFORE_DUEDATE_SIXTY   InvoiceDaysBeforeDueDate = 60
+	QrCodeFormatAll     QrCodeFormat = "ALL"
+	QrCodeFormatImage   QrCodeFormat = "IMAGE"
+	QrCodeFormatPayload QrCodeFormat = "PAYLOAD"
 )
 const (
-	INVOICE_DATE_PERIOD_ON_PAYMENT_CONFIRMATION InvoiceDatePeriod = "ON_PAYMENT_CONFIRMATION"
-	INVOICE_DATE_PERIOD_ON_PAYMENT_DUE_DATE     InvoiceDatePeriod = "ON_PAYMENT_DUE_DATE"
-	INVOICE_DATE_PERIOD_BEFORE_PAYMENT_DUE_DATE InvoiceDatePeriod = "BEFORE_PAYMENT_DUE_DATE"
-	INVOICE_DATE_PERIOD_ON_DUE_DATE_MONTH       InvoiceDatePeriod = "ON_DUE_DATE_MONTH"
-	INVOICE_DATE_PERIOD_ON_NEXT_MONTH           InvoiceDatePeriod = "ON_NEXT_MONTH"
+	PixKeyTypeCpf   PixKeyType = "CPF"
+	PixKeyTypeCnpj  PixKeyType = "CNPJ"
+	PixKeyTypeEmail PixKeyType = "EMAIL"
+	PixKeyTypePhone PixKeyType = "PHONE"
+	PixKeyTypeEvp   PixKeyType = "EVP"
 )
 const (
-	INVOICE_SCHEDULED               InvoiceStatus = "SCHEDULED"
-	INVOICE_SYNCHRONIZED            InvoiceStatus = "SYNCHRONIZED"
-	INVOICE_AUTHORIZED              InvoiceStatus = "AUTHORIZED"
-	INVOICE_PROCESSING_CANCELLATION InvoiceStatus = "PROCESSING_CANCELLATION"
-	INVOICE_CANCELED                InvoiceStatus = "CANCELED"
-	INVOICE_CANCELLATION_DENIED     InvoiceStatus = "CANCELLATION_DENIED"
-	INVOICE_ERROR                   InvoiceStatus = "ERROR"
+	PixKeyAwaitingActivation      PixKeyStatus = "AWAITING_ACTIVATION"
+	PixKeyAwaitingActive          PixKeyStatus = "ACTIVE"
+	PixKeyAwaitingDeletion        PixKeyStatus = "AWAITING_DELETION"
+	PixKeyAwaitingAccountDeletion PixKeyStatus = "AWAITING_ACCOUNT_DELETION"
+	PixKeyAwaitingDeleted         PixKeyStatus = "AWAITING_DELETED"
+	PixKeyAwaitingError           PixKeyStatus = "AWAITING_ERROR"
 )
 const (
-	SORT_SUBSCRIPTION_DATE_CREATED SortSubscriptionField = "dateCreated"
+	InvoiceDaysBeforeDuedateFive    InvoiceDaysBeforeDueDate = 5
+	InvoiceDaysBeforeDuedateTen     InvoiceDaysBeforeDueDate = 10
+	InvoiceDaysBeforeDuedateFifteen InvoiceDaysBeforeDueDate = 15
+	InvoiceDaysBeforeDuedateThirty  InvoiceDaysBeforeDueDate = 30
+	InvoiceDaysBeforeDuedateSixty   InvoiceDaysBeforeDueDate = 60
 )
 const (
-	ORDER_DESC Order = "desc"
-	ORDER_ASC  Order = "asc"
+	InvoiceDatePeriodOnPaymentConfirmation InvoiceDatePeriod = "ON_PAYMENT_CONFIRMATION"
+	InvoiceDatePeriodOnPaymentDueDate      InvoiceDatePeriod = "ON_PAYMENT_DUE_DATE"
+	InvoiceDatePeriodBeforePaymentDueDate  InvoiceDatePeriod = "BEFORE_PAYMENT_DUE_DATE"
+	InvoiceDatePeriodOnDueDateMonth        InvoiceDatePeriod = "ON_DUE_DATE_MONTH"
+	InvoiceDatePeriodOnNextMonth           InvoiceDatePeriod = "ON_NEXT_MONTH"
 )
 const (
-	SUBSCRIPTION_ACTIVE   SubscriptionStatus = "ACTIVE"
-	SUBSCRIPTION_INACTIVE SubscriptionStatus = "INACTIVE"
-	SUBSCRIPTION_EXPIRED  SubscriptionStatus = "EXPIRED"
+	InvoiceScheduled              InvoiceStatus = "SCHEDULED"
+	InvoiceSynchronized           InvoiceStatus = "SYNCHRONIZED"
+	InvoiceAuthorized             InvoiceStatus = "AUTHORIZED"
+	InvoiceProcessingCancellation InvoiceStatus = "PROCESSING_CANCELLATION"
+	InvoiceCanceled               InvoiceStatus = "CANCELED"
+	InvoiceCancellationDenied     InvoiceStatus = "CANCELLATION_DENIED"
+	InvoiceError                  InvoiceStatus = "ERROR"
 )
 const (
-	WEEKLY       SubscriptionCycle = "WEEKLY"
-	BIWEEKLY     SubscriptionCycle = "BIWEEKLY"
-	MONTHLY      SubscriptionCycle = "MONTHLY"
-	BIMONTHLY    SubscriptionCycle = "BIMONTHLY"
-	QUARTERLY    SubscriptionCycle = "QUARTERLY"
-	SEMIANNUALLY SubscriptionCycle = "SEMIANNUALLY"
-	YEARLY       SubscriptionCycle = "YEARLY"
+	SortSubscriptionDateCreated SortSubscriptionField = "dateCreated"
 )
 const (
-	BOLETO      BillingType = "BOLETO"
-	CREDIT_CARD BillingType = "CREDIT_CARD"
-	UNDEFINED   BillingType = "UNDEFINED"
-	DEBIT_CARD  BillingType = "DEBIT_CARD"
-	TRANSFER    BillingType = "TRANSFER"
-	DEPOSIT     BillingType = "DEPOSIT"
-	PIX         BillingType = "PIX"
+	OrderDesc Order = "desc"
+	OrderAsc  Order = "asc"
 )
 const (
-	CHARGE_PENDING                      ChargeStatus = "PENDING"
-	CHARGE_RECEIVED                     ChargeStatus = "RECEIVED"
-	CHARGE_CONFIRMED                    ChargeStatus = "CONFIRMED"
-	CHARGE_OVERDUE                      ChargeStatus = "OVERDUE"
-	CHARGE_REFUNDED                     ChargeStatus = "REFUNDED"
-	CHARGE_RECEIVED_IN_CASH             ChargeStatus = "RECEIVED_IN_CASH"
-	CHARGE_REFUND_REQUESTED             ChargeStatus = "REFUND_REQUESTED"
-	CHARGE_REFUND_IN_PROGRESS           ChargeStatus = "REFUND_IN_PROGRESS"
-	CHARGE_CHARGEBACK_REQUESTED         ChargeStatus = "CHARGEBACK_REQUESTED"
-	CHARGE_CHARGEBACK_DISPUTE           ChargeStatus = "CHARGEBACK_DISPUTE"
-	CHARGE_AWAITING_CHARGEBACK_REVERSAL ChargeStatus = "AWAITING_CHARGEBACK_REVERSAL"
-	CHARGE_DUNNING_REQUESTED            ChargeStatus = "DUNNING_REQUESTED"
-	CHARGE_DUNNING_RECEIVED             ChargeStatus = "DUNNING_RECEIVED"
-	CHARGE_AWAITING_RISK_ANALYSIS       ChargeStatus = "AWAITING_RISK_ANALYSIS"
+	SubscriptionActive   SubscriptionStatus = "ACTIVE"
+	SubscriptionInactive SubscriptionStatus = "INACTIVE"
+	SubscriptionExpired  SubscriptionStatus = "EXPIRED"
 )
 const (
-	ABSENCE_OF_PRINT                          ChargebackReason = "ABSENCE_OF_PRINT"
-	ABSENT_CARD_FRAUD                         ChargebackReason = "ABSENT_CARD_FRAUD"
-	CARD_ACTIVATED_PHONE_TRANSACTION          ChargebackReason = "CARD_ACTIVATED_PHONE_TRANSACTION"
-	CARD_FRAUD                                ChargebackReason = "CARD_FRAUD"
-	CARD_RECOVERY_BULLETIN                    ChargebackReason = "CARD_RECOVERY_BULLETIN"
-	COMMERCIAL_DISAGREEMENT                   ChargebackReason = "COMMERCIAL_DISAGREEMENT"
-	COPY_NOT_RECEIVED                         ChargebackReason = "COPY_NOT_RECEIVED"
-	CREDIT_OR_DEBIT_PRESENTATION_ERROR        ChargebackReason = "CREDIT_OR_DEBIT_PRESENTATION_ERROR"
-	DIFFERENT_PAY_METHOD                      ChargebackReason = "DIFFERENT_PAY_METHOD"
-	FRAUD                                     ChargebackReason = "FRAUD"
-	INCORRECT_TRANSACTION_VALUE               ChargebackReason = "INCORRECT_TRANSACTION_VALUE"
-	INVALID_CURRENCY                          ChargebackReason = "INVALID_CURRENCY"
-	INVALID_DATA                              ChargebackReason = "INVALID_DATA"
-	LATE_PRESENTATION                         ChargebackReason = "LATE_PRESENTATION"
-	LOCAL_REGULATORY_OR_LEGAL_DISPUTE         ChargebackReason = "LOCAL_REGULATORY_OR_LEGAL_DISPUTE"
-	MULTIPLE_ROCS                             ChargebackReason = "MULTIPLE_ROCS"
-	ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED  ChargebackReason = "ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED"
-	OTHER_ABSENT_CARD_FRAUD                   ChargebackReason = "OTHER_ABSENT_CARD_FRAUD"
-	PROCESS_ERROR                             ChargebackReason = "PROCESS_ERROR"
-	RECEIVED_COPY_ILLEGIBLE_OR_INCOMPLETE     ChargebackReason = "RECEIVED_COPY_ILLEGIBLE_OR_INCOMPLETE"
-	RECURRENCE_CANCELED                       ChargebackReason = "RECURRENCE_CANCELED"
-	REQUIRED_AUTHORIZATION_NOT_GRANTED        ChargebackReason = "REQUIRED_AUTHORIZATION_NOT_GRANTED"
-	RIGHT_OF_FULL_RECOURSE_FOR_FRAUD          ChargebackReason = "RIGHT_OF_FULL_RECOURSE_FOR_FRAUD"
-	SALE_CANCELED                             ChargebackReason = "SALE_CANCELED"
-	SERVICE_DISAGREEMENT_OR_DEFECTIVE_PRODUCT ChargebackReason = "SERVICE_DISAGREEMENT_OR_DEFECTIVE_PRODUCT"
-	SERVICE_NOT_RECEIVED                      ChargebackReason = "SERVICE_NOT_RECEIVED"
-	SPLIT_SALE                                ChargebackReason = "SPLIT_SALE"
-	TRANSFERS_OF_DIVERSE_RESPONSIBILITIES     ChargebackReason = "TRANSFERS_OF_DIVERSE_RESPONSIBILITIES"
-	UNQUALIFIED_CAR_RENTAL_DEBIT              ChargebackReason = "UNQUALIFIED_CAR_RENTAL_DEBIT"
-	USA_CARDHOLDER_DISPUTE                    ChargebackReason = "USA_CARDHOLDER_DISPUTE"
-	VISA_FRAUD_MONITORING_PROGRAM             ChargebackReason = "VISA_FRAUD_MONITORING_PROGRAM"
-	WARNING_BULLETIN_FILE                     ChargebackReason = "WARNING_BULLETIN_FILE"
+	Weekly       SubscriptionCycle = "WEEKLY"
+	Biweekly     SubscriptionCycle = "BIWEEKLY"
+	Monthly      SubscriptionCycle = "MONTHLY"
+	Bimonthly    SubscriptionCycle = "BIMONTHLY"
+	Quarterly    SubscriptionCycle = "QUARTERLY"
+	Semiannually SubscriptionCycle = "SEMIANNUALLY"
+	Yearly       SubscriptionCycle = "YEARLY"
 )
 const (
-	CHARGEBACK_REQUESTED  ChargebackStatus = "REQUESTED"
-	CHARGEBACK_IN_DISPUTE ChargebackStatus = "IN_DISPUTE"
-	CHARGEBACK_LOST       ChargebackStatus = "LOST"
-	CHARGEBACK_REVERSED   ChargebackStatus = "REVERSED"
-	CHARGEBACK_DONE       ChargebackStatus = "DONE"
+	BillingTypeBoleto     BillingType = "BOLETO"
+	BillingTypeCreditCard BillingType = "CREDIT_CARD"
+	BillingTypeUndefined  BillingType = "UNDEFINED"
+	BillingTypeDebitCard  BillingType = "DEBIT_CARD"
+	BillingTypeTransfer   BillingType = "TRANSFER"
+	BillingTypeDeposit    BillingType = "DEPOSIT"
+	BillingTypePix        BillingType = "PIX"
 )
 const (
-	DISCOUNT_FIXED      DiscountType = "FIXED"
-	DISCOUNT_PERCENTAGE DiscountType = "PERCENTAGE"
+	ChargeStatusPending                    ChargeStatus = "PENDING"
+	ChargeStatusReceived                   ChargeStatus = "RECEIVED"
+	ChargeStatusConfirmed                  ChargeStatus = "CONFIRMED"
+	ChargeStatusOverdue                    ChargeStatus = "OVERDUE"
+	ChargeStatusRefunded                   ChargeStatus = "REFUNDED"
+	ChargeStatusReceivedInCash             ChargeStatus = "RECEIVED_IN_CASH"
+	ChargeStatusRefundRequested            ChargeStatus = "REFUND_REQUESTED"
+	ChargeStatusRefundInProgress           ChargeStatus = "REFUND_IN_PROGRESS"
+	ChargeStatusChargebackRequested        ChargeStatus = "CHARGEBACK_REQUESTED"
+	ChargeStatusChargebackDispute          ChargeStatus = "CHARGEBACK_DISPUTE"
+	ChargeStatusAwaitingChargebackReversal ChargeStatus = "AWAITING_CHARGEBACK_REVERSAL"
+	ChargeStatusDunningRequested           ChargeStatus = "DUNNING_REQUESTED"
+	ChargeStatusDunningReceived            ChargeStatus = "DUNNING_RECEIVED"
+	ChargeStatusAwaitingRiskAnalysis       ChargeStatus = "AWAITING_RISK_ANALYSIS"
 )
 const (
-	SANDBOX    Env = iota
-	PRODUCTION Env = iota
+	ChargebackReasonAbsenceOfPrint                        ChargebackReason = "ABSENCE_OF_PRINT"
+	ChargebackReasonAbsentCardFraud                       ChargebackReason = "ABSENT_CARD_FRAUD"
+	ChargebackReasonCardActivatedPhoneTransaction         ChargebackReason = "CARD_ACTIVATED_PHONE_TRANSACTION"
+	ChargebackReasonCardFraud                             ChargebackReason = "CARD_FRAUD"
+	ChargebackReasonCardRecoveryBulletin                  ChargebackReason = "CARD_RECOVERY_BULLETIN"
+	ChargebackReasonCommercialDisagreement                ChargebackReason = "COMMERCIAL_DISAGREEMENT"
+	ChargebackReasonCopyNotReceived                       ChargebackReason = "COPY_NOT_RECEIVED"
+	ChargebackReasonCreditOrDebitPresentationError        ChargebackReason = "CREDIT_OR_DEBIT_PRESENTATION_ERROR"
+	ChargebackReasonDifferentPayMethod                    ChargebackReason = "DIFFERENT_PAY_METHOD"
+	ChargebackReasonFraud                                 ChargebackReason = "FRAUD"
+	ChargebackReasonIncorrectTransactionValue             ChargebackReason = "INCORRECT_TRANSACTION_VALUE"
+	ChargebackReasonInvalidCurrency                       ChargebackReason = "INVALID_CURRENCY"
+	ChargebackReasonInvalidData                           ChargebackReason = "INVALID_DATA"
+	ChargebackReasonLatePresentation                      ChargebackReason = "LATE_PRESENTATION"
+	ChargebackReasonLocalRegulatoryOrLegalDispute         ChargebackReason = "LOCAL_REGULATORY_OR_LEGAL_DISPUTE"
+	ChargebackReasonMultipleRocs                          ChargebackReason = "MULTIPLE_ROCS"
+	ChargebackReasonOriginalCreditTransactionNotAccepted  ChargebackReason = "ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED"
+	ChargebackReasonOtherAbsentCardFraud                  ChargebackReason = "OTHER_ABSENT_CARD_FRAUD"
+	ChargebackReasonProcessError                          ChargebackReason = "PROCESS_ERROR"
+	ChargebackReasonReceivedCopyIllegibleOrIncomplete     ChargebackReason = "RECEIVED_COPY_ILLEGIBLE_OR_INCOMPLETE"
+	ChargebackReasonRecurrenceCanceled                    ChargebackReason = "RECURRENCE_CANCELED"
+	ChargebackReasonRequiredAuthorizationNotGranted       ChargebackReason = "REQUIRED_AUTHORIZATION_NOT_GRANTED"
+	ChargebackReasonRightOfFullRecourseForFraud           ChargebackReason = "RIGHT_OF_FULL_RECOURSE_FOR_FRAUD"
+	ChargebackReasonSaleCanceled                          ChargebackReason = "SALE_CANCELED"
+	ChargebackReasonServiceDisagreementOrDefectiveProduct ChargebackReason = "SERVICE_DISAGREEMENT_OR_DEFECTIVE_PRODUCT"
+	ChargebackReasonServiceNotReceived                    ChargebackReason = "SERVICE_NOT_RECEIVED"
+	ChargebackReasonSplitSale                             ChargebackReason = "SPLIT_SALE"
+	ChargebackReasonTransfersOfDiverseResponsibilities    ChargebackReason = "TRANSFERS_OF_DIVERSE_RESPONSIBILITIES"
+	ChargebackReasonUnqualifiedCarRentalDebit             ChargebackReason = "UNQUALIFIED_CAR_RENTAL_DEBIT"
+	ChargebackReasonUsaCardholderDispute                  ChargebackReason = "USA_CARDHOLDER_DISPUTE"
+	ChargebackReasonVisaFraudMonitoringProgram            ChargebackReason = "VISA_FRAUD_MONITORING_PROGRAM"
+	ChargebackReasonWarningBulletinFile                   ChargebackReason = "WARNING_BULLETIN_FILE"
 )
 const (
-	ERROR_VALIDATION ErrorType = "VALIDATION"
-	ERROR_UNEXPECTED ErrorType = "UNEXPECTED"
+	ChargebackStatusRequested ChargebackStatus = "REQUESTED"
+	ChargebackStatusInDispute ChargebackStatus = "IN_DISPUTE"
+	ChargebackStatusLost      ChargebackStatus = "LOST"
+	ChargebackStatusReversed  ChargebackStatus = "REVERSED"
+	ChargebackStatusDone      ChargebackStatus = "DONE"
 )
 const (
-	FINE_FIXED      FineType = "FIXED"
-	FINE_PERCENTAGE FineType = "PERCENTAGE"
+	DiscountTypeFixed      DiscountType = "FIXED"
+	DiscountTypePercentage DiscountType = "PERCENTAGE"
 )
 const (
-	INTEREST_FIXED      InterestType = "FIXED"
-	INTEREST_PERCENTAGE InterestType = "PERCENTAGE"
+	EnvSandbox    Env = iota
+	EnvProduction Env = iota
 )
 const (
-	REFUND_PENDING   RefundStatus = "PENDING"
-	REFUND_CANCELLED RefundStatus = "CANCELLED"
-	REFUND_DONE      RefundStatus = "DONE"
+	ErrorTypeValidation ErrorType = "VALIDATION"
+	ErrorTypeUnexpected ErrorType = "UNEXPECTED"
 )
 const (
-	RECEIVABLE_UNIT_AFFECTED_BY_EXTERNAL_CONTRACTUAL_EFFECT SplitRefusalReason = "RECEIVABLE_UNIT_AFFECTED_BY_EXTERNAL_CONTRACTUAL_EFFECT"
+	FineTypeFixed      FineType = "FIXED"
+	FineTypePercentage FineType = "PERCENTAGE"
 )
 const (
-	SPLIT_PENDING         SplitStatus = "PENDING"
-	SPLIT_AWAITING_CREDIT SplitStatus = "AWAITING_CREDIT"
-	SPLIT_CANCELLED       SplitStatus = "CANCELLED"
-	SPLIT_DONE            SplitStatus = "DONE"
-	SPLIT_REFUSED         SplitStatus = "REFUSED"
+	InterestTypeFixed      InterestType = "FIXED"
+	InterestTypePercentage InterestType = "PERCENTAGE"
 )
 const (
-	INVOICE     TypeOfDocument = "INVOICE"
-	CONTRACT    TypeOfDocument = "CONTRACT"
-	DOCUMENT    TypeOfDocument = "DOCUMENT"
-	SPREADSHEET TypeOfDocument = "SPREADSHEET"
-	PROGRAM     TypeOfDocument = "PROGRAM"
-	OTHER       TypeOfDocument = "OTHER"
+	RefundStatusPending   RefundStatus = "PENDING"
+	RefundStatusCancelled RefundStatus = "CANCELLED"
+	RefundStatusDone      RefundStatus = "DONE"
 )
 const (
-	PAYMENT_CREATED         NotificationEvent = "PAYMENT_CREATED"
-	PAYMENT_DUEDATE_WARNING NotificationEvent = "PAYMENT_DUEDATE_WARNING"
-	PAYMENT_RECEIVED        NotificationEvent = "PAYMENT_RECEIVED"
-	SEND_LINHA_DIGITAVEL    NotificationEvent = "SEND_LINHA_DIGITAVEL"
-	PAYMENT_OVERDUE         NotificationEvent = "PAYMENT_OVERDUE"
-	PAYMENT_UPDATED         NotificationEvent = "PAYMENT_UPDATED"
+	SplitRefusalReason1 SplitRefusalReason = "RECEIVABLE_UNIT_AFFECTED_BY_EXTERNAL_CONTRACTUAL_EFFECT"
 )
+const (
+	SplitStatusPending        SplitStatus = "PENDING"
+	SplitStatusAwaitingCredit SplitStatus = "AWAITING_CREDIT"
+	SplitStatusCancelled      SplitStatus = "CANCELLED"
+	SplitStatusDone           SplitStatus = "DONE"
+	SplitStatusRefused        SplitStatus = "REFUSED"
+)
+const (
+	DocumentTypeInvoice     DocumentType = "INVOICE"
+	DocumentTypeContract    DocumentType = "CONTRACT"
+	DocumentTypeDocument    DocumentType = "DOCUMENT"
+	DocumentTypeSpreadsheet DocumentType = "SPREADSHEET"
+	DocumentTypeProgram     DocumentType = "PROGRAM"
+	DocumentTypeOther       DocumentType = "OTHER"
+)
+const (
+	NotificationEventPaymentCreated        NotificationEvent = "PAYMENT_CREATED"
+	NotificationEventPaymentDuedateWarning NotificationEvent = "PAYMENT_DUEDATE_WARNING"
+	NotificationEventPaymentReceived       NotificationEvent = "PAYMENT_RECEIVED"
+	NotificationEventSendLinhaDigitavel    NotificationEvent = "SEND_LINHA_DIGITAVEL"
+	NotificationEventPaymentOverdue        NotificationEvent = "PAYMENT_OVERDUE"
+	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
+)
+
+func (p PersonType) IsEnumValid() bool {
+	switch p {
+	case PersonTypePhysical, PersonTypeJuridical:
+		return true
+	}
+	return false
+}
 
 func (b BankAccountType) IsEnumValid() bool {
 	switch b {
-	case BANK_TYPE_SALARY_ACCOUNT, BANK_TYPE_PAYMENT_ACCOUNT, BANK_TYPE_INVESTIMENT_ACCOUNT, BANK_TYPE_CHECKING_ACCOUNT:
+	case BankTypeSalaryAccount, BankTypePaymentAccount, BankTypeInvestimentAccount, BankTypeCheckingAccount:
 		return true
 	}
 	return false
@@ -265,7 +285,7 @@ func (b BankAccountType) IsEnumValid() bool {
 
 func (p PixTransactionFinality) IsEnumValid() bool {
 	switch p {
-	case PIX_TRANSACTION_FINALITY_CHANGE, PIX_TRANSACTION_FINALITY_WITHDRAWAL:
+	case PixTransactionFinalityChange, PixTransactionFinalityWithdrawal:
 		return true
 	}
 	return false
@@ -273,8 +293,8 @@ func (p PixTransactionFinality) IsEnumValid() bool {
 
 func (p PixTransactionStatus) IsEnumValid() bool {
 	switch p {
-	case PIX_TRANSACTION_AWAITING_REQUEST, PIX_TRANSACTION_DONE, PIX_TRANSACTION_REQUESTED, PIX_TRANSACTION_SCHEDULED,
-		PIX_TRANSACTION_REFUSED, PIX_TRANSACTION_ERROR, PIX_TRANSACTION_CANCELLED:
+	case PixTransactionAwaitingRequest, PixTransactionDone, PixTransactionRequested, PixTransactionScheduled,
+		PixTransactionRefused, PixTransactionError, PixTransactionCancelled:
 		return true
 	}
 	return false
@@ -282,8 +302,8 @@ func (p PixTransactionStatus) IsEnumValid() bool {
 
 func (p PixTransactionOriginType) IsEnumValid() bool {
 	switch p {
-	case PIX_TRANSACTION_ORIGIN_MANUAL, PIX_TRANSACTION_ORIGIN_ADDRESS_KEY, PIX_TRANSACTION_ORIGIN_STATIC_QRCODE,
-		PIX_TRANSACTION_ORIGIN_DYNAMIC_QRCODE, PIX_TRANSACTION_ORIGIN_EXTERNAL_DEBIT:
+	case PixTransactionOriginManual, PixTransactionOriginAddressKey, PixTransactionOriginStaticQrcode,
+		PixTransactionOriginDynamicQrcode, PixTransactionOriginExternalDebit:
 		return true
 	}
 	return false
@@ -291,8 +311,8 @@ func (p PixTransactionOriginType) IsEnumValid() bool {
 
 func (p PixTransactionType) IsEnumValid() bool {
 	switch p {
-	case PIX_TRANSACTION_TYPE_CREDIT, PIX_TRANSACTION_TYPE_CREDIT_REFUND, PIX_TRANSACTION_TYPE_DEBIT,
-		PIX_TRANSACTION_TYPE_DEBIT_REFUND, PIX_TRANSACTION_TYPE_DEBIT_REFUND_CANCELLATION:
+	case PixTransactionTypeCredit, PixTransactionTypeCreditRefund, PixTransactionTypeDebit,
+		PixTransactionTypeDebitRefund, PixTransactionTypeDebitRefundCancellation:
 		return true
 	}
 	return false
@@ -300,7 +320,7 @@ func (p PixTransactionType) IsEnumValid() bool {
 
 func (p PixQrCodeType) IsEnumValid() bool {
 	switch p {
-	case PIX_QR_CODE_TYPE_STATIC, PIX_QR_CODE_TYPE_DYNAMIC:
+	case PixQrCodeTypeStatic, PixQrCodeTypeDynamic:
 		return true
 	}
 	return false
@@ -308,7 +328,7 @@ func (p PixQrCodeType) IsEnumValid() bool {
 
 func (q QrCodeFormat) IsEnumValid() bool {
 	switch q {
-	case QR_CODE_FORMAT_ALL, QR_CODE_FORMAT_IMAGE, QR_CODE_FORMAT_PAYLOAD:
+	case QrCodeFormatAll, QrCodeFormatImage, QrCodeFormatPayload:
 		return true
 	}
 	return false
@@ -316,8 +336,8 @@ func (q QrCodeFormat) IsEnumValid() bool {
 
 func (p PixKeyStatus) IsEnumValid() bool {
 	switch p {
-	case PIX_KEY_AWAITING_ACTIVE, PIX_KEY_AWAITING_ACTIVATION, PIX_KEY_AWAITING_DELETED, PIX_KEY_AWAITING_ACCOUNT_DELETION,
-		PIX_KEY_AWAITING_DELETION, PIX_KEY_AWAITING_ERROR:
+	case PixKeyAwaitingActive, PixKeyAwaitingActivation, PixKeyAwaitingDeleted, PixKeyAwaitingAccountDeletion,
+		PixKeyAwaitingDeletion, PixKeyAwaitingError:
 		return true
 	}
 	return false
@@ -325,7 +345,7 @@ func (p PixKeyStatus) IsEnumValid() bool {
 
 func (p PixKeyType) IsEnumValid() bool {
 	switch p {
-	case PIX_KEY_TYPE_CNPJ, PIX_KEY_TYPE_CPF, PIX_KEY_TYPE_EMAIL, PIX_KEY_TYPE_PHONE, PIX_KEY_TYPE_EVP:
+	case PixKeyTypeCnpj, PixKeyTypeCpf, PixKeyTypeEmail, PixKeyTypePhone, PixKeyTypeEvp:
 		return true
 	}
 	return false
@@ -333,8 +353,8 @@ func (p PixKeyType) IsEnumValid() bool {
 
 func (i InvoiceDaysBeforeDueDate) IsEnumValid() bool {
 	switch i {
-	case INVOICE_DAYS_BEFORE_DUEDATE_FIVE, INVOICE_DAYS_BEFORE_DUEDATE_TEN, INVOICE_DAYS_BEFORE_DUEDATE_FIFTEEN,
-		INVOICE_DAYS_BEFORE_DUEDATE_THIRTY, INVOICE_DAYS_BEFORE_DUEDATE_SIXTY:
+	case InvoiceDaysBeforeDuedateFive, InvoiceDaysBeforeDuedateTen, InvoiceDaysBeforeDuedateFifteen,
+		InvoiceDaysBeforeDuedateThirty, InvoiceDaysBeforeDuedateSixty:
 		return true
 	}
 	return false
@@ -342,8 +362,8 @@ func (i InvoiceDaysBeforeDueDate) IsEnumValid() bool {
 
 func (i InvoiceStatus) IsEnumValid() bool {
 	switch i {
-	case INVOICE_AUTHORIZED, INVOICE_CANCELED, INVOICE_CANCELLATION_DENIED, INVOICE_PROCESSING_CANCELLATION,
-		INVOICE_ERROR, INVOICE_SCHEDULED, INVOICE_SYNCHRONIZED:
+	case InvoiceAuthorized, InvoiceCanceled, InvoiceCancellationDenied, InvoiceProcessingCancellation,
+		InvoiceError, InvoiceScheduled, InvoiceSynchronized:
 		return true
 	}
 	return false
@@ -351,9 +371,17 @@ func (i InvoiceStatus) IsEnumValid() bool {
 
 func (i InvoiceDatePeriod) IsEnumValid() bool {
 	switch i {
-	case INVOICE_DATE_PERIOD_ON_PAYMENT_CONFIRMATION, INVOICE_DATE_PERIOD_ON_PAYMENT_DUE_DATE,
-		INVOICE_DATE_PERIOD_BEFORE_PAYMENT_DUE_DATE, INVOICE_DATE_PERIOD_ON_DUE_DATE_MONTH,
-		INVOICE_DATE_PERIOD_ON_NEXT_MONTH:
+	case InvoiceDatePeriodOnPaymentConfirmation, InvoiceDatePeriodOnPaymentDueDate,
+		InvoiceDatePeriodBeforePaymentDueDate, InvoiceDatePeriodOnDueDateMonth,
+		InvoiceDatePeriodOnNextMonth:
+		return true
+	}
+	return false
+}
+
+func (s SortPaymentBookField) IsEnumValid() bool {
+	switch s {
+	case SortPaymentBookDueDate:
 		return true
 	}
 	return false
@@ -361,7 +389,7 @@ func (i InvoiceDatePeriod) IsEnumValid() bool {
 
 func (s SortSubscriptionField) IsEnumValid() bool {
 	switch s {
-	case SORT_SUBSCRIPTION_DATE_CREATED:
+	case SortSubscriptionDateCreated:
 		return true
 	}
 	return false
@@ -369,7 +397,7 @@ func (s SortSubscriptionField) IsEnumValid() bool {
 
 func (s SubscriptionStatus) IsEnumValid() bool {
 	switch s {
-	case SUBSCRIPTION_ACTIVE, SUBSCRIPTION_INACTIVE, SUBSCRIPTION_EXPIRED:
+	case SubscriptionActive, SubscriptionInactive, SubscriptionExpired:
 		return true
 	}
 	return false
@@ -377,7 +405,7 @@ func (s SubscriptionStatus) IsEnumValid() bool {
 
 func (o Order) IsEnumValid() bool {
 	switch o {
-	case ORDER_DESC, ORDER_ASC:
+	case OrderDesc, OrderAsc:
 		return true
 	}
 	return false
@@ -385,7 +413,7 @@ func (o Order) IsEnumValid() bool {
 
 func (s SubscriptionCycle) IsEnumValid() bool {
 	switch s {
-	case WEEKLY, BIWEEKLY, MONTHLY, BIMONTHLY, QUARTERLY, SEMIANNUALLY, YEARLY:
+	case Weekly, Biweekly, Monthly, Bimonthly, Quarterly, Semiannually, Yearly:
 		return true
 	}
 	return false
@@ -393,8 +421,8 @@ func (s SubscriptionCycle) IsEnumValid() bool {
 
 func (n NotificationEvent) IsEnumValid() bool {
 	switch n {
-	case PAYMENT_CREATED, PAYMENT_DUEDATE_WARNING, PAYMENT_RECEIVED, SEND_LINHA_DIGITAVEL, PAYMENT_OVERDUE,
-		PAYMENT_UPDATED:
+	case NotificationEventPaymentCreated, NotificationEventPaymentDuedateWarning, NotificationEventPaymentReceived, NotificationEventSendLinhaDigitavel, NotificationEventPaymentOverdue,
+		NotificationEventPaymentUpdated:
 		return true
 	}
 	return false
@@ -402,14 +430,14 @@ func (n NotificationEvent) IsEnumValid() bool {
 
 func (c ChargebackReason) IsEnumValid() bool {
 	switch c {
-	case ABSENCE_OF_PRINT, ABSENT_CARD_FRAUD, CARD_ACTIVATED_PHONE_TRANSACTION, CARD_FRAUD, CARD_RECOVERY_BULLETIN,
-		COMMERCIAL_DISAGREEMENT, COPY_NOT_RECEIVED, CREDIT_OR_DEBIT_PRESENTATION_ERROR, DIFFERENT_PAY_METHOD, FRAUD,
-		INCORRECT_TRANSACTION_VALUE, INVALID_CURRENCY, INVALID_DATA, LATE_PRESENTATION, LOCAL_REGULATORY_OR_LEGAL_DISPUTE,
-		MULTIPLE_ROCS, ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED, OTHER_ABSENT_CARD_FRAUD, PROCESS_ERROR,
-		RECEIVED_COPY_ILLEGIBLE_OR_INCOMPLETE, RECURRENCE_CANCELED, REQUIRED_AUTHORIZATION_NOT_GRANTED,
-		RIGHT_OF_FULL_RECOURSE_FOR_FRAUD, SALE_CANCELED, SERVICE_DISAGREEMENT_OR_DEFECTIVE_PRODUCT, SERVICE_NOT_RECEIVED,
-		SPLIT_SALE, TRANSFERS_OF_DIVERSE_RESPONSIBILITIES, UNQUALIFIED_CAR_RENTAL_DEBIT, USA_CARDHOLDER_DISPUTE,
-		VISA_FRAUD_MONITORING_PROGRAM, WARNING_BULLETIN_FILE:
+	case ChargebackReasonAbsenceOfPrint, ChargebackReasonAbsentCardFraud, ChargebackReasonCardActivatedPhoneTransaction, ChargebackReasonCardFraud, ChargebackReasonCardRecoveryBulletin,
+		ChargebackReasonCommercialDisagreement, ChargebackReasonCopyNotReceived, ChargebackReasonCreditOrDebitPresentationError, ChargebackReasonDifferentPayMethod, ChargebackReasonFraud,
+		ChargebackReasonIncorrectTransactionValue, ChargebackReasonInvalidCurrency, ChargebackReasonInvalidData, ChargebackReasonLatePresentation, ChargebackReasonLocalRegulatoryOrLegalDispute,
+		ChargebackReasonMultipleRocs, ChargebackReasonOriginalCreditTransactionNotAccepted, ChargebackReasonOtherAbsentCardFraud, ChargebackReasonProcessError,
+		ChargebackReasonReceivedCopyIllegibleOrIncomplete, ChargebackReasonRecurrenceCanceled, ChargebackReasonRequiredAuthorizationNotGranted,
+		ChargebackReasonRightOfFullRecourseForFraud, ChargebackReasonSaleCanceled, ChargebackReasonServiceDisagreementOrDefectiveProduct, ChargebackReasonServiceNotReceived,
+		ChargebackReasonSplitSale, ChargebackReasonTransfersOfDiverseResponsibilities, ChargebackReasonUnqualifiedCarRentalDebit, ChargebackReasonUsaCardholderDispute,
+		ChargebackReasonVisaFraudMonitoringProgram, ChargebackReasonWarningBulletinFile:
 		return true
 	}
 	return false
@@ -417,7 +445,7 @@ func (c ChargebackReason) IsEnumValid() bool {
 
 func (c BillingType) IsEnumValid() bool {
 	switch c {
-	case BOLETO, CREDIT_CARD, UNDEFINED, DEBIT_CARD, TRANSFER, DEPOSIT, PIX:
+	case BillingTypeBoleto, BillingTypeCreditCard, BillingTypeUndefined, BillingTypeDebitCard, BillingTypeTransfer, BillingTypeDeposit, BillingTypePix:
 		return true
 	}
 	return false
@@ -425,10 +453,10 @@ func (c BillingType) IsEnumValid() bool {
 
 func (c ChargeStatus) IsEnumValid() bool {
 	switch c {
-	case CHARGE_PENDING, CHARGE_RECEIVED, CHARGE_CONFIRMED, CHARGE_OVERDUE, CHARGE_REFUNDED, CHARGE_RECEIVED_IN_CASH,
-		CHARGE_REFUND_REQUESTED, CHARGE_REFUND_IN_PROGRESS, CHARGE_CHARGEBACK_REQUESTED, CHARGE_CHARGEBACK_DISPUTE,
-		CHARGE_AWAITING_CHARGEBACK_REVERSAL, CHARGE_DUNNING_REQUESTED, CHARGE_DUNNING_RECEIVED,
-		CHARGE_AWAITING_RISK_ANALYSIS:
+	case ChargeStatusPending, ChargeStatusReceived, ChargeStatusConfirmed, ChargeStatusOverdue, ChargeStatusRefunded, ChargeStatusReceivedInCash,
+		ChargeStatusRefundRequested, ChargeStatusRefundInProgress, ChargeStatusChargebackRequested, ChargeStatusChargebackDispute,
+		ChargeStatusAwaitingChargebackReversal, ChargeStatusDunningRequested, ChargeStatusDunningReceived,
+		ChargeStatusAwaitingRiskAnalysis:
 		return true
 	}
 	return false
@@ -436,7 +464,7 @@ func (c ChargeStatus) IsEnumValid() bool {
 
 func (c ChargebackStatus) IsEnumValid() bool {
 	switch c {
-	case CHARGEBACK_REQUESTED, CHARGEBACK_IN_DISPUTE, CHARGEBACK_LOST, CHARGEBACK_REVERSED, CHARGEBACK_DONE:
+	case ChargebackStatusRequested, ChargebackStatusInDispute, ChargebackStatusLost, ChargebackStatusReversed, ChargebackStatusDone:
 		return true
 	}
 	return false
@@ -444,7 +472,7 @@ func (c ChargebackStatus) IsEnumValid() bool {
 
 func (d DiscountType) IsEnumValid() bool {
 	switch d {
-	case DISCOUNT_FIXED, DISCOUNT_PERCENTAGE:
+	case DiscountTypeFixed, DiscountTypePercentage:
 		return true
 	}
 	return false
@@ -452,7 +480,7 @@ func (d DiscountType) IsEnumValid() bool {
 
 func (a Env) IsEnumValid() bool {
 	switch a {
-	case SANDBOX, PRODUCTION:
+	case EnvSandbox, EnvProduction:
 		return true
 	}
 	return false
@@ -460,7 +488,7 @@ func (a Env) IsEnumValid() bool {
 
 func (e ErrorType) IsEnumValid() bool {
 	switch e {
-	case ERROR_VALIDATION, ERROR_UNEXPECTED:
+	case ErrorTypeValidation, ErrorTypeUnexpected:
 		return true
 	}
 	return false
@@ -468,7 +496,7 @@ func (e ErrorType) IsEnumValid() bool {
 
 func (f FineType) IsEnumValid() bool {
 	switch f {
-	case FINE_FIXED, FINE_PERCENTAGE:
+	case FineTypeFixed, FineTypePercentage:
 		return true
 	}
 	return false
@@ -476,7 +504,7 @@ func (f FineType) IsEnumValid() bool {
 
 func (i InterestType) IsEnumValid() bool {
 	switch i {
-	case INTEREST_FIXED, INTEREST_PERCENTAGE:
+	case InterestTypeFixed, InterestTypePercentage:
 		return true
 	}
 	return false
@@ -484,7 +512,7 @@ func (i InterestType) IsEnumValid() bool {
 
 func (r RefundStatus) IsEnumValid() bool {
 	switch r {
-	case REFUND_PENDING, REFUND_CANCELLED, REFUND_DONE:
+	case RefundStatusPending, RefundStatusCancelled, RefundStatusDone:
 		return true
 	}
 	return false
@@ -492,7 +520,7 @@ func (r RefundStatus) IsEnumValid() bool {
 
 func (s SplitRefusalReason) IsEnumValid() bool {
 	switch s {
-	case RECEIVABLE_UNIT_AFFECTED_BY_EXTERNAL_CONTRACTUAL_EFFECT:
+	case SplitRefusalReason1:
 		return true
 	}
 	return false
@@ -500,15 +528,15 @@ func (s SplitRefusalReason) IsEnumValid() bool {
 
 func (s SplitStatus) IsEnumValid() bool {
 	switch s {
-	case SPLIT_PENDING, SPLIT_AWAITING_CREDIT, SPLIT_CANCELLED, SPLIT_DONE, SPLIT_REFUSED:
+	case SplitStatusPending, SplitStatusAwaitingCredit, SplitStatusCancelled, SplitStatusDone, SplitStatusRefused:
 		return true
 	}
 	return false
 }
 
-func (t TypeOfDocument) IsEnumValid() bool {
+func (t DocumentType) IsEnumValid() bool {
 	switch t {
-	case INVOICE, CONTRACT, DOCUMENT, SPREADSHEET, PROGRAM, OTHER:
+	case DocumentTypeInvoice, DocumentTypeContract, DocumentTypeDocument, DocumentTypeSpreadsheet, DocumentTypeProgram, DocumentTypeOther:
 		return true
 	}
 	return false
@@ -516,69 +544,69 @@ func (t TypeOfDocument) IsEnumValid() bool {
 
 func (c ChargebackReason) String() string {
 	switch c {
-	case ABSENCE_OF_PRINT:
+	case ChargebackReasonAbsenceOfPrint:
 		return "Ausência de impressão"
-	case ABSENT_CARD_FRAUD:
+	case ChargebackReasonAbsentCardFraud:
 		return "Fraude em ambiente de cartão não presente"
-	case CARD_ACTIVATED_PHONE_TRANSACTION:
+	case ChargebackReasonCardActivatedPhoneTransaction:
 		return "Transação telefônica ativada por cartão"
-	case CARD_FRAUD:
+	case ChargebackReasonCardFraud:
 		return "Fraude em ambiente de cartão presente"
-	case CARD_RECOVERY_BULLETIN:
+	case ChargebackReasonCardRecoveryBulletin:
 		return "Boletim de negativação de cartões"
-	case COMMERCIAL_DISAGREEMENT:
+	case ChargebackReasonCommercialDisagreement:
 		return "Desacordo comercial"
-	case COPY_NOT_RECEIVED:
+	case ChargebackReasonCopyNotReceived:
 		return "Cópia não atendida"
-	case CREDIT_OR_DEBIT_PRESENTATION_ERROR:
+	case ChargebackReasonCreditOrDebitPresentationError:
 		return "Erro de apresentação de crédito / débito"
-	case DIFFERENT_PAY_METHOD:
+	case ChargebackReasonDifferentPayMethod:
 		return "Pagamento por outros meios"
-	case FRAUD:
+	case ChargebackReasonFraud:
 		return "Sem autorização do portador do cartão"
-	case INCORRECT_TRANSACTION_VALUE:
+	case ChargebackReasonIncorrectTransactionValue:
 		return "Valor da transação é diferente"
-	case INVALID_CURRENCY:
+	case ChargebackReasonInvalidCurrency:
 		return "Moeda inválida"
-	case INVALID_DATA:
+	case ChargebackReasonInvalidData:
 		return "Dados inválidos"
-	case LATE_PRESENTATION:
+	case ChargebackReasonLatePresentation:
 		return "Apresentação tardia"
-	case LOCAL_REGULATORY_OR_LEGAL_DISPUTE:
+	case ChargebackReasonLocalRegulatoryOrLegalDispute:
 		return "Contestação regulatória / legal local"
-	case MULTIPLE_ROCS:
+	case ChargebackReasonMultipleRocs:
 		return "ROCs múltiplos"
-	case ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED:
+	case ChargebackReasonOriginalCreditTransactionNotAccepted:
 		return "Transação de crédito original não aceita"
-	case OTHER_ABSENT_CARD_FRAUD:
+	case ChargebackReasonOtherAbsentCardFraud:
 		return "Outras fraudes - Cartão ausente"
-	case PROCESS_ERROR:
+	case ChargebackReasonProcessError:
 		return "Erro de processamento"
-	case RECEIVED_COPY_ILLEGIBLE_OR_INCOMPLETE:
+	case ChargebackReasonReceivedCopyIllegibleOrIncomplete:
 		return "Cópia atendida ilegível / incompleta"
-	case RECURRENCE_CANCELED:
+	case ChargebackReasonRecurrenceCanceled:
 		return "Recorrência cancelada"
-	case REQUIRED_AUTHORIZATION_NOT_GRANTED:
+	case ChargebackReasonRequiredAuthorizationNotGranted:
 		return "Autorização requerida não obtida"
-	case RIGHT_OF_FULL_RECOURSE_FOR_FRAUD:
+	case ChargebackReasonRightOfFullRecourseForFraud:
 		return "Direito de regresso integral por fraude"
-	case SALE_CANCELED:
+	case ChargebackReasonSaleCanceled:
 		return "Mercadoria / serviços cancelado"
-	case SERVICE_DISAGREEMENT_OR_DEFECTIVE_PRODUCT:
+	case ChargebackReasonServiceDisagreementOrDefectiveProduct:
 		return "Mercadoria / serviço com defeito ou em desacordo"
-	case SERVICE_NOT_RECEIVED:
+	case ChargebackReasonServiceNotReceived:
 		return "Mercadoria / serviços não recebidos"
-	case SPLIT_SALE:
+	case ChargebackReasonSplitSale:
 		return "Desmembramento de venda"
-	case TRANSFERS_OF_DIVERSE_RESPONSIBILITIES:
+	case ChargebackReasonTransfersOfDiverseResponsibilities:
 		return "Transf. de responsabilidades diversas"
-	case UNQUALIFIED_CAR_RENTAL_DEBIT:
+	case ChargebackReasonUnqualifiedCarRentalDebit:
 		return "Débito de aluguel de carro não qualificado"
-	case USA_CARDHOLDER_DISPUTE:
+	case ChargebackReasonUsaCardholderDispute:
 		return "Contestação do portador de cartão (EUA)"
-	case VISA_FRAUD_MONITORING_PROGRAM:
+	case ChargebackReasonVisaFraudMonitoringProgram:
 		return "Programa Visa de monitoramento de fraude"
-	case WARNING_BULLETIN_FILE:
+	case ChargebackReasonWarningBulletinFile:
 		return "Arquivo boletim de advertência"
 	}
 	return ""

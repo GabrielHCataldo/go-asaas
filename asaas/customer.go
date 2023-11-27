@@ -49,7 +49,7 @@ type CustomerResponse struct {
 	Province              string          `json:"province,omitempty"`
 	PostalCode            string          `json:"postalCode,omitempty"`
 	CpfCnpj               string          `json:"cpfCnpj,omitempty"`
-	PersonType            string          `json:"personType,omitempty"`
+	PersonType            PersonType      `json:"personType,omitempty"`
 	Deleted               bool            `json:"deleted,omitempty"`
 	AdditionalEmails      string          `json:"additionalEmails,omitempty"`
 	ExternalReference     string          `json:"externalReference,omitempty"`
@@ -93,7 +93,7 @@ func NewCustomer(env Env, accessToken string) Customer {
 
 func (c customer) Create(ctx context.Context, body UpdateCustomerRequest) (*CustomerResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/customers", body)
@@ -101,7 +101,7 @@ func (c customer) Create(ctx context.Context, body UpdateCustomerRequest) (*Cust
 
 func (c customer) UpdateByID(ctx context.Context, customerID string, body UpdateCustomerRequest) (*CustomerResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerID), body)

@@ -78,14 +78,14 @@ type ChargeReceiveInCashRequest struct {
 }
 
 type UploadChargeDocumentRequest struct {
-	AvailableAfterPayment bool           `json:"availableAfterPayment,omitempty"`
-	Type                  TypeOfDocument `json:"type,omitempty" validate:"required,enum"`
-	File                  *os.File       `json:"file,omitempty" validate:"required"`
+	AvailableAfterPayment bool         `json:"availableAfterPayment,omitempty"`
+	Type                  DocumentType `json:"type,omitempty" validate:"required,enum"`
+	File                  *os.File     `json:"file,omitempty" validate:"required"`
 }
 
 type UpdateChargeDocumentDefinitionsRequest struct {
-	AvailableAfterPayment bool           `json:"availableAfterPayment,omitempty"`
-	Type                  TypeOfDocument `json:"type,omitempty" validate:"required,enum"`
+	AvailableAfterPayment bool         `json:"availableAfterPayment,omitempty"`
+	Type                  DocumentType `json:"type,omitempty" validate:"required,enum"`
 }
 
 type ChargeCallbackRequest struct {
@@ -150,7 +150,7 @@ type ChargeDocumentResponse struct {
 	ID                    string              `json:"id,omitempty"`
 	Name                  string              `json:"name,omitempty"`
 	AvailableAfterPayment bool                `json:"availableAfterPayment,omitempty"`
-	Type                  TypeOfDocument      `json:"type,omitempty"`
+	Type                  DocumentType        `json:"type,omitempty"`
 	File                  *ChargeFileResponse `json:"file,omitempty"`
 	Deleted               bool                `json:"deleted,omitempty"`
 	Errors                []ErrorResponse     `json:"errors,omitempty"`
@@ -218,7 +218,7 @@ func NewCharge(env Env, accessCode string) Charge {
 
 func (c charge) Create(ctx context.Context, body CreateChargeRequest) (*ChargeResponse, Error) {
 	if err := c.validateCreateBodyRequest(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	c.prepareCreateBodyRequest(&body)
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
@@ -228,7 +228,7 @@ func (c charge) Create(ctx context.Context, body CreateChargeRequest) (*ChargeRe
 func (c charge) PayWithCreditCard(ctx context.Context, chargeID string, body CreditCardRequest) (*ChargeResponse,
 	Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/payWithCreditCard`, chargeID), body)
@@ -237,7 +237,7 @@ func (c charge) PayWithCreditCard(ctx context.Context, chargeID string, body Cre
 func (c charge) UpdateByID(ctx context.Context, chargeID string, body UpdateChargeRequest) (*ChargeResponse,
 	Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s`, chargeID), body)
@@ -262,7 +262,7 @@ func (c charge) RefundByID(ctx context.Context, chargeID string, body RefundRequ
 func (c charge) ReceiveInCashByID(ctx context.Context, chargeID string, body ChargeReceiveInCashRequest) (
 	*ChargeResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/receiveInCash`, chargeID), body)
@@ -276,7 +276,7 @@ func (c charge) UndoReceivedInCashByID(ctx context.Context, chargeID string) (*C
 func (c charge) UploadDocumentByID(ctx context.Context, chargeID string, body UploadChargeDocumentRequest) (
 	*ChargeDocumentResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeDocumentResponse](ctx, c.env, c.accessToken)
 	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/documents`, chargeID), body)
@@ -289,7 +289,7 @@ func (c charge) UpdateDocumentDefinitionsByID(
 	body UpdateChargeDocumentDefinitionsRequest,
 ) (*ChargeDocumentResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeDocumentResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeID, docID), body)
@@ -365,7 +365,7 @@ func (c charge) prepareCreateBodyRequest(body *CreateChargeRequest) {
 	body.DueDate = NewDate(body.DueDate.Year(), body.DueDate.Month(), body.DueDate.Day(),
 		23, 59, 0, 0, body.DueDate.Location())
 	switch body.BillingType {
-	case CREDIT_CARD:
+	case BillingTypeCreditCard:
 		if body.Fine != nil {
 			body.Fine.DueDateLimitDays = 0
 		}

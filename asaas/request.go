@@ -56,7 +56,7 @@ func (r request[T]) make(method string, path string, payload any) (*T, Error) {
 		(res.StatusCode == http.StatusNotFound && (method == http.MethodGet || method == http.MethodPut)) {
 		return &result, nil
 	}
-	return nil, NewError(ERROR_UNEXPECTED, "response status code not expected:", res.StatusCode)
+	return nil, NewError(ErrorTypeUnexpected, "response status code not expected:", res.StatusCode)
 }
 
 func (r request[T]) makeMultipartForm(method string, path string, payload any) (*T, Error) {
@@ -82,7 +82,7 @@ func (r request[T]) makeMultipartForm(method string, path string, payload any) (
 		}
 		return &result, nil
 	}
-	return nil, NewError(ERROR_UNEXPECTED, "response status code not expected:", res.StatusCode)
+	return nil, NewError(ErrorTypeUnexpected, "response status code not expected:", res.StatusCode)
 }
 
 func (r request[T]) createHttpRequest(ctx context.Context, method string, path string, payload any) (
@@ -123,8 +123,16 @@ func (r request[T]) createHttpRequest(ctx context.Context, method string, path s
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("Content-Type", "application/json")
+	var t T
+	accept := HttpContentTypeJSON
+	switch any(t).(type) {
+	case string, FileTextPlainResponse:
+		accept = HttpContentTypeText
+	}
+	req.Header.Add("Accept", accept)
+	if accept == HttpContentTypeJSON {
+		req.Header.Add("Content-Type", HttpContentTypeJSON)
+	}
 	req.Header.Add("access_token", r.accessToken)
 	return req, nil
 }

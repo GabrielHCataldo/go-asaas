@@ -63,7 +63,7 @@ func NewCreditCard(env Env, accessToken string) CreditCard {
 func (c creditCard) Tokenize(ctx context.Context, body CreditCardTokenizeRequest) (*CreditCardTokenizeResponse,
 	Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[CreditCardTokenizeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/creditCard/tokenize", body)

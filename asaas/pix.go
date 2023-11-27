@@ -132,7 +132,7 @@ type PixReceiverResponse struct {
 	Name        string          `json:"name,omitempty"`
 	TradingName string          `json:"tradingName,omitempty"`
 	CpfCnpj     string          `json:"cpfCnpj,omitempty"`
-	PersonType  string          `json:"personType,omitempty"`
+	PersonType  PersonType      `json:"personType,omitempty"`
 	Agency      string          `json:"agency,omitempty"`
 	Account     string          `json:"account,omitempty"`
 	AccountType BankAccountType `json:"accountType,omitempty"`
@@ -205,7 +205,7 @@ func NewPix(env Env, accessToken string) Pix {
 
 func (p pix) PayQrCode(ctx context.Context, body PayPixQrCodeRequest) (*PixTransactionResponse, Error) {
 	if err := p.validatePayQrCodeBodyRequest(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[PixTransactionResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPost, "/v3/pix/qrCodes/pay", body)
@@ -213,7 +213,7 @@ func (p pix) PayQrCode(ctx context.Context, body PayPixQrCodeRequest) (*PixTrans
 
 func (p pix) DecodeQrCode(ctx context.Context, body PixQrCodeRequest) (*DecodePixQrCodeResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[DecodePixQrCodeResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPost, "/v3/pix/qrCodes/decode", body)
@@ -226,14 +226,14 @@ func (p pix) CancelTransactionByID(ctx context.Context, pixTransactionID string)
 
 func (p pix) CreateKey(ctx context.Context) (*PixKeyResponse, Error) {
 	req := NewRequest[PixKeyResponse](ctx, p.env, p.accessToken)
-	return req.make(http.MethodPost, "/v3/pix/addressKeys", createPixKeyRequest{Type: PIX_KEY_TYPE_EVP})
+	return req.make(http.MethodPost, "/v3/pix/addressKeys", createPixKeyRequest{Type: PixKeyTypeEvp})
 }
 
 func (p pix) CreateStaticKey(ctx context.Context, body CreatePixKeyStaticRequest) (*QrCodeResponse, Error) {
 	if err := p.validateCreateStaticKeyBodyRequest(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	} else if !body.Format.IsEnumValid() {
-		body.Format = QR_CODE_FORMAT_ALL
+		body.Format = QrCodeFormatAll
 	}
 	req := NewRequest[QrCodeResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPost, "/v3/pix/qrCodes/static", body)

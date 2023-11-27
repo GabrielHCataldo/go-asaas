@@ -58,7 +58,7 @@ func NewInstallment(env Env, accessToken string) Installment {
 func (i installment) UpdateSplitsByID(ctx context.Context, installmentID string, body []SplitRequest) (
 	*UpdateInstallmentSplitsResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
+		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[UpdateInstallmentSplitsResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/splits", installmentID), body)

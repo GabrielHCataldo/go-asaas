@@ -13,7 +13,7 @@ var lError = log.New(os.Stdout, "[ASAAS \u001b[31mERROR: \u001b[0m", log.LstdFla
 var lDebug = log.New(os.Stdout, "[ASAAS \u001b[36mDEBUG: \u001B[0m", log.LstdFlags)
 
 func logInfoSkipCaller(skipCaller int, env Env, v ...any) {
-	if env == PRODUCTION {
+	if env == EnvProduction {
 		return
 	}
 	lInfo.Print(getSystemMessageDefault(skipCaller), fmt.Sprintln(v...))
@@ -21,10 +21,6 @@ func logInfoSkipCaller(skipCaller int, env Env, v ...any) {
 
 func logWarning(v ...any) {
 	lWarning.Print(getSystemMessageDefault(3), fmt.Sprintln(v...))
-}
-
-func logDebug(v ...any) {
-	lDebug.Print(getSystemMessageDefault(3), fmt.Sprintln(v...))
 }
 
 func logDebugSkipCaller(skipCaller int, v ...any) {
