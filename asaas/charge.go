@@ -178,7 +178,7 @@ type ChargeResponse struct {
 	DateCreated           *Date               `json:"dateCreated,omitempty"`
 }
 
-type ChargeDeleteResponse struct {
+type DeleteResponse struct {
 	ID      string `json:"id,omitempty"`
 	Deleted bool   `json:"deleted,omitempty"`
 }
@@ -248,6 +248,20 @@ type ChargeFileResponse struct {
 	DownloadURL  string `json:"downloadUrl,omitempty"`
 }
 
+type ChargeCreationLimitResponse struct {
+	Creation ChargeCreationResponse `json:"creation,omitempty"`
+}
+
+type ChargeCreationResponse struct {
+	Daily DailyCreationLimitResponse `json:"daily,omitempty"`
+}
+
+type DailyCreationLimitResponse struct {
+	Limit      int  `json:"limit,omitempty"`
+	Used       int  `json:"used,omitempty"`
+	WasReached bool `json:"wasReached,omitempty"`
+}
+
 type charge struct {
 	env         Env
 	accessToken string
@@ -257,7 +271,7 @@ type Charge interface {
 	Create(ctx context.Context, body CreateChargeRequest) (*ChargeResponse, Error)
 	PayWithCreditCard(ctx context.Context, chargeID string, body CreditCardRequest) (*ChargeResponse, Error)
 	UpdateByID(ctx context.Context, chargeID string, body UpdateChargeRequest) (*ChargeResponse, Error)
-	DeleteByID(ctx context.Context, chargeID string) (*ChargeDeleteResponse, Error)
+	DeleteByID(ctx context.Context, chargeID string) (*DeleteResponse, Error)
 	RestoreByID(ctx context.Context, chargeID string) (*ChargeResponse, Error)
 	RefundByID(ctx context.Context, chargeID string, body RefundChargeRequest) (*ChargeResponse, Error)
 	ReceiveInCashByID(ctx context.Context, chargeID string, body ReceiveInCashRequest) (*ChargeResponse, Error)
@@ -265,7 +279,9 @@ type Charge interface {
 	UploadDocumentByID(ctx context.Context, chargeID string, body UploadDocumentRequest) (*ChargeDocumentResponse, Error)
 	UpdateDocumentDefinitionsByID(ctx context.Context, chargeID, docID string, body UpdateDocumentDefinitionsRequest) (
 		*ChargeDocumentResponse, Error)
+	DeleteDocumentByID(ctx context.Context, chargeID, docID string) (*DeleteResponse, Error)
 	GetByID(ctx context.Context, chargeID string) (*ChargeResponse, Error)
+	GetCreationLimit(ctx context.Context) (*ChargeCreationLimitResponse, Error)
 	GetStatusByID(ctx context.Context, chargeID string) (*ChargeStatus, Error)
 	GetIdentificationFieldByID(ctx context.Context, chargeID string) (*IdentificationFieldResponse, Error)
 	GetPixQRCodeByID(ctx context.Context, chargeID string) (*PixQRCodeResponse, Error)
@@ -310,8 +326,8 @@ func (c charge) UpdateByID(ctx context.Context, chargeID string, body UpdateChar
 	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s`, chargeID), body)
 }
 
-func (c charge) DeleteByID(ctx context.Context, chargeID string) (*ChargeDeleteResponse, Error) {
-	req := NewRequest[ChargeDeleteResponse](ctx, c.env, c.accessToken)
+func (c charge) DeleteByID(ctx context.Context, chargeID string) (*DeleteResponse, Error) {
+	req := NewRequest[DeleteResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf(`/v3/payments/%s`, chargeID), nil)
 }
 
@@ -360,6 +376,16 @@ func (c charge) UpdateDocumentDefinitionsByID(
 	}
 	req := NewRequest[ChargeDocumentResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeID, docID), body)
+}
+
+func (c charge) DeleteDocumentByID(ctx context.Context, chargeID, docID string) (*DeleteResponse, Error) {
+	req := NewRequest[DeleteResponse](ctx, c.env, c.accessToken)
+	return req.make(http.MethodDelete, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeID, docID), nil)
+}
+
+func (c charge) GetCreationLimit(ctx context.Context) (*ChargeCreationLimitResponse, Error) {
+	req := NewRequest[ChargeCreationLimitResponse](ctx, c.env, c.accessToken)
+	return req.make(http.MethodGet, "/v3/payments/limits", nil)
 }
 
 func (c charge) GetByID(ctx context.Context, chargeID string) (*ChargeResponse, Error) {

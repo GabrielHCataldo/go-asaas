@@ -113,6 +113,16 @@ func TestChargeGetDocumentByIDNoContent(t *testing.T) {
 	AssertAsaasResponseNoContent(t, resp, errAsaas)
 }
 
+func TestChargeGetCreationLimit(t *testing.T) {
+	accessToken, err := test.GetAccessTokenByEnv()
+	AssertFatalErrorNonnull(t, err)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nCharge := NewCharge(SANDBOX, *accessToken)
+	resp, errAsaas := nCharge.GetCreationLimit(ctx)
+	AssertAsaasResponseSuccess(t, resp, errAsaas)
+}
+
 func TestChargeGetAllDocumentsByIDSuccess(t *testing.T) {
 	accessToken, err := test.GetAccessTokenByEnv()
 	AssertFatalErrorNonnull(t, err)
