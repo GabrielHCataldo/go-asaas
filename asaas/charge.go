@@ -140,7 +140,7 @@ type IdentificationFieldResponse struct {
 	BarCode             string `json:"barCode,omitempty"`
 }
 
-type PixQRCodeResponse struct {
+type ChargePixQrCodeResponse struct {
 	EncodedImage   string `json:"encodedImage,omitempty"`
 	Payload        string `json:"payload,omitempty"`
 	ExpirationDate Date   `json:"expirationDate,omitempty"`
@@ -201,7 +201,7 @@ type Charge interface {
 	GetCreationLimit(ctx context.Context) (*ChargeCreationLimitResponse, Error)
 	GetStatusByID(ctx context.Context, chargeID string) (*ChargeStatus, Error)
 	GetIdentificationFieldByID(ctx context.Context, chargeID string) (*IdentificationFieldResponse, Error)
-	GetPixQRCodeByID(ctx context.Context, chargeID string) (*PixQRCodeResponse, Error)
+	GetPixQrCodeByID(ctx context.Context, chargeID string) (*ChargePixQrCodeResponse, Error)
 	GetDocumentByID(ctx context.Context, chargeID, docID string) (*ChargeDocumentResponse, Error)
 	GetAllDocumentsByID(ctx context.Context, chargeID string, filter PageableDefaultRequest) (
 		*Pageable[ChargeDocumentResponse], Error)
@@ -325,8 +325,8 @@ func (c charge) GetIdentificationFieldByID(ctx context.Context, chargeID string)
 	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/identificationField`, chargeID), nil)
 }
 
-func (c charge) GetPixQRCodeByID(ctx context.Context, chargeID string) (*PixQRCodeResponse, Error) {
-	req := NewRequest[PixQRCodeResponse](ctx, c.env, c.accessToken)
+func (c charge) GetPixQrCodeByID(ctx context.Context, chargeID string) (*ChargePixQrCodeResponse, Error) {
+	req := NewRequest[ChargePixQrCodeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/pixQrCode`, chargeID), nil)
 }
 

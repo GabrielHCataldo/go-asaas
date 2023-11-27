@@ -27,12 +27,56 @@ type InvoiceDatePeriod string
 type InvoiceDaysBeforeDueDate int
 type PixKeyStatus string
 type PixKeyType string
-type QRCodeFormat string
+type QrCodeFormat string
+type PixQrCodeType string
+type PixTransactionStatus string
+type PixTransactionFinality string
+type PixTransactionType string
+type PixTransactionOriginType string
+type BankAccountType string
+type PersonType string
 
 const (
-	QR_CODE_FORMAT_ALL     QRCodeFormat = "ALL"
-	QR_CODE_FORMAT_IMAGE   QRCodeFormat = "IMAGE"
-	QR_CODE_FORMAT_PAYLOAD QRCodeFormat = "PAYLOAD"
+	BANK_TYPE_CHECKING_ACCOUNT    BankAccountType = "CHECKING_ACCOUNT"
+	BANK_TYPE_SALARY_ACCOUNT      BankAccountType = "SALARY_ACCOUNT"
+	BANK_TYPE_INVESTIMENT_ACCOUNT BankAccountType = "INVESTIMENT_ACCOUNT"
+	BANK_TYPE_PAYMENT_ACCOUNT     BankAccountType = "PAYMENT_ACCOUNT"
+)
+const (
+	PIX_QR_CODE_TYPE_STATIC  PixQrCodeType = "STATIC"
+	PIX_QR_CODE_TYPE_DYNAMIC PixQrCodeType = "DYNAMIC"
+)
+const (
+	PIX_TRANSACTION_ORIGIN_MANUAL         PixTransactionOriginType = "MANUAL"
+	PIX_TRANSACTION_ORIGIN_ADDRESS_KEY    PixTransactionOriginType = "ADDRESS_KEY"
+	PIX_TRANSACTION_ORIGIN_STATIC_QRCODE  PixTransactionOriginType = "STATIC_QRCODE"
+	PIX_TRANSACTION_ORIGIN_DYNAMIC_QRCODE PixTransactionOriginType = "DYNAMIC_QRCODE"
+	PIX_TRANSACTION_ORIGIN_EXTERNAL_DEBIT PixTransactionOriginType = "EXTERNAL_DEBIT"
+)
+const (
+	PIX_TRANSACTION_TYPE_DEBIT                     PixTransactionType = "DEBIT"
+	PIX_TRANSACTION_TYPE_CREDIT                    PixTransactionType = "CREDIT"
+	PIX_TRANSACTION_TYPE_CREDIT_REFUND             PixTransactionType = "CREDIT_REFUND"
+	PIX_TRANSACTION_TYPE_DEBIT_REFUND              PixTransactionType = "DEBIT_REFUND"
+	PIX_TRANSACTION_TYPE_DEBIT_REFUND_CANCELLATION PixTransactionType = "DEBIT_REFUND_CANCELLATION"
+)
+const (
+	PIX_TRANSACTION_FINALITY_WITHDRAWAL PixTransactionFinality = "WITHDRAWAL"
+	PIX_TRANSACTION_FINALITY_CHANGE     PixTransactionFinality = "CHANGE"
+)
+const (
+	PIX_TRANSACTION_AWAITING_REQUEST PixTransactionStatus = "AWAITING_REQUEST"
+	PIX_TRANSACTION_DONE             PixTransactionStatus = "DONE"
+	PIX_TRANSACTION_REQUESTED        PixTransactionStatus = "REQUESTED"
+	PIX_TRANSACTION_SCHEDULED        PixTransactionStatus = "SCHEDULED"
+	PIX_TRANSACTION_REFUSED          PixTransactionStatus = "REFUSED"
+	PIX_TRANSACTION_ERROR            PixTransactionStatus = "ERROR"
+	PIX_TRANSACTION_CANCELLED        PixTransactionStatus = "CANCELLED"
+)
+const (
+	QR_CODE_FORMAT_ALL     QrCodeFormat = "ALL"
+	QR_CODE_FORMAT_IMAGE   QrCodeFormat = "IMAGE"
+	QR_CODE_FORMAT_PAYLOAD QrCodeFormat = "PAYLOAD"
 )
 const (
 	PIX_KEY_TYPE_CPF   PixKeyType = "CPF"
@@ -73,16 +117,16 @@ const (
 	INVOICE_ERROR                   InvoiceStatus = "ERROR"
 )
 const (
-	SORT_SUBSCRIpTION_DATE_CREATED SortSubscriptionField = "dateCreated"
+	SORT_SUBSCRIPTION_DATE_CREATED SortSubscriptionField = "dateCreated"
 )
 const (
 	ORDER_DESC Order = "desc"
 	ORDER_ASC  Order = "asc"
 )
 const (
-	SUBSCRIpTION_ACTIVE   SubscriptionStatus = "ACTIVE"
-	SUBSCRIpTION_INACTIVE SubscriptionStatus = "INACTIVE"
-	SUBSCRIpTION_EXPIRED  SubscriptionStatus = "EXPIRED"
+	SUBSCRIPTION_ACTIVE   SubscriptionStatus = "ACTIVE"
+	SUBSCRIPTION_INACTIVE SubscriptionStatus = "INACTIVE"
+	SUBSCRIPTION_EXPIRED  SubscriptionStatus = "EXPIRED"
 )
 const (
 	WEEKLY       SubscriptionCycle = "WEEKLY"
@@ -134,7 +178,7 @@ const (
 	INVALID_DATA                              ChargebackReason = "INVALID_DATA"
 	LATE_PRESENTATION                         ChargebackReason = "LATE_PRESENTATION"
 	LOCAL_REGULATORY_OR_LEGAL_DISPUTE         ChargebackReason = "LOCAL_REGULATORY_OR_LEGAL_DISPUTE"
-	MULTIpLE_ROCS                             ChargebackReason = "MULTIpLE_ROCS"
+	MULTIPLE_ROCS                             ChargebackReason = "MULTIPLE_ROCS"
 	ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED  ChargebackReason = "ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED"
 	OTHER_ABSENT_CARD_FRAUD                   ChargebackReason = "OTHER_ABSENT_CARD_FRAUD"
 	PROCESS_ERROR                             ChargebackReason = "PROCESS_ERROR"
@@ -211,7 +255,58 @@ const (
 	PAYMENT_UPDATED         NotificationEvent = "PAYMENT_UPDATED"
 )
 
-func (q QRCodeFormat) IsEnumValid() bool {
+func (b BankAccountType) IsEnumValid() bool {
+	switch b {
+	case BANK_TYPE_SALARY_ACCOUNT, BANK_TYPE_PAYMENT_ACCOUNT, BANK_TYPE_INVESTIMENT_ACCOUNT, BANK_TYPE_CHECKING_ACCOUNT:
+		return true
+	}
+	return false
+}
+
+func (p PixTransactionFinality) IsEnumValid() bool {
+	switch p {
+	case PIX_TRANSACTION_FINALITY_CHANGE, PIX_TRANSACTION_FINALITY_WITHDRAWAL:
+		return true
+	}
+	return false
+}
+
+func (p PixTransactionStatus) IsEnumValid() bool {
+	switch p {
+	case PIX_TRANSACTION_AWAITING_REQUEST, PIX_TRANSACTION_DONE, PIX_TRANSACTION_REQUESTED, PIX_TRANSACTION_SCHEDULED,
+		PIX_TRANSACTION_REFUSED, PIX_TRANSACTION_ERROR, PIX_TRANSACTION_CANCELLED:
+		return true
+	}
+	return false
+}
+
+func (p PixTransactionOriginType) IsEnumValid() bool {
+	switch p {
+	case PIX_TRANSACTION_ORIGIN_MANUAL, PIX_TRANSACTION_ORIGIN_ADDRESS_KEY, PIX_TRANSACTION_ORIGIN_STATIC_QRCODE,
+		PIX_TRANSACTION_ORIGIN_DYNAMIC_QRCODE, PIX_TRANSACTION_ORIGIN_EXTERNAL_DEBIT:
+		return true
+	}
+	return false
+}
+
+func (p PixTransactionType) IsEnumValid() bool {
+	switch p {
+	case PIX_TRANSACTION_TYPE_CREDIT, PIX_TRANSACTION_TYPE_CREDIT_REFUND, PIX_TRANSACTION_TYPE_DEBIT,
+		PIX_TRANSACTION_TYPE_DEBIT_REFUND, PIX_TRANSACTION_TYPE_DEBIT_REFUND_CANCELLATION:
+		return true
+	}
+	return false
+}
+
+func (p PixQrCodeType) IsEnumValid() bool {
+	switch p {
+	case PIX_QR_CODE_TYPE_STATIC, PIX_QR_CODE_TYPE_DYNAMIC:
+		return true
+	}
+	return false
+}
+
+func (q QrCodeFormat) IsEnumValid() bool {
 	switch q {
 	case QR_CODE_FORMAT_ALL, QR_CODE_FORMAT_IMAGE, QR_CODE_FORMAT_PAYLOAD:
 		return true
@@ -266,7 +361,7 @@ func (i InvoiceDatePeriod) IsEnumValid() bool {
 
 func (s SortSubscriptionField) IsEnumValid() bool {
 	switch s {
-	case SORT_SUBSCRIpTION_DATE_CREATED:
+	case SORT_SUBSCRIPTION_DATE_CREATED:
 		return true
 	}
 	return false
@@ -274,7 +369,7 @@ func (s SortSubscriptionField) IsEnumValid() bool {
 
 func (s SubscriptionStatus) IsEnumValid() bool {
 	switch s {
-	case SUBSCRIpTION_ACTIVE, SUBSCRIpTION_INACTIVE, SUBSCRIpTION_EXPIRED:
+	case SUBSCRIPTION_ACTIVE, SUBSCRIPTION_INACTIVE, SUBSCRIPTION_EXPIRED:
 		return true
 	}
 	return false
@@ -310,7 +405,7 @@ func (c ChargebackReason) IsEnumValid() bool {
 	case ABSENCE_OF_PRINT, ABSENT_CARD_FRAUD, CARD_ACTIVATED_PHONE_TRANSACTION, CARD_FRAUD, CARD_RECOVERY_BULLETIN,
 		COMMERCIAL_DISAGREEMENT, COPY_NOT_RECEIVED, CREDIT_OR_DEBIT_PRESENTATION_ERROR, DIFFERENT_PAY_METHOD, FRAUD,
 		INCORRECT_TRANSACTION_VALUE, INVALID_CURRENCY, INVALID_DATA, LATE_PRESENTATION, LOCAL_REGULATORY_OR_LEGAL_DISPUTE,
-		MULTIpLE_ROCS, ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED, OTHER_ABSENT_CARD_FRAUD, PROCESS_ERROR,
+		MULTIPLE_ROCS, ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED, OTHER_ABSENT_CARD_FRAUD, PROCESS_ERROR,
 		RECEIVED_COPY_ILLEGIBLE_OR_INCOMPLETE, RECURRENCE_CANCELED, REQUIRED_AUTHORIZATION_NOT_GRANTED,
 		RIGHT_OF_FULL_RECOURSE_FOR_FRAUD, SALE_CANCELED, SERVICE_DISAGREEMENT_OR_DEFECTIVE_PRODUCT, SERVICE_NOT_RECEIVED,
 		SPLIT_SALE, TRANSFERS_OF_DIVERSE_RESPONSIBILITIES, UNQUALIFIED_CAR_RENTAL_DEBIT, USA_CARDHOLDER_DISPUTE,
@@ -451,7 +546,7 @@ func (c ChargebackReason) String() string {
 		return "Apresentação tardia"
 	case LOCAL_REGULATORY_OR_LEGAL_DISPUTE:
 		return "Contestação regulatória / legal local"
-	case MULTIpLE_ROCS:
+	case MULTIPLE_ROCS:
 		return "ROCs múltiplos"
 	case ORIGINAL_CREDIT_TRANSACTION_NOT_ACCEPTED:
 		return "Transação de crédito original não aceita"

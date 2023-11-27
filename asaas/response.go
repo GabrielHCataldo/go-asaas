@@ -13,6 +13,42 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (p PixTransactionResponse) IsSuccess() bool {
+	return len(p.Errors) == 0 && util.IsNotBlank(&p.ID)
+}
+
+func (p PixTransactionResponse) IsFailure() bool {
+	return !p.IsSuccess()
+}
+
+func (p PixTransactionResponse) IsNoContent() bool {
+	return len(p.Errors) == 0 && util.IsBlank(&p.ID)
+}
+
+func (p PixCancelTransactionResponse) IsSuccess() bool {
+	return len(p.Errors) == 0 && util.IsNotBlank(&p.ID)
+}
+
+func (p PixCancelTransactionResponse) IsFailure() bool {
+	return !p.IsSuccess()
+}
+
+func (p PixCancelTransactionResponse) IsNoContent() bool {
+	return len(p.Errors) == 0 && util.IsBlank(&p.ID)
+}
+
+func (d DecodePixQrCodeResponse) IsSuccess() bool {
+	return len(d.Errors) == 0 && util.IsNotBlank(&d.Payload)
+}
+
+func (d DecodePixQrCodeResponse) IsFailure() bool {
+	return !d.IsSuccess()
+}
+
+func (d DecodePixQrCodeResponse) IsNoContent() bool {
+	return len(d.Errors) == 0 && util.IsBlank(&d.Payload)
+}
+
 func (p PixKeyResponse) IsSuccess() bool {
 	return len(p.Errors) == 0 && util.IsNotBlank(&p.ID)
 }
@@ -163,16 +199,16 @@ func (i IdentificationFieldResponse) IsNoContent() bool {
 	return util.IsBlank(&i.IdentificationField) && util.IsBlank(&i.BarCode) && util.IsBlank(&i.NossoNumero)
 }
 
-func (p PixQRCodeResponse) IsSuccess() bool {
-	return util.IsNotBlank(&p.EncodedImage) && util.IsNotBlank(&p.Payload) && !p.ExpirationDate.IsZero()
+func (c ChargePixQrCodeResponse) IsSuccess() bool {
+	return util.IsNotBlank(&c.EncodedImage) && util.IsNotBlank(&c.Payload) && !c.ExpirationDate.IsZero()
 }
 
-func (p PixQRCodeResponse) IsFailure() bool {
-	return !p.IsSuccess()
+func (c ChargePixQrCodeResponse) IsFailure() bool {
+	return !c.IsSuccess()
 }
 
-func (p PixQRCodeResponse) IsNoContent() bool {
-	return util.IsBlank(&p.EncodedImage) && util.IsBlank(&p.Payload) && p.ExpirationDate.IsZero()
+func (c ChargePixQrCodeResponse) IsNoContent() bool {
+	return util.IsBlank(&c.EncodedImage) && util.IsBlank(&c.Payload) && c.ExpirationDate.IsZero()
 }
 
 func (c ChargeCreationLimitResponse) IsSuccess() bool {
