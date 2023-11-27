@@ -77,6 +77,7 @@ func TestChargeUploadDocumentByID(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	f, err := test.GetSimpleFile()
+	AssertFatalErrorNonnull(t, err)
 	defer func(name string) {
 		err = os.Remove(name)
 		if err != nil {
@@ -89,10 +90,50 @@ func TestChargeUploadDocumentByID(t *testing.T) {
 		Type:                  DOCUMENT,
 		File:                  f,
 	})
-	AssertAsaasResponseFailure(t, resp, errAsaas)
+	AssertAsaasResponseSuccess(t, resp, errAsaas)
 }
 
-func TestChargeGetAll(t *testing.T) {
+func TestChargeGetDocumentByIDSuccess(t *testing.T) {
+	accessToken, err := test.GetAccessTokenByEnv()
+	AssertFatalErrorNonnull(t, err)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nCharge := NewCharge(SANDBOX, *accessToken)
+	resp, errAsaas := nCharge.GetDocumentByID(ctx, test.GetChargeIdDefault(), test.GetDocumentIdDefault())
+	AssertAsaasResponseSuccess(t, resp, errAsaas)
+}
+
+func TestChargeGetDocumentByIDNoContent(t *testing.T) {
+	accessToken, err := test.GetAccessTokenByEnv()
+	AssertFatalErrorNonnull(t, err)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nCharge := NewCharge(SANDBOX, *accessToken)
+	resp, errAsaas := nCharge.GetDocumentByID(ctx, test.GetChargeIdDefault(), "test")
+	AssertAsaasResponseNoContent(t, resp, errAsaas)
+}
+
+func TestChargeGetAllDocumentsByIDSuccess(t *testing.T) {
+	accessToken, err := test.GetAccessTokenByEnv()
+	AssertFatalErrorNonnull(t, err)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nCharge := NewCharge(SANDBOX, *accessToken)
+	resp, errAsaas := nCharge.GetAllDocumentsByID(ctx, test.GetChargeIdDefault(), PageableDefaultRequest{})
+	AssertAsaasResponseSuccess(t, resp, errAsaas)
+}
+
+func TestChargeGetAllDocumentsByIDNoContent(t *testing.T) {
+	accessToken, err := test.GetAccessTokenByEnv()
+	AssertFatalErrorNonnull(t, err)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nCharge := NewCharge(SANDBOX, *accessToken)
+	resp, errAsaas := nCharge.GetAllDocumentsByID(ctx, test.GetChargeIdDefault(), PageableDefaultRequest{})
+	AssertAsaasResponseSuccess(t, resp, errAsaas)
+}
+
+func TestChargeGetAllSuccess(t *testing.T) {
 	accessToken, err := test.GetAccessTokenByEnv()
 	AssertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -100,4 +141,16 @@ func TestChargeGetAll(t *testing.T) {
 	nCharge := NewCharge(SANDBOX, *accessToken)
 	resp, errAsaas := nCharge.GetAll(ctx, GetAllChargesRequest{})
 	AssertAsaasResponseSuccess(t, resp, errAsaas)
+}
+
+func TestChargeGetAllNoContent(t *testing.T) {
+	accessToken, err := test.GetAccessTokenByEnv()
+	AssertFatalErrorNonnull(t, err)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nCharge := NewCharge(SANDBOX, *accessToken)
+	resp, errAsaas := nCharge.GetAll(ctx, GetAllChargesRequest{
+		Status: CHARGE_RECEIVED,
+	})
+	AssertAsaasResponseNoContent(t, resp, errAsaas)
 }

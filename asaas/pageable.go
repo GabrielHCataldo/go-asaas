@@ -7,3 +7,8 @@ type Pageable[T any] struct {
 	Offset     int  `json:"offset"`
 	Data       []T  `json:"data"`
 }
+
+type PageableDefaultRequest struct {
+	Offset int `json:"offset,omitempty"`
+	Limit  int `json:"limit,omitempty" validate:"omitempty,lte=100"`
+}

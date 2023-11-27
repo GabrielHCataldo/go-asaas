@@ -312,6 +312,10 @@ func (c ChargebackReason) String() string {
 	return ""
 }
 
+func (a Env) String() string {
+	return []string{"SANDBOX", "PRODUCTION"}[a]
+}
+
 func (a Env) BaseURL() string {
 	return []string{"https://sandbox.asaas.com/api", "https://api.asaas.com"}[a]
 }

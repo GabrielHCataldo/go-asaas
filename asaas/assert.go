@@ -2,7 +2,6 @@ package asaas
 
 import (
 	"encoding/json"
-	"github.com/fatih/structs"
 	"reflect"
 	"testing"
 )
@@ -17,33 +16,32 @@ func AssertFatalErrorNonnull(t *testing.T, err error) {
 func AssertSuccessNonnull(t *testing.T, v any) {
 	r := reflect.ValueOf(v)
 	if !r.IsNil() {
-		logErrorSkipCaller(4, "unexpect result: object is nil")
+		logErrorSkipCaller(4, "unexpect: object is nil")
 		t.Fail()
 		return
 	}
 	vJson, _ := json.Marshal(v)
-	logDebugSkipCaller(4, "success result: object nonnull", string(vJson))
+	logDebugSkipCaller(4, "success: object nonnull", string(vJson))
 }
 
 func AssertAsaasResponseSuccess(t *testing.T, resp any, err any) {
 	r := reflect.ValueOf(resp)
 	e := reflect.ValueOf(err)
+	iResp, ok := resp.(response)
 	if !e.IsNil() {
 		vJson, _ := json.Marshal(err)
-		logErrorSkipCaller(4, "unexpect result: err Asaas is not nil:", string(vJson))
+		logErrorSkipCaller(4, "unexpect: err asaas is not nil:", string(vJson))
 		t.Fail()
-	} else if r.IsNil() {
-		logErrorSkipCaller(4, "unexpect result: result is nil")
+	} else if r.IsNil() || !ok {
+		logErrorSkipCaller(4, "unexpect: resp is nil or not response interface implemented")
 		t.Fail()
 	} else {
 		vJson, _ := json.Marshal(resp)
-		respStruct := structs.New(resp)
-		errorsField := respStruct.Field("Errors")
-		if errorsField != nil && !errorsField.IsZero() && errorsField.Value() != nil {
-			logErrorSkipCaller(4, "unexpect result: errors result from Asaas:", string(vJson))
-			t.Fail()
+		if iResp.IsSuccess() {
+			logDebugSkipCaller(4, "success: resp is success:", string(vJson))
 		} else {
-			logDebugSkipCaller(4, "success result:", string(vJson))
+			logErrorSkipCaller(4, "unexpect: resp is failure:", string(vJson))
+			t.Fail()
 		}
 	}
 }
@@ -51,22 +49,44 @@ func AssertAsaasResponseSuccess(t *testing.T, resp any, err any) {
 func AssertAsaasResponseFailure(t *testing.T, resp any, err any) {
 	r := reflect.ValueOf(resp)
 	e := reflect.ValueOf(err)
+	iResp, ok := resp.(response)
 	if !e.IsNil() {
 		vJson, _ := json.Marshal(err)
-		logErrorSkipCaller(4, "unexpect result: err Asaas is not nil:", string(vJson))
+		logErrorSkipCaller(4, "unexpect: err asaas is not nil:", string(vJson))
 		t.Fail()
-	} else if r.IsNil() {
-		logErrorSkipCaller(4, "unexpect result: result is nil")
+	} else if r.IsNil() || !ok {
+		logErrorSkipCaller(4, "unexpect: resp is nil or not response interface implemented")
 		t.Fail()
 	} else {
 		vJson, _ := json.Marshal(resp)
-		respStruct := structs.New(resp)
-		errorsField := respStruct.Field("Errors")
-		if errorsField == nil || errorsField.IsZero() || errorsField.Value() == nil {
-			logDebugSkipCaller(4, "unexpect result: errors result from Asaas is empty")
+		if iResp.IsSuccess() {
+			logErrorSkipCaller(4, "unexpect: resp is success: ", string(vJson))
 			t.Fail()
 		} else {
-			logDebugSkipCaller(4, "success result:", string(vJson))
+			logDebugSkipCaller(4, "success: resp is failure:", string(vJson))
 		}
+	}
+}
+
+func AssertAsaasResponseNoContent(t *testing.T, resp any, err any) {
+	r := reflect.ValueOf(resp)
+	e := reflect.ValueOf(err)
+	iResp, ok := resp.(response)
+	if !e.IsNil() {
+		vJson, _ := json.Marshal(err)
+		logErrorSkipCaller(4, "unexpect: err asaas is not nil:", string(vJson))
+		t.Fail()
+		return
+	} else if r.IsNil() || !ok {
+		logErrorSkipCaller(4, "unexpect: resp is nil or not response interface implemented")
+		t.Fail()
+		return
+	}
+	vJson, _ := json.Marshal(resp)
+	if iResp.IsNoContent() {
+		logDebugSkipCaller(4, "success: resp is no content", string(vJson))
+	} else {
+		logErrorSkipCaller(4, "unexpect: resp has content ", string(vJson))
+		t.Fail()
 	}
 }

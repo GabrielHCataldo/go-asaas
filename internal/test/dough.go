@@ -5,6 +5,8 @@ import (
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"io"
 	"os"
+	"strconv"
+	"time"
 )
 
 const PrefixEnvAccessToken = "ASAAS_ACCESS_TOKEN"
@@ -20,6 +22,10 @@ func GetAccessTokenByEnv() (*string, error) {
 
 func GetChargeIdDefault() string {
 	return "pay_0190206161077023"
+}
+
+func GetDocumentIdDefault() string {
+	return "1864d2cb-5420-4e95-85b8-57ddeda30225"
 }
 
 func GetCreateChargePixRequestDefault() []byte {
@@ -163,7 +169,9 @@ func GetCreditCardRequestDefault() []byte {
 }
 
 func GetSimpleFile() (*os.File, error) {
-	f, err := os.Create("test.txt")
+	randomKey := strconv.FormatInt(time.Now().Unix(), 10)
+	nameFile := "test-" + randomKey + ".txt"
+	f, err := os.Create(nameFile)
 	if err != nil {
 		return nil, err
 	}
@@ -175,7 +183,7 @@ func GetSimpleFile() (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
-	return os.Open("test.txt")
+	return os.Open(nameFile)
 }
 
 func GetCreateCustomerRequestDefault() []byte {

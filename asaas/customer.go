@@ -5,31 +5,6 @@ import (
 	"net/http"
 )
 
-type customer struct {
-	env         Env
-	accessToken string
-}
-
-type Customer interface {
-	Create(ctx context.Context, body CreateCustomerRequest) (*CustomerResponse, Error)
-}
-
-func NewCustomer(env Env, accessToken string) Customer {
-	logWarning("Customer service running on", env)
-	return customer{
-		env:         env,
-		accessToken: accessToken,
-	}
-}
-
-func (c customer) Create(ctx context.Context, body CreateCustomerRequest) (*CustomerResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
-	}
-	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPost, "/v3/customers", body)
-}
-
 type CreateCustomerRequest struct {
 	Name                 string `json:"name,omitempty" validate:"required,full_name"`
 	CpfCnpj              string `json:"cpfCnpj,omitempty" validate:"required,document"`
@@ -77,4 +52,29 @@ type CustomerResponse struct {
 	Observations          string          `json:"observations,omitempty"`
 	Errors                []ErrorResponse `json:"errors,omitempty"`
 	DateCreated           Date            `json:"dateCreated,omitempty"`
+}
+
+type customer struct {
+	env         Env
+	accessToken string
+}
+
+type Customer interface {
+	Create(ctx context.Context, body CreateCustomerRequest) (*CustomerResponse, Error)
+}
+
+func NewCustomer(env Env, accessToken string) Customer {
+	logWarning("Customer service running on", env.String())
+	return customer{
+		env:         env,
+		accessToken: accessToken,
+	}
+}
+
+func (c customer) Create(ctx context.Context, body CreateCustomerRequest) (*CustomerResponse, Error) {
+	if err := Validate().Struct(body); err != nil {
+		return nil, NewError(ERROR_VALIDATION, err)
+	}
+	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
+	return req.make(http.MethodPost, "/v3/customers", body)
 }

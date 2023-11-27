@@ -62,6 +62,10 @@ func (d Date) Location() *time.Location {
 	return time.Time(d).Location()
 }
 
+func (d Date) IsZero() bool {
+	return time.Time(d).IsZero()
+}
+
 func (d Date) date() (year int, month time.Month, day int, yDay int) {
 	t := time.Time(d)
 	return t.Year(), t.Month(), t.Day(), t.YearDay()

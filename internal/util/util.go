@@ -49,6 +49,16 @@ func IsBlank(value *string) bool {
 	return value == nil || len(strings.TrimSpace(*value)) == 0
 }
 
+func IsNotBlank(value *string) bool {
+	return !IsBlank(value)
+}
+
+func ReplaceAllSpacesRepeat(v string) string {
+	re := regexp.MustCompile(`\s+`)
+	out := re.ReplaceAllString(v, " ")
+	return strings.TrimSpace(out)
+}
+
 func GetSystemInfo(skipCaller int) (fileName string, line string, funcName string) {
 	pc := make([]uintptr, 10) // at least 1 entry needed
 	runtime.Callers(skipCaller, pc)

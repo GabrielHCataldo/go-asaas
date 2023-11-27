@@ -5,10 +5,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"github.com/fatih/structs"
 	"io"
 	"mime/multipart"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -44,12 +46,14 @@ func (r request[T]) make(method string, path string, payload any) (*T, Error) {
 		return nil, NewByError(err)
 	}
 	defer r.closeBody(res.Body)
-	if res.StatusCode == http.StatusOK || res.StatusCode == http.StatusBadRequest {
-		var result T
-		err = r.readResponse(res, &result)
-		if err != nil {
-			return nil, NewByError(err)
-		}
+	var result T
+	err = r.readResponse(res, &result)
+	if err != nil {
+		return nil, NewByError(err)
+	}
+	if res.StatusCode == http.StatusOK ||
+		res.StatusCode == http.StatusBadRequest ||
+		method == http.MethodGet && res.StatusCode == http.StatusNotFound {
 		return &result, nil
 	}
 	return nil, NewError(ERROR_UNEXPECTED, "response status code not expected:", res.StatusCode)
@@ -84,15 +88,36 @@ func (r request[T]) makeMultipartForm(method string, path string, payload any) (
 func (r request[T]) createHttpRequest(ctx context.Context, method string, path string, payload any) (
 	*http.Request, error) {
 	rUrl := r.env.BaseURL() + path
-	logInfoSkipCaller(5, r.env, "request url:", rUrl, "method:", method)
 	var payloadToSend io.Reader
+	var payloadBytes []byte
 	if payload != nil {
-		payloadBytes, err := json.Marshal(payload)
-		if err != nil {
-			return nil, err
+		switch method {
+		case http.MethodGet:
+			fields := structs.Fields(payload)
+			params := url.Values{}
+			for _, f := range fields {
+				if f.Value() == nil || f.IsZero() {
+					continue
+				}
+				k := strings.Replace(f.Tag("json"), ",omitempty", "", 1)
+				params.Add(k, fmt.Sprintf(`%s`, f.Value()))
+			}
+			encode := params.Encode()
+			if util.IsNotBlank(&encode) {
+				rUrl += "?" + encode
+			}
+			break
+		default:
+			payloadBytes, err := json.Marshal(payload)
+			if err != nil {
+				return nil, err
+			}
+			payloadToSend = bytes.NewReader(payloadBytes)
 		}
+	}
+	logInfoSkipCaller(5, r.env, "request url:", rUrl, "method:", method)
+	if len(payloadBytes) > 0 {
 		logInfoSkipCaller(5, r.env, "request body:", string(payloadBytes))
-		payloadToSend = bytes.NewReader(payloadBytes)
 	}
 	req, err := http.NewRequestWithContext(ctx, method, rUrl, payloadToSend)
 	if err != nil {
@@ -120,8 +145,8 @@ func (r request[T]) createHttpRequestMultipartForm(
 			return nil, err
 		}
 	}
+	logInfoSkipCaller(5, r.env, "request body:", util.ReplaceAllSpacesRepeat(b.String()))
 	defer r.closeWriter(w)
-	logInfoSkipCaller(5, r.env, "request body:", strings.ReplaceAll(b.String(), "\n", ""))
 	req, err = http.NewRequestWithContext(ctx, method, rUrl, &b)
 	if err != nil {
 		return nil, err
@@ -158,7 +183,10 @@ func (r request[T]) readResponse(res *http.Response, result *T) error {
 	if err != nil {
 		return err
 	}
-	logInfoSkipCaller(6, r.env, "response body:", string(respBody))
+	logInfoSkipCaller(6, r.env, "response status:", res.StatusCode, "body:", string(respBody))
+	if len(respBody) == 0 {
+		return nil
+	}
 	return json.Unmarshal(respBody, result)
 }
 
