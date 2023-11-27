@@ -85,7 +85,7 @@ func TestChargeUploadDocumentByID(t *testing.T) {
 		}
 	}(f.Name())
 	nCharge := NewCharge(SANDBOX, *accessToken)
-	resp, errAsaas := nCharge.UploadDocumentByID(ctx, test.GetChargeIdDefault(), UploadDocumentRequest{
+	resp, errAsaas := nCharge.UploadDocumentByID(ctx, test.GetChargeIdDefault(), UploadChargeDocumentRequest{
 		AvailableAfterPayment: false,
 		Type:                  DOCUMENT,
 		File:                  f,

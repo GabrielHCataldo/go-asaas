@@ -19,7 +19,7 @@ type InstallmentResponse struct {
 	Deleted               bool                           `json:"deleted,omitempty"`
 	Customer              string                         `json:"customer,omitempty"`
 	PaymentLink           string                         `json:"paymentLink,omitempty"`
-	TransactionReceiptURL string                         `json:"transactionReceiptUrl,omitempty"`
+	TransactionReceiptUrl string                         `json:"transactionReceiptUrl,omitempty"`
 	DateCreated           *Date                          `json:"dateCreated,omitempty"`
 	Chargeback            *InstallmentChargebackResponse `json:"chargeback,omitempty"`
 }

@@ -18,7 +18,58 @@ type SplitRefusalReason string
 type SplitStatus string
 type TypeOfDocument string
 type NotificationEvent string
+type SubscriptionCycle string
+type SubscriptionStatus string
+type Order string
+type SortSubscriptionField string
+type InvoiceStatus string
+type InvoiceDatePeriod string
+type InvoiceDaysBeforeDueDate int
 
+const (
+	INVOICE_DAYS_BEFORE_DUEDATE_FIVE    InvoiceDaysBeforeDueDate = 5
+	INVOICE_DAYS_BEFORE_DUEDATE_TEN     InvoiceDaysBeforeDueDate = 10
+	INVOICE_DAYS_BEFORE_DUEDATE_FIFTEEN InvoiceDaysBeforeDueDate = 15
+	INVOICE_DAYS_BEFORE_DUEDATE_THIRTY  InvoiceDaysBeforeDueDate = 30
+	INVOICE_DAYS_BEFORE_DUEDATE_SIXTY   InvoiceDaysBeforeDueDate = 60
+)
+const (
+	INVOICE_DATE_PERIOD_ON_PAYMENT_CONFIRMATION InvoiceDatePeriod = "ON_PAYMENT_CONFIRMATION"
+	INVOICE_DATE_PERIOD_ON_PAYMENT_DUE_DATE     InvoiceDatePeriod = "ON_PAYMENT_DUE_DATE"
+	INVOICE_DATE_PERIOD_BEFORE_PAYMENT_DUE_DATE InvoiceDatePeriod = "BEFORE_PAYMENT_DUE_DATE"
+	INVOICE_DATE_PERIOD_ON_DUE_DATE_MONTH       InvoiceDatePeriod = "ON_DUE_DATE_MONTH"
+	INVOICE_DATE_PERIOD_ON_NEXT_MONTH           InvoiceDatePeriod = "ON_NEXT_MONTH"
+)
+const (
+	INVOICE_SCHEDULED               InvoiceStatus = "SCHEDULED"
+	INVOICE_SYNCHRONIZED            InvoiceStatus = "SYNCHRONIZED"
+	INVOICE_AUTHORIZED              InvoiceStatus = "AUTHORIZED"
+	INVOICE_PROCESSING_CANCELLATION InvoiceStatus = "PROCESSING_CANCELLATION"
+	INVOICE_CANCELED                InvoiceStatus = "CANCELED"
+	INVOICE_CANCELLATION_DENIED     InvoiceStatus = "CANCELLATION_DENIED"
+	INVOICE_ERROR                   InvoiceStatus = "ERROR"
+)
+const (
+	SORT_SUBSCRIPTION_DATE_CREATED SortSubscriptionField = "dateCreated"
+)
+const (
+	ORDER_DESC Order = "desc"
+	ORDER_ASC  Order = "asc"
+)
+const (
+	SUBSCRIPTION_ACTIVE   SubscriptionStatus = "ACTIVE"
+	SUBSCRIPTION_INACTIVE SubscriptionStatus = "INACTIVE"
+	SUBSCRIPTION_EXPIRED  SubscriptionStatus = "EXPIRED"
+)
+const (
+	WEEKLY       SubscriptionCycle = "WEEKLY"
+	BIWEEKLY     SubscriptionCycle = "BIWEEKLY"
+	MONTHLY      SubscriptionCycle = "MONTHLY"
+	BIMONTHLY    SubscriptionCycle = "BIMONTHLY"
+	QUARTERLY    SubscriptionCycle = "QUARTERLY"
+	SEMIANNUALLY SubscriptionCycle = "SEMIANNUALLY"
+	YEARLY       SubscriptionCycle = "YEARLY"
+)
 const (
 	BOLETO      BillingType = "BOLETO"
 	CREDIT_CARD BillingType = "CREDIT_CARD"
@@ -136,6 +187,66 @@ const (
 	PAYMENT_OVERDUE         NotificationEvent = "PAYMENT_OVERDUE"
 	PAYMENT_UPDATED         NotificationEvent = "PAYMENT_UPDATED"
 )
+
+func (i InvoiceDaysBeforeDueDate) IsEnumValid() bool {
+	switch i {
+	case INVOICE_DAYS_BEFORE_DUEDATE_FIVE, INVOICE_DAYS_BEFORE_DUEDATE_TEN, INVOICE_DAYS_BEFORE_DUEDATE_FIFTEEN,
+		INVOICE_DAYS_BEFORE_DUEDATE_THIRTY, INVOICE_DAYS_BEFORE_DUEDATE_SIXTY:
+		return true
+	}
+	return false
+}
+
+func (i InvoiceStatus) IsEnumValid() bool {
+	switch i {
+	case INVOICE_AUTHORIZED, INVOICE_CANCELED, INVOICE_CANCELLATION_DENIED, INVOICE_PROCESSING_CANCELLATION,
+		INVOICE_ERROR, INVOICE_SCHEDULED, INVOICE_SYNCHRONIZED:
+		return true
+	}
+	return false
+}
+
+func (i InvoiceDatePeriod) IsEnumValid() bool {
+	switch i {
+	case INVOICE_DATE_PERIOD_ON_PAYMENT_CONFIRMATION, INVOICE_DATE_PERIOD_ON_PAYMENT_DUE_DATE,
+		INVOICE_DATE_PERIOD_BEFORE_PAYMENT_DUE_DATE, INVOICE_DATE_PERIOD_ON_DUE_DATE_MONTH,
+		INVOICE_DATE_PERIOD_ON_NEXT_MONTH:
+		return true
+	}
+	return false
+}
+
+func (s SortSubscriptionField) IsEnumValid() bool {
+	switch s {
+	case SORT_SUBSCRIPTION_DATE_CREATED:
+		return true
+	}
+	return false
+}
+
+func (s SubscriptionStatus) IsEnumValid() bool {
+	switch s {
+	case SUBSCRIPTION_ACTIVE, SUBSCRIPTION_INACTIVE, SUBSCRIPTION_EXPIRED:
+		return true
+	}
+	return false
+}
+
+func (o Order) IsEnumValid() bool {
+	switch o {
+	case ORDER_DESC, ORDER_ASC:
+		return true
+	}
+	return false
+}
+
+func (s SubscriptionCycle) IsEnumValid() bool {
+	switch s {
+	case WEEKLY, BIWEEKLY, MONTHLY, BIMONTHLY, QUARTERLY, SEMIANNUALLY, YEARLY:
+		return true
+	}
+	return false
+}
 
 func (n NotificationEvent) IsEnumValid() bool {
 	switch n {
@@ -334,6 +445,6 @@ func (a Env) String() string {
 	return []string{"SANDBOX", "PRODUCTION"}[a]
 }
 
-func (a Env) BaseURL() string {
+func (a Env) BaseUrl() string {
 	return []string{"https://sandbox.asaas.com/api", "https://api.asaas.com"}[a]
 }

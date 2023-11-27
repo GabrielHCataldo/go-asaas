@@ -4,7 +4,6 @@ import (
 	"context"
 	berrors "errors"
 	"fmt"
-	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"net/http"
 	"os"
 	"time"
@@ -15,38 +14,38 @@ type CreateChargeRequest struct {
 	BillingType          BillingType                  `json:"billingType,omitempty" validate:"required,enum"`
 	Value                float64                      `json:"value,omitempty" validate:"required"`
 	DueDate              Date                         `json:"dueDate,omitempty" validate:"required"`
-	Description          string                       `json:"description,omitempty"`
+	Description          string                       `json:"description,omitempty" validate:"omitempty,lte=500"`
 	ExternalReference    string                       `json:"externalReference,omitempty"`
 	Discount             *DiscountRequest             `json:"discount,omitempty"`
 	Interest             *InterestRequest             `json:"interest,omitempty"`
 	Fine                 *FineRequest                 `json:"fine,omitempty"`
 	PostalService        bool                         `json:"postalService,omitempty"`
 	Split                []SplitRequest               `json:"split,omitempty"`
-	Callback             *CallbackRequest             `json:"callback,omitempty"`
+	Callback             *ChargeCallbackRequest       `json:"callback,omitempty"`
 	CreditCard           *CreditCardRequest           `json:"creditCard,omitempty"`
 	CreditCardHolderInfo *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
 	CreditCardToken      string                       `json:"creditCardToken,omitempty"`
 	InstallmentCount     int                          `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
 	InstallmentValue     float64                      `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
 	AuthorizeOnly        bool                         `json:"authorizeOnly,omitempty"`
-	RemoteIP             string                       `json:"remoteIp,omitempty" validate:"required,ip"`
+	RemoteIP             string                       `json:"remoteIp,omitempty"`
 }
 
 type UpdateChargeRequest struct {
-	Customer          string           `json:"customer,omitempty" validate:"required"`
-	BillingType       BillingType      `json:"billingType,omitempty" validate:"required,enum"`
-	Value             float64          `json:"value,omitempty" validate:"required,gt=0"`
-	DueDate           Date             `json:"dueDate,omitempty" validate:"required"`
-	Description       string           `json:"description,omitempty"`
-	ExternalReference string           `json:"externalReference,omitempty"`
-	Discount          *DiscountRequest `json:"discount,omitempty"`
-	Interest          *InterestRequest `json:"interest,omitempty"`
-	Fine              *FineRequest     `json:"fine,omitempty"`
-	PostalService     bool             `json:"postalService,omitempty"`
-	Split             []SplitRequest   `json:"split,omitempty"`
-	Callback          *CallbackRequest `json:"callback,omitempty"`
-	InstallmentCount  int              `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
-	InstallmentValue  float64          `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
+	Customer          string                 `json:"customer,omitempty" validate:"required"`
+	BillingType       BillingType            `json:"billingType,omitempty" validate:"required,enum"`
+	Value             float64                `json:"value,omitempty" validate:"required,gt=0"`
+	DueDate           Date                   `json:"dueDate,omitempty" validate:"required"`
+	Description       string                 `json:"description,omitempty"`
+	ExternalReference string                 `json:"externalReference,omitempty"`
+	Discount          *DiscountRequest       `json:"discount,omitempty"`
+	Interest          *InterestRequest       `json:"interest,omitempty"`
+	Fine              *FineRequest           `json:"fine,omitempty"`
+	PostalService     bool                   `json:"postalService,omitempty"`
+	Split             []SplitRequest         `json:"split,omitempty"`
+	Callback          *ChargeCallbackRequest `json:"callback,omitempty"`
+	InstallmentCount  int                    `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
+	InstallmentValue  float64                `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
 }
 
 type GetAllChargesRequest struct {
@@ -72,65 +71,25 @@ type GetAllChargesRequest struct {
 	Limit                 int          `json:"limit,omitempty"`
 }
 
-type CreditCardRequest struct {
-	HolderName  string `json:"holderName,omitempty" validate:"required,full_name"`
-	Number      string `json:"number,omitempty" validate:"required,numeric,min=10,max=19"`
-	ExpiryMonth string `json:"expiryMonth,omitempty" validate:"required,numeric,len=2"`
-	ExpiryYear  string `json:"expiryYear,omitempty" validate:"required,numeric,len=4"`
-	CCV         string `json:"ccv,omitempty" validate:"required,numeric,min=3,max=4"`
-}
-
-type RefundChargeRequest struct {
-	Value       float64 `json:"value,omitempty"`
-	Description string  `json:"description,omitempty"`
-}
-
-type ReceiveInCashRequest struct {
+type ChargeReceiveInCashRequest struct {
 	PaymentDate    Date    `json:"paymentDate,omitempty" validate:"required"`
 	Value          float64 `json:"value,omitempty" validate:"required,gt=0"`
 	NotifyCustomer bool    `json:"notifyCustomer,omitempty"`
 }
 
-type UploadDocumentRequest struct {
+type UploadChargeDocumentRequest struct {
 	AvailableAfterPayment bool           `json:"availableAfterPayment,omitempty"`
 	Type                  TypeOfDocument `json:"type,omitempty" validate:"required,enum"`
 	File                  *os.File       `json:"file,omitempty" validate:"required"`
 }
 
-type UpdateDocumentDefinitionsRequest struct {
+type UpdateChargeDocumentDefinitionsRequest struct {
 	AvailableAfterPayment bool           `json:"availableAfterPayment,omitempty"`
 	Type                  TypeOfDocument `json:"type,omitempty" validate:"required,enum"`
 }
 
-type CreditCardHolderInfoRequest struct {
-	Name              string `json:"name,omitempty" validate:"required,full_name"`
-	CpfCnpj           string `json:"cpfCnpj,omitempty" validate:"required,document"`
-	Email             string `json:"email,omitempty" validate:"required,email"`
-	Phone             string `json:"phone,omitempty" validate:"required,phone"`
-	MobilePhone       string `json:"mobilePhone,omitempty" validate:"omitempty,phone"`
-	PostalCode        string `json:"postalCode,omitempty" validate:"required,postal_code"`
-	AddressNumber     string `json:"addressNumber,omitempty" validate:"required,numeric"`
-	AddressComplement string `json:"addressComplement,omitempty"`
-}
-
-type DiscountRequest struct {
-	Value            float64      `json:"value,omitempty" validate:"required,gt=0"`
-	DueDateLimitDays int          `json:"dueDateLimitDays,omitempty" validate:"gte=0"`
-	Type             DiscountType `json:"type,omitempty" validate:"omitempty,enum"`
-}
-
-type InterestRequest struct {
-	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
-}
-
-type FineRequest struct {
-	Value            float64  `json:"value,omitempty" validate:"required,gt=0"`
-	DueDateLimitDays int      `json:"dueDateLimitDays,omitempty" validate:"omitempty,gte=0"`
-	Type             FineType `json:"type,omitempty" validate:"omitempty,enum"`
-}
-
-type CallbackRequest struct {
-	SuccessURL   string `json:"successUrl,omitempty" validate:"required,url"`
+type ChargeCallbackRequest struct {
+	SuccessUrl   string `json:"successUrl,omitempty" validate:"required,url"`
 	AutoRedirect bool   `json:"autoRedirect,omitempty"`
 }
 
@@ -153,9 +112,9 @@ type ChargeResponse struct {
 	PaymentDate           *Date               `json:"paymentDate,omitempty"`
 	ClientPaymentDate     *Date               `json:"clientPaymentDate,omitempty"`
 	InstallmentNumber     int                 `json:"installmentCount,omitempty"`
-	TransactionReceiptURL string              `json:"transactionReceiptUrl,omitempty"`
+	TransactionReceiptUrl string              `json:"transactionReceiptUrl,omitempty"`
 	NossoNumero           string              `json:"nossoNumero,omitempty"`
-	InvoiceURL            string              `json:"invoiceUrl,omitempty"`
+	InvoiceUrl            string              `json:"invoiceUrl,omitempty"`
 	BankSlipUrl           string              `json:"bankSlipUrl,omitempty"`
 	InvoiceNumber         string              `json:"invoiceNumber,omitempty"`
 	CreditCard            *CreditCardResponse `json:"creditCard,omitempty"`
@@ -173,36 +132,6 @@ type ChargeResponse struct {
 
 type ChargeStatusResponse struct {
 	Status ChargeStatus `json:"status,omitempty"`
-}
-
-type CreditCardResponse struct {
-	CreditCardNumber string `json:"creditCardNumber,omitempty"`
-	CreditCardBrand  string `json:"creditCardBrand,omitempty"`
-	CreditCardToken  string `json:"creditCardToken,omitempty"`
-}
-
-type DiscountResponse struct {
-	Value            float64      `json:"value,omitempty"`
-	DueDateLimitDays int          `json:"dueDateLimitDays,omitempty"`
-	Type             DiscountType `json:"type,omitempty"`
-}
-
-type InterestResponse struct {
-	Value float64      `json:"value,omitempty"`
-	Type  InterestType `json:"type,omitempty"`
-}
-
-type FineResponse struct {
-	Value float64  `json:"value,omitempty"`
-	Type  FineType `json:"type,omitempty"`
-}
-
-type RefundResponse struct {
-	Status                RefundStatus `json:"status,omitempty"`
-	Value                 float64      `json:"value,omitempty"`
-	Description           string       `json:"description,omitempty"`
-	TransactionReceiptURL string       `json:"transactionReceiptUrl,omitempty"`
-	DateCreated           Date         `json:"dateCreated,omitempty"`
 }
 
 type IdentificationFieldResponse struct {
@@ -232,8 +161,8 @@ type ChargeFileResponse struct {
 	OriginalName string `json:"originalName,omitempty"`
 	Size         int    `json:"size,omitempty"`
 	Extension    string `json:"extension,omitempty"`
-	PreviewURL   string `json:"previewUrl,omitempty"`
-	DownloadURL  string `json:"downloadUrl,omitempty"`
+	PreviewUrl   string `json:"previewUrl,omitempty"`
+	DownloadUrl  string `json:"downloadUrl,omitempty"`
 }
 
 type ChargeCreationLimitResponse struct {
@@ -261,11 +190,11 @@ type Charge interface {
 	UpdateByID(ctx context.Context, chargeID string, body UpdateChargeRequest) (*ChargeResponse, Error)
 	DeleteByID(ctx context.Context, chargeID string) (*DeleteResponse, Error)
 	RestoreByID(ctx context.Context, chargeID string) (*ChargeResponse, Error)
-	RefundByID(ctx context.Context, chargeID string, body RefundChargeRequest) (*ChargeResponse, Error)
-	ReceiveInCashByID(ctx context.Context, chargeID string, body ReceiveInCashRequest) (*ChargeResponse, Error)
+	RefundByID(ctx context.Context, chargeID string, body RefundRequest) (*ChargeResponse, Error)
+	ReceiveInCashByID(ctx context.Context, chargeID string, body ChargeReceiveInCashRequest) (*ChargeResponse, Error)
 	UndoReceivedInCashByID(ctx context.Context, chargeID string) (*ChargeResponse, Error)
-	UploadDocumentByID(ctx context.Context, chargeID string, body UploadDocumentRequest) (*ChargeDocumentResponse, Error)
-	UpdateDocumentDefinitionsByID(ctx context.Context, chargeID, docID string, body UpdateDocumentDefinitionsRequest) (
+	UploadDocumentByID(ctx context.Context, chargeID string, body UploadChargeDocumentRequest) (*ChargeDocumentResponse, Error)
+	UpdateDocumentDefinitionsByID(ctx context.Context, chargeID, docID string, body UpdateChargeDocumentDefinitionsRequest) (
 		*ChargeDocumentResponse, Error)
 	DeleteDocumentByID(ctx context.Context, chargeID, docID string) (*DeleteResponse, Error)
 	GetByID(ctx context.Context, chargeID string) (*ChargeResponse, Error)
@@ -324,13 +253,13 @@ func (c charge) RestoreByID(ctx context.Context, chargeID string) (*ChargeRespon
 	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/restore`, chargeID), nil)
 }
 
-func (c charge) RefundByID(ctx context.Context, chargeID string, body RefundChargeRequest) (
+func (c charge) RefundByID(ctx context.Context, chargeID string, body RefundRequest) (
 	*ChargeResponse, Error) {
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/refund`, chargeID), body)
 }
 
-func (c charge) ReceiveInCashByID(ctx context.Context, chargeID string, body ReceiveInCashRequest) (
+func (c charge) ReceiveInCashByID(ctx context.Context, chargeID string, body ChargeReceiveInCashRequest) (
 	*ChargeResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ERROR_VALIDATION, err)
@@ -344,7 +273,7 @@ func (c charge) UndoReceivedInCashByID(ctx context.Context, chargeID string) (*C
 	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/undoReceivedInCash`, chargeID), nil)
 }
 
-func (c charge) UploadDocumentByID(ctx context.Context, chargeID string, body UploadDocumentRequest) (
+func (c charge) UploadDocumentByID(ctx context.Context, chargeID string, body UploadChargeDocumentRequest) (
 	*ChargeDocumentResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ERROR_VALIDATION, err)
@@ -357,7 +286,7 @@ func (c charge) UpdateDocumentDefinitionsByID(
 	ctx context.Context,
 	chargeID,
 	docID string,
-	body UpdateDocumentDefinitionsRequest,
+	body UpdateChargeDocumentDefinitionsRequest,
 ) (*ChargeDocumentResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ERROR_VALIDATION, err)
@@ -425,22 +354,11 @@ func (c charge) validateCreateBodyRequest(body CreateChargeRequest) error {
 		dueDate := time.Date(body.DueDate.Time().Year(), body.DueDate.Month(), body.DueDate.Day(), 23, 59, 0, 0,
 			body.DueDate.Location())
 		if time.Now().UTC().After(dueDate.UTC()) {
-			return berrors.New("invalid due date")
+			return berrors.New("invalid dueDate")
 		}
 	}
-	switch body.BillingType {
-	case CREDIT_CARD:
-		cCard := body.CreditCard
-		cCardHolderInfoBody := body.CreditCardHolderInfo
-		cCardToken := body.CreditCardToken
-		if util.IsBlank(&cCardToken) && (cCard == nil || cCardHolderInfoBody == nil) {
-			return berrors.New("to charge by credit card, enter the credit card or credit card token")
-		} else if cCard != nil && !util.ValidateExpirationCreditCard(cCard.ExpiryYear, cCard.ExpiryMonth) {
-			return berrors.New("expired card")
-		}
-		break
-	}
-	return nil
+	return validateBillingBody(body.BillingType, body.CreditCard, body.CreditCardHolderInfo, body.CreditCardToken,
+		body.RemoteIP)
 }
 
 func (c charge) prepareCreateBodyRequest(body *CreateChargeRequest) {
@@ -456,5 +374,6 @@ func (c charge) prepareCreateBodyRequest(body *CreateChargeRequest) {
 		body.CreditCard = nil
 		body.CreditCardHolderInfo = nil
 		body.CreditCardToken = ""
+		body.RemoteIP = ""
 	}
 }

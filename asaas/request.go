@@ -87,7 +87,7 @@ func (r request[T]) makeMultipartForm(method string, path string, payload any) (
 
 func (r request[T]) createHttpRequest(ctx context.Context, method string, path string, payload any) (
 	*http.Request, error) {
-	rUrl := r.env.BaseURL() + path
+	rUrl := r.env.BaseUrl() + path
 	var payloadToSend io.Reader
 	var payloadBytes []byte
 	if payload != nil {
@@ -135,7 +135,7 @@ func (r request[T]) createHttpRequestMultipartForm(
 	path string,
 	values map[string]io.Reader,
 ) (req *http.Request, err error) {
-	rUrl := r.env.BaseURL() + path
+	rUrl := r.env.BaseUrl() + path
 	logInfoSkipCaller(5, r.env, "request url:", rUrl, "method:", method)
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)

@@ -13,6 +13,48 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (s SubscriptionResponse) IsSuccess() bool {
+	return len(s.Errors) == 0 && util.IsNotBlank(&s.ID)
+}
+
+func (s SubscriptionResponse) IsFailure() bool {
+	return !s.IsSuccess()
+}
+
+func (s SubscriptionResponse) IsNoContent() bool {
+	return len(s.Errors) == 0 && util.IsBlank(&s.ID)
+}
+
+func (i InvoiceResponse) IsSuccess() bool {
+	return util.IsNotBlank(&i.ID)
+}
+
+func (i InvoiceResponse) IsFailure() bool {
+	return !i.IsSuccess()
+}
+
+func (i InvoiceResponse) IsNoContent() bool {
+	return util.IsBlank(&i.ID)
+}
+
+func (i InvoiceSettingResponse) IsSuccess() bool {
+	return len(i.Errors) == 0 && (util.IsNotBlank(&i.MunicipalServiceId) || util.IsNotBlank(&i.MunicipalServiceCode) ||
+		util.IsNotBlank(&i.MunicipalServiceName) || util.IsNotBlank(&i.InvoiceCreationPeriod) ||
+		util.IsNotBlank(&i.Observations) || i.Deductions != 0 || i.DaysBeforeDueDate.IsEnumValid() ||
+		i.ReceivedOnly || i.Taxes != nil)
+}
+
+func (i InvoiceSettingResponse) IsFailure() bool {
+	return !i.IsSuccess()
+}
+
+func (i InvoiceSettingResponse) IsNoContent() bool {
+	return util.IsBlank(&i.MunicipalServiceId) && util.IsBlank(&i.MunicipalServiceCode) &&
+		util.IsBlank(&i.MunicipalServiceName) && util.IsBlank(&i.InvoiceCreationPeriod) &&
+		util.IsBlank(&i.Observations) && i.Deductions == 0 && !i.DaysBeforeDueDate.IsEnumValid() &&
+		!i.ReceivedOnly && i.Taxes == nil && len(i.Errors) == 0
+}
+
 func (n NotificationResponse) IsSuccess() bool {
 	return len(n.Errors) == 0 && util.IsNotBlank(&n.ID)
 }

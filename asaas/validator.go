@@ -1,6 +1,7 @@
 package asaas
 
 import (
+	berrors "errors"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"github.com/go-playground/validator/v10"
 	"log"
@@ -79,4 +80,25 @@ func validatePostalCode(fl validator.FieldLevel) bool {
 func validateEnum(fl validator.FieldLevel) bool {
 	value := fl.Field().Interface().(BaseEnum)
 	return value.IsEnumValid()
+}
+
+func validateBillingBody(
+	billingType BillingType,
+	cCard *CreditCardRequest,
+	cCardHolderInfoBody *CreditCardHolderInfoRequest,
+	cCardToken,
+	remoteIP string,
+) error {
+	switch billingType {
+	case CREDIT_CARD:
+		if util.IsBlank(&cCardToken) && (cCard == nil || cCardHolderInfoBody == nil) {
+			return berrors.New("charge by credit card, enter the credit card or credit card token")
+		} else if cCard != nil && !util.ValidateExpirationCreditCard(cCard.ExpiryYear, cCard.ExpiryMonth) {
+			return berrors.New("expired card")
+		} else if util.IsBlank(&remoteIP) && !util.ValidateIP(remoteIP) {
+			return berrors.New("invalid remoteIp")
+		}
+		break
+	}
+	return nil
 }
