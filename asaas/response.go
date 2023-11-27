@@ -2,10 +2,39 @@ package asaas
 
 import "github.com/GabrielHCataldo/go-asaas/internal/util"
 
+type DeleteResponse struct {
+	ID      string `json:"id,omitempty"`
+	Deleted bool   `json:"deleted,omitempty"`
+}
+
 type response interface {
 	IsSuccess() bool
 	IsFailure() bool
 	IsNoContent() bool
+}
+
+func (n NotificationResponse) IsSuccess() bool {
+	return len(n.Errors) == 0 && util.IsNotBlank(&n.ID)
+}
+
+func (n NotificationResponse) IsFailure() bool {
+	return !n.IsSuccess()
+}
+
+func (n NotificationResponse) IsNoContent() bool {
+	return len(n.Errors) == 0 && util.IsBlank(&n.ID)
+}
+
+func (u UpdateManyNotificationsResponse) IsSuccess() bool {
+	return len(u.Errors) == 0 && len(u.Notifications) > 0
+}
+
+func (u UpdateManyNotificationsResponse) IsFailure() bool {
+	return !u.IsSuccess()
+}
+
+func (u UpdateManyNotificationsResponse) IsNoContent() bool {
+	return false
 }
 
 func (p Pageable[T]) IsSuccess() bool {
@@ -41,7 +70,7 @@ func (d DeleteResponse) IsFailure() bool {
 }
 
 func (d DeleteResponse) IsNoContent() bool {
-	return false
+	return util.IsBlank(&d.ID)
 }
 
 func (c ChargeDocumentResponse) IsSuccess() bool {

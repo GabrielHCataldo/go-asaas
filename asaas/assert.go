@@ -6,16 +6,16 @@ import (
 	"testing"
 )
 
-func AssertFatalErrorNonnull(t *testing.T, err error) {
+func assertFatalErrorNonnull(t *testing.T, err error) {
 	if err != nil {
 		logErrorSkipCaller(4, err)
 		t.Fatal()
 	}
 }
 
-func AssertSuccessNonnull(t *testing.T, v any) {
+func assertSuccessNonnull(t *testing.T, v any) {
 	r := reflect.ValueOf(v)
-	if !r.IsNil() {
+	if r.IsNil() {
 		logErrorSkipCaller(4, "unexpect: object is nil")
 		t.Fail()
 		return
@@ -24,7 +24,7 @@ func AssertSuccessNonnull(t *testing.T, v any) {
 	logDebugSkipCaller(4, "success: object nonnull", string(vJson))
 }
 
-func AssertAsaasResponseSuccess(t *testing.T, resp any, err any) {
+func assertResponseSuccess(t *testing.T, resp any, err any) {
 	r := reflect.ValueOf(resp)
 	e := reflect.ValueOf(err)
 	iResp, ok := resp.(response)
@@ -46,7 +46,7 @@ func AssertAsaasResponseSuccess(t *testing.T, resp any, err any) {
 	}
 }
 
-func AssertAsaasResponseFailure(t *testing.T, resp any, err any) {
+func assertResponseFailure(t *testing.T, resp any, err any) {
 	r := reflect.ValueOf(resp)
 	e := reflect.ValueOf(err)
 	iResp, ok := resp.(response)
@@ -68,7 +68,7 @@ func AssertAsaasResponseFailure(t *testing.T, resp any, err any) {
 	}
 }
 
-func AssertAsaasResponseNoContent(t *testing.T, resp any, err any) {
+func assertResponseNoContent(t *testing.T, resp any, err any) {
 	r := reflect.ValueOf(resp)
 	e := reflect.ValueOf(err)
 	iResp, ok := resp.(response)

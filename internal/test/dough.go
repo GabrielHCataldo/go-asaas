@@ -20,6 +20,10 @@ func GetAccessTokenByEnv() (*string, error) {
 	return &accessToken, nil
 }
 
+func GetCustomerIdDefault() string {
+	return "cus_000005791749"
+}
+
 func GetChargeIdDefault() string {
 	return "pay_0190206161077023"
 }
@@ -36,6 +40,7 @@ func GetCreateChargePixRequestDefault() []byte {
 			"dueDate": "2100-11-26",
 			"value": 100,
 			"description": "Cobrança via teste unitário em Goland",
+			"remoteIp": "191.253.125.194"
 		}
 	`)
 }
@@ -47,7 +52,8 @@ func GetCreateChargeBoletoRequestDefault() []byte {
 			"billingType": "BOLETO",
 			"discount": {
 				"value": 10,
-				"dueDateLimitDays": 0
+				"dueDateLimitDays": 0,
+				"type": "FIXED"
 			},
 			"interest": {
 				"value": 2
@@ -58,6 +64,7 @@ func GetCreateChargeBoletoRequestDefault() []byte {
 			"dueDate": "2100-11-26",
 			"value": 100,
 			"description": "Cobrança via teste unitário em Goland",
+			"remoteIp": "191.253.125.194"
 		}
 	`)
 }
@@ -86,7 +93,7 @@ func GetCreateChargeCreditCardRequestDefault() []byte {
 				"postalCode": "89223-005",
 				"addressNumber": "277"
 			},
-			"remoteIp": "116.213.42.532"
+			"remoteIp": "191.253.125.194"
 		}
 	`)
 }

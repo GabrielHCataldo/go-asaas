@@ -8,14 +8,25 @@ import (
 	"time"
 )
 
-func TestCustomerCreate(t *testing.T) {
+func TestCustomerCreateSuccess(t *testing.T) {
 	accessToken, err := test.GetAccessTokenByEnv()
-	AssertFatalErrorNonnull(t, err)
+	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	req := &CreateCustomerRequest{}
+	req := &UpdateCustomerRequest{}
 	err = json.Unmarshal(test.GetCreateCustomerRequestDefault(), req)
+	assertFatalErrorNonnull(t, err)
 	nCustomer := NewCustomer(SANDBOX, *accessToken)
 	resp, errAsaas := nCustomer.Create(ctx, *req)
-	AssertAsaasResponseSuccess(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, errAsaas)
+}
+
+func TestCustomerCreateFailure(t *testing.T) {
+	accessToken, err := test.GetAccessTokenByEnv()
+	assertFatalErrorNonnull(t, err)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nCustomer := NewCustomer(SANDBOX, *accessToken)
+	_, errAsaas := nCustomer.Create(ctx, UpdateCustomerRequest{})
+	assertSuccessNonnull(t, errAsaas)
 }

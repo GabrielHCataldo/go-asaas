@@ -53,7 +53,7 @@ func (r request[T]) make(method string, path string, payload any) (*T, Error) {
 	}
 	if res.StatusCode == http.StatusOK ||
 		res.StatusCode == http.StatusBadRequest ||
-		method == http.MethodGet && res.StatusCode == http.StatusNotFound {
+		(res.StatusCode == http.StatusNotFound && (method == http.MethodGet || method == http.MethodPut)) {
 		return &result, nil
 	}
 	return nil, NewError(ERROR_UNEXPECTED, "response status code not expected:", res.StatusCode)

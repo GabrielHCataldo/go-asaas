@@ -69,7 +69,7 @@ type GetAllChargesRequest struct {
 	DueDateLE             *Date        `json:"dueDate[le],omitempty"`
 	User                  string       `json:"user,omitempty"`
 	Offset                int          `json:"offset,omitempty"`
-	Limit                 int          `json:"limit,omitempty" validate:"omitempty,lte=100"`
+	Limit                 int          `json:"limit,omitempty"`
 }
 
 type CreditCardRequest struct {
@@ -116,7 +116,7 @@ type CreditCardHolderInfoRequest struct {
 type DiscountRequest struct {
 	Value            float64      `json:"value,omitempty" validate:"required,gt=0"`
 	DueDateLimitDays int          `json:"dueDateLimitDays,omitempty" validate:"gte=0"`
-	Type             DiscountType `json:"type,omitempty" validate:"required,enum"`
+	Type             DiscountType `json:"type,omitempty" validate:"omitempty,enum"`
 }
 
 type InterestRequest struct {
@@ -126,7 +126,7 @@ type InterestRequest struct {
 type FineRequest struct {
 	Value            float64  `json:"value,omitempty" validate:"required,gt=0"`
 	DueDateLimitDays int      `json:"dueDateLimitDays,omitempty" validate:"omitempty,gte=0"`
-	Type             FineType `json:"type,omitempty" validate:"required,enum"`
+	Type             FineType `json:"type,omitempty" validate:"omitempty,enum"`
 }
 
 type SplitRequest struct {
@@ -176,11 +176,6 @@ type ChargeResponse struct {
 	Refunds               []RefundResponse    `json:"refunds,omitempty"`
 	Errors                []ErrorResponse     `json:"errors,omitempty"`
 	DateCreated           *Date               `json:"dateCreated,omitempty"`
-}
-
-type DeleteResponse struct {
-	ID      string `json:"id,omitempty"`
-	Deleted bool   `json:"deleted,omitempty"`
 }
 
 type ChargeStatusResponse struct {
@@ -426,9 +421,6 @@ func (c charge) GetAllDocumentsByID(ctx context.Context, chargeID string, filter
 
 func (c charge) GetAll(ctx context.Context, filter GetAllChargesRequest) (
 	*Pageable[ChargeResponse], Error) {
-	if err := Validate().Struct(filter); err != nil {
-		return nil, NewError(ERROR_VALIDATION, err)
-	}
 	req := NewRequest[Pageable[ChargeResponse]](ctx, c.env, c.accessToken)
 	return req.make(http.MethodGet, "/v3/payments", filter)
 }

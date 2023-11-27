@@ -17,6 +17,7 @@ type RefundStatus string
 type SplitRefusalReason string
 type SplitStatus string
 type TypeOfDocument string
+type NotificationEvent string
 
 const (
 	BOLETO      BillingType = "BOLETO"
@@ -127,6 +128,23 @@ const (
 	PROGRAM     TypeOfDocument = "PROGRAM"
 	OTHER       TypeOfDocument = "OTHER"
 )
+const (
+	PAYMENT_CREATED         NotificationEvent = "PAYMENT_CREATED"
+	PAYMENT_DUEDATE_WARNING NotificationEvent = "PAYMENT_DUEDATE_WARNING"
+	PAYMENT_RECEIVED        NotificationEvent = "PAYMENT_RECEIVED"
+	SEND_LINHA_DIGITAVEL    NotificationEvent = "SEND_LINHA_DIGITAVEL"
+	PAYMENT_OVERDUE         NotificationEvent = "PAYMENT_OVERDUE"
+	PAYMENT_UPDATED         NotificationEvent = "PAYMENT_UPDATED"
+)
+
+func (n NotificationEvent) IsEnumValid() bool {
+	switch n {
+	case PAYMENT_CREATED, PAYMENT_DUEDATE_WARNING, PAYMENT_RECEIVED, SEND_LINHA_DIGITAVEL, PAYMENT_OVERDUE,
+		PAYMENT_UPDATED:
+		return true
+	}
+	return false
+}
 
 func (c ChargebackReason) IsEnumValid() bool {
 	switch c {

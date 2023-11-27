@@ -10,5 +10,5 @@ type Pageable[T any] struct {
 
 type PageableDefaultRequest struct {
 	Offset int `json:"offset,omitempty"`
-	Limit  int `json:"limit,omitempty" validate:"omitempty,lte=100"`
+	Limit  int `json:"limit,omitempty"`
 }
