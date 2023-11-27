@@ -129,13 +129,6 @@ type FineRequest struct {
 	Type             FineType `json:"type,omitempty" validate:"omitempty,enum"`
 }
 
-type SplitRequest struct {
-	WalletID        string  `json:"walletId,omitempty" validate:"required"`
-	FixedValue      float64 `json:"fixedValue,omitempty" validate:"omitempty,gt=0"`
-	PercentualValue float64 `json:"percentualValue,omitempty" validate:"omitempty,gt=0"`
-	TotalFixedValue float64 `json:"totalFixedValue,omitempty" validate:"omitempty,gt=0"`
-}
-
 type CallbackRequest struct {
 	SuccessURL   string `json:"successUrl,omitempty" validate:"required,url"`
 	AutoRedirect bool   `json:"autoRedirect,omitempty"`
