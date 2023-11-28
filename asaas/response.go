@@ -13,6 +13,30 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (n NegativitySimulateResponse) IsSuccess() bool {
+	return util.IsNotBlank(&n.Payment)
+}
+
+func (n NegativitySimulateResponse) IsFailure() bool {
+	return !n.IsSuccess()
+}
+
+func (n NegativitySimulateResponse) IsNoContent() bool {
+	return util.IsBlank(&n.Payment)
+}
+
+func (n NegativityResponse) IsSuccess() bool {
+	return len(n.Errors) == 0 && util.IsNotBlank(&n.ID)
+}
+
+func (n NegativityResponse) IsFailure() bool {
+	return !n.IsSuccess()
+}
+
+func (n NegativityResponse) IsNoContent() bool {
+	return len(n.Errors) == 0 && util.IsBlank(&n.ID)
+}
+
 func (a AnticipationResponse) IsSuccess() bool {
 	return len(a.Errors) == 0 && util.IsNotBlank(&a.ID)
 }

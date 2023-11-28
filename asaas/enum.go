@@ -42,7 +42,39 @@ type TransferAsaasStatus string
 type TransferOperationType string
 type BankAccountType string
 type AnticipationStatus string
+type NegativityStatus string
+type NegativityType string
+type FileMimeType string
 
+const (
+	FileMimeTypePdf  FileMimeType = "application/pdf"
+	FileMimeTypeText FileMimeType = "text/plain"
+	FileMimeTypeAvif FileMimeType = "image/avif"
+	FileMimeTypeCss  FileMimeType = "text/css; charset=utf-8"
+	FileMimeTypeGif  FileMimeType = "image/gif"
+	FileMimeTypeHtml FileMimeType = "text/html; charset=utf-8"
+	FileMimeTypeJpeg FileMimeType = "image/jpeg"
+	FileMimeTypeJs   FileMimeType = "text/javascript; charset=utf-8"
+	FileMimeTypeJson FileMimeType = "application/json"
+	FileMimeTypePng  FileMimeType = "image/png"
+	FileMimeTypeSvg  FileMimeType = "image/svg+xml"
+	FileMimeTypeWasm FileMimeType = "application/wasm"
+	FileMimeTypeWebp FileMimeType = "image/webp"
+	FileMimeTypeXml  FileMimeType = "text/xml; charset=utf-8"
+)
+const (
+	NegativityTypeCreditBureau NegativityType = "CREDIT_BUREAU"
+)
+const (
+	NegativityStatusPending              NegativityStatus = "PENDING"
+	NegativityStatusAwaitingApproval     NegativityStatus = "AWAITING_APPROVAL"
+	NegativityStatusAwaitingCancellation NegativityStatus = "AWAITING_CANCELLATION"
+	NegativityStatusProcessed            NegativityStatus = "PROCESSED"
+	NegativityStatusPaid                 NegativityStatus = "PAID"
+	NegativityStatusPartiallyPaid        NegativityStatus = "PARTIALLY_PAID"
+	NegativityStatusDenied               NegativityStatus = "DENIED"
+	NegativityStatusCancelled            NegativityStatus = "CANCELLED"
+)
 const (
 	AnticipationStatusPending   AnticipationStatus = "PENDING"
 	AnticipationStatusDenied    AnticipationStatus = "DENIED"
@@ -301,6 +333,34 @@ const (
 	NotificationEventPaymentOverdue        NotificationEvent = "PAYMENT_OVERDUE"
 	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
 )
+
+func (f FileMimeType) IsEnumValid() bool {
+	switch f {
+	case FileMimeTypePdf, FileMimeTypeText, FileMimeTypeAvif, FileMimeTypeCss, FileMimeTypeGif, FileMimeTypeHtml,
+		FileMimeTypeJpeg, FileMimeTypeJs, FileMimeTypeJson, FileMimeTypePng, FileMimeTypeSvg, FileMimeTypeWasm,
+		FileMimeTypeWebp, FileMimeTypeXml:
+		return true
+	}
+	return false
+}
+
+func (a NegativityStatus) IsEnumValid() bool {
+	switch a {
+	case NegativityStatusAwaitingApproval, NegativityStatusAwaitingCancellation, NegativityStatusCancelled,
+		NegativityStatusDenied, NegativityStatusPaid, NegativityStatusPending, NegativityStatusProcessed,
+		NegativityStatusPartiallyPaid:
+		return true
+	}
+	return false
+}
+
+func (a NegativityType) IsEnumValid() bool {
+	switch a {
+	case NegativityTypeCreditBureau:
+		return true
+	}
+	return false
+}
 
 func (a AnticipationStatus) IsEnumValid() bool {
 	switch a {
@@ -693,6 +753,43 @@ func (a Env) String() string {
 	return []string{"SANDBOX", "PRODUCTION"}[a]
 }
 
+func (f FileMimeType) String() string {
+	return string(f)
+}
+
 func (a Env) BaseUrl() string {
 	return []string{"https://sandbox.asaas.com/api", "https://api.asaas.com"}[a]
+}
+
+func (f FileMimeType) Extension() string {
+	switch f {
+	case FileMimeTypePdf:
+		return ".pdf"
+	case FileMimeTypeText:
+		return ".txt"
+	case FileMimeTypeAvif:
+		return ".avif"
+	case FileMimeTypeCss:
+		return ".css"
+	case FileMimeTypeGif:
+		return ".gif"
+	case FileMimeTypeHtml:
+		return ".html"
+	case FileMimeTypeJpeg:
+		return ".jpeg"
+	case FileMimeTypeJs:
+		return ".js"
+	case FileMimeTypeJson:
+		return ".json"
+	case FileMimeTypePng:
+		return ".png"
+	case FileMimeTypeWasm:
+		return ".wasm"
+	case FileMimeTypeWebp:
+		return ".webp"
+	case FileMimeTypeXml:
+		return ".xml"
+	default:
+		return ""
+	}
 }

@@ -13,20 +13,20 @@ type InstallmentPaymentBookRequest struct {
 
 type InstallmentResponse struct {
 	ID                    string                         `json:"id,omitempty"`
+	Customer              string                         `json:"customer,omitempty"`
 	Value                 float64                        `json:"value,omitempty"`
 	NetValue              float64                        `json:"netValue,omitempty"`
 	PaymentValue          float64                        `json:"paymentValue,omitempty"`
 	InstallmentCount      int                            `json:"installmentCount,omitempty"`
 	BillingType           BillingType                    `json:"billingType,omitempty"`
-	PaymentDate           *Date                          `json:"paymentDate,omitempty"`
+	PaymentDate           Date                           `json:"paymentDate,omitempty"`
 	Description           string                         `json:"description,omitempty"`
 	ExpirationDay         int                            `json:"expirationDay,omitempty"`
 	Deleted               bool                           `json:"deleted,omitempty"`
-	Customer              string                         `json:"customer,omitempty"`
 	PaymentLink           string                         `json:"paymentLink,omitempty"`
 	TransactionReceiptUrl string                         `json:"transactionReceiptUrl,omitempty"`
 	Chargeback            *InstallmentChargebackResponse `json:"chargeback,omitempty"`
-	DateCreated           *DateTime                      `json:"dateCreated,omitempty"`
+	DateCreated           Date                           `json:"dateCreated,omitempty"`
 }
 
 type InstallmentChargebackResponse struct {

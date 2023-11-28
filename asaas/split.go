@@ -10,9 +10,9 @@ type SplitRequest struct {
 type SplitResponse struct {
 	ID              string             `json:"id,omitempty"`
 	WalletID        string             `json:"walletId,omitempty"`
+	Status          SplitStatus        `json:"status,omitempty"`
 	FixedValue      float64            `json:"fixedValue,omitempty"`
 	PercentualValue float64            `json:"percentualValue,omitempty"`
 	TotalValue      float64            `json:"totalValue,omitempty"`
 	RefusalReason   SplitRefusalReason `json:"refusalReason,omitempty"`
-	Status          SplitStatus        `json:"status,omitempty"`
 }

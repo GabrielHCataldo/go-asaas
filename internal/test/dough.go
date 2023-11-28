@@ -25,7 +25,7 @@ func GetCustomerIdDefault() string {
 }
 
 func GetChargeIdDefault() string {
-	return "pay_0190206161077023"
+	return "pay_9162542863222410"
 }
 
 func GetDocumentIdDefault() string {
@@ -39,7 +39,7 @@ func GetCreateChargePixRequestDefault() []byte {
 			"customer": "cus_000005791749",
 			"dueDate": "2100-11-26",
 			"value": 100,
-			"description": "Cobrança via teste unitário em Goland",
+			"description": "Cobrança via teste unitário em Golang",
 			"remoteIp": "191.253.125.194"
 		}
 	`)
@@ -63,7 +63,7 @@ func GetCreateChargeBoletoRequestDefault() []byte {
 			},
 			"dueDate": "2100-11-26",
 			"value": 100,
-			"description": "Cobrança via teste unitário em Goland",
+			"description": "Cobrança via teste unitário em Golang",
 			"remoteIp": "191.253.125.194"
 		}
 	`)
@@ -76,7 +76,7 @@ func GetCreateChargeCreditCardRequestDefault() []byte {
 			"billingType": "CREDIT_CARD",
 			"value": 10.0,
 			"dueDate": "2100-11-26",
-			"description": "Cobrança via teste unitário em Goland",
+			"description": "Cobrança via teste unitário em Golang",
 			"creditCard": {
 				"holderName": "unit test go",
 				"number": "4000000000000010",
@@ -105,7 +105,7 @@ func GetCreateChargeCreditCardFailureRequestDefault() []byte {
 			"billingType": "CREDIT_CARD",
 			"value": 10.0,
 			"dueDate": "2023-11-28",
-			"description": "Cobrança via teste unitário em Goland",
+			"description": "Cobrança via teste unitário em Golang",
 			"creditCard": {
 				"holderName": "unit test go",
 				"number": "5184019740373151",
@@ -176,8 +176,8 @@ func GetCreditCardRequestDefault() []byte {
 }
 
 func GetSimpleFile() (*os.File, error) {
-	randomKey := strconv.FormatInt(time.Now().Unix(), 10)
-	nameFile := "test-" + randomKey + ".txt"
+	randomKey := strconv.FormatInt(time.Now().Unix()+int64(time.Now().Nanosecond()), 10)
+	nameFile := "test " + randomKey + ".txt"
 	f, err := os.Create(nameFile)
 	if err != nil {
 		return nil, err
@@ -196,7 +196,7 @@ func GetSimpleFile() (*os.File, error) {
 func GetCreateCustomerRequestDefault() []byte {
 	return []byte(`
 		{
-			"name": "Unit Test Goland",
+			"name": "Unit Test Golang",
 			"email": "unittestgolang@gmail.com",
 			"phone": "4738010920",
 			"mobilePhone": "47999376637",
@@ -259,27 +259,19 @@ func GetTransferToBankFailureRequestDefault() []byte {
 `)
 }
 
-func GetTransferToAsaasRequestDefault() []byte {
+func GetCreateNegativitySuccess() []byte {
 	return []byte(`
 		{
-			"value": 1,
-			"bankAccount": {
-				"bank": {
-					"code": "237"
-				},
-				"accountName": "Conta do Bradesco",
-				"ownerName": "GC",
-				"ownerBirthDate": "1999-01-21",
-				"cpfCnpj": "45991590000108",
-				"type": "PAYMENT_ACCOUNT",
-				"agency": "0001",
-				"account": "103913",
-				"accountDigit": "8",
-				"bankAccountType": "CONTA_CORRENTE"
-			},
-			"operationType": "PIX",
-			"scheduleDate": null,
-			"description": "Test via Postman"
+			"payment": "pay_8129071930338672",
+			"type": "CREDIT_BUREAU",
+			"description": "Unit test Golang",
+			"customerName": "Marcelo Almeida",
+			"customerCpfCnpj": "24971563792",
+			"customerPrimaryPhone": "47999376637",
+			"customerPostalCode": "01310-000",
+			"customerAddress": "Av. Paulista",
+			"customerAddressNumber": "150",
+			"customerProvince": "Centro"
 		}
 `)
 }

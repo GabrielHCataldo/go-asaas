@@ -39,23 +39,23 @@ type BankRequest struct {
 }
 
 type GetAllTransfersRequest struct {
-	DateCreatedGe  *Date `json:"dateCreated[ge],omitempty"`
-	DateCreatedLe  *Date `json:"dateCreated[le],omitempty"`
-	TransferDateGe *Date `json:"transferDate[ge],omitempty"`
-	TransferDateLe *Date `json:"transferDate[le],omitempty"`
-	Type           *Date `json:"type,omitempty"`
+	DateCreatedGe  Date `json:"dateCreated[ge],omitempty"`
+	DateCreatedLe  Date `json:"dateCreated[le],omitempty"`
+	TransferDateGe Date `json:"transferDate[ge],omitempty"`
+	TransferDateLe Date `json:"transferDate[le],omitempty"`
+	Type           Date `json:"type,omitempty"`
 }
 
 type TransferResponse struct {
 	ID                    string                `json:"id,omitempty"`
 	Type                  TransferType          `json:"type,omitempty"`
+	Status                TransferStatus        `json:"status,omitempty"`
 	Value                 float64               `json:"value,omitempty"`
 	NetValue              float64               `json:"netValue,omitempty"`
-	Status                TransferStatus        `json:"status,omitempty"`
 	TransferFee           float64               `json:"transferFee,omitempty"`
-	EffectiveDate         *Date                 `json:"effectiveDate,omitempty"`
+	EffectiveDate         Date                  `json:"effectiveDate,omitempty"`
 	EndToEndIdentifier    string                `json:"endToEndIdentifier,omitempty"`
-	ScheduleDate          *Date                 `json:"scheduleDate,omitempty"`
+	ScheduleDate          Date                  `json:"scheduleDate,omitempty"`
 	Authorized            bool                  `json:"authorized,omitempty"`
 	FailReason            string                `json:"failReason,omitempty"`
 	WalletID              string                `json:"walletId,omitempty"`
@@ -64,7 +64,7 @@ type TransferResponse struct {
 	OperationType         TransferOperationType `json:"operationType,omitempty"`
 	Description           string                `json:"description,omitempty"`
 	Errors                []ErrorResponse       `json:"errors,omitempty"`
-	DateCreated           *Date                 `json:"dateCreated,omitempty"`
+	DateCreated           Date                  `json:"dateCreated,omitempty"`
 }
 
 type BackAccountResponse struct {

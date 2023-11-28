@@ -19,7 +19,7 @@ type CreateSubscriptionRequest struct {
 	CreditCard           *CreditCardRequest           `json:"creditCard,omitempty"`
 	CreditCardHolderInfo *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
 	CreditCardToken      string                       `json:"creditCardToken,omitempty"`
-	EndDate              *Date                        `json:"endDate,omitempty" validate:"omitempty,after_now"`
+	EndDate              Date                         `json:"endDate,omitempty" validate:"omitempty,after_now"`
 	MaxPayments          int                          `json:"maxPayments,omitempty" validate:"omitempty,gt=0"`
 	ExternalReference    string                       `json:"externalReference,omitempty"`
 	Split                []SplitRequest               `json:"split,omitempty"`
@@ -30,7 +30,7 @@ type UpdateSubscriptionRequest struct {
 	BillingType           BillingType                  `json:"billingType,omitempty" validate:"omitempty,enum"`
 	Value                 float64                      `json:"value,omitempty" validate:"omitempty,gt=0"`
 	Status                SubscriptionStatus           `json:"status,omitempty" validate:"omitempty,enum"`
-	NextDueDate           *Date                        `json:"nextDueDate,omitempty"`
+	NextDueDate           Date                         `json:"nextDueDate,omitempty"`
 	Discount              *DiscountRequest             `json:"discount,omitempty"`
 	Interest              *InterestRequest             `json:"interest,omitempty"`
 	Fine                  *FineRequest                 `json:"fine,omitempty"`
@@ -39,7 +39,7 @@ type UpdateSubscriptionRequest struct {
 	CreditCard            *CreditCardRequest           `json:"creditCard,omitempty"`
 	CreditCardHolderInfo  *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
 	CreditCardToken       string                       `json:"creditCardToken,omitempty"`
-	EndDate               *Date                        `json:"endDate,omitempty"`
+	EndDate               Date                         `json:"endDate,omitempty"`
 	UpdatePendingPayments bool                         `json:"updatePendingPayments,omitempty"`
 	ExternalReference     string                       `json:"externalReference,omitempty"`
 }
@@ -72,22 +72,22 @@ type SubscriptionPaymentBookRequest struct {
 type SubscriptionResponse struct {
 	ID                string             `json:"id,omitempty"`
 	Customer          string             `json:"customer,omitempty"`
+	Status            SubscriptionStatus `json:"status,omitempty"`
 	Refunds           []RefundResponse   `json:"refunds,omitempty"`
-	Errors            []ErrorResponse    `json:"errors,omitempty"`
 	BillingType       BillingType        `json:"billingType,omitempty"`
 	Value             float64            `json:"value,omitempty"`
 	NextDueDate       Date               `json:"nextDueDate,omitempty"`
 	Cycle             SubscriptionCycle  `json:"cycle,omitempty"`
-	Status            SubscriptionStatus `json:"status,omitempty"`
 	Discount          *DiscountResponse  `json:"discount,omitempty"`
 	Interest          *InterestResponse  `json:"interest,omitempty"`
 	Fine              *FineResponse      `json:"fine,omitempty"`
 	Description       string             `json:"description,omitempty"`
-	EndDate           *Date              `json:"endDate,omitempty"`
+	EndDate           Date               `json:"endDate,omitempty"`
 	MaxPayments       int                `json:"maxPayments,omitempty"`
 	ExternalReference string             `json:"externalReference,omitempty"`
 	Deleted           bool               `json:"deleted,omitempty"`
-	DateCreated       *DateTime          `json:"dateCreated,omitempty"`
+	Errors            []ErrorResponse    `json:"errors,omitempty"`
+	DateCreated       Date               `json:"dateCreated,omitempty"`
 }
 
 type subscription struct {
