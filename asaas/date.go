@@ -16,12 +16,14 @@ func (d *Date) UnmarshalJSON(b []byte) error {
 		return nil
 	}
 	t, err := time.Parse(dLayout, s)
-	*d = Date(t)
-	return err
+	if err == nil {
+		*d = Date(t)
+	}
+	return nil
 }
 
 func (d Date) MarshalJSON() ([]byte, error) {
-	if time.Time(d).IsZero() {
+	if d.IsZero() {
 		return []byte(fmt.Sprintf(`null`)), nil
 	}
 	return []byte(fmt.Sprintf(`"%s"`, d.Format())), nil

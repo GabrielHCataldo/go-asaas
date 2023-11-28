@@ -13,7 +13,7 @@ type TransferToBankRequest struct {
 	PixAddressKey     string                `json:"pixAddressKey,omitempty"`
 	PixAddressKeyType PixKeyType            `json:"pixAddressKeyType,omitempty" validate:"omitempty,enum"`
 	Description       string                `json:"description,omitempty"`
-	ScheduleDate      Date                  `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
+	ScheduleDate      *Date                 `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
 }
 
 type TransferToAssasRequest struct {
@@ -25,7 +25,7 @@ type BackAccountRequest struct {
 	Bank            BankRequest     `json:"bank,omitempty" validate:"required"`
 	AccountName     string          `json:"accountName,omitempty"`
 	OwnerName       string          `json:"ownerName,omitempty" validate:"required"`
-	OwnerBirthDate  Date            `json:"ownerBirthDate,omitempty" validate:"omitempty,before_now"`
+	OwnerBirthDate  *Date           `json:"ownerBirthDate,omitempty" validate:"omitempty,before_now"`
 	CpfCnpj         string          `json:"cpfCnpj,omitempty" validate:"required,document"`
 	Agency          string          `json:"agency,omitempty" validate:"required,numeric,max=5"`
 	Account         string          `json:"account,omitempty" validate:"required,numeric,max=12"`
@@ -39,11 +39,11 @@ type BankRequest struct {
 }
 
 type GetAllTransfersRequest struct {
-	DateCreatedGe  Date `json:"dateCreated[ge],omitempty"`
-	DateCreatedLe  Date `json:"dateCreated[le],omitempty"`
-	TransferDateGe Date `json:"transferDate[ge],omitempty"`
-	TransferDateLe Date `json:"transferDate[le],omitempty"`
-	Type           Date `json:"type,omitempty"`
+	DateCreatedGe  *Date        `json:"dateCreated[ge],omitempty"`
+	DateCreatedLe  *Date        `json:"dateCreated[le],omitempty"`
+	TransferDateGe *Date        `json:"transferDate[ge],omitempty"`
+	TransferDateLe *Date        `json:"transferDate[le],omitempty"`
+	Type           TransferType `json:"type,omitempty"`
 }
 
 type TransferResponse struct {
@@ -53,9 +53,9 @@ type TransferResponse struct {
 	Value                 float64               `json:"value,omitempty"`
 	NetValue              float64               `json:"netValue,omitempty"`
 	TransferFee           float64               `json:"transferFee,omitempty"`
-	EffectiveDate         Date                  `json:"effectiveDate,omitempty"`
+	EffectiveDate         *Date                 `json:"effectiveDate,omitempty"`
 	EndToEndIdentifier    string                `json:"endToEndIdentifier,omitempty"`
-	ScheduleDate          Date                  `json:"scheduleDate,omitempty"`
+	ScheduleDate          *Date                 `json:"scheduleDate,omitempty"`
 	Authorized            bool                  `json:"authorized,omitempty"`
 	FailReason            string                `json:"failReason,omitempty"`
 	WalletID              string                `json:"walletId,omitempty"`
@@ -64,14 +64,14 @@ type TransferResponse struct {
 	OperationType         TransferOperationType `json:"operationType,omitempty"`
 	Description           string                `json:"description,omitempty"`
 	Errors                []ErrorResponse       `json:"errors,omitempty"`
-	DateCreated           Date                  `json:"dateCreated,omitempty"`
+	DateCreated           *Date                 `json:"dateCreated,omitempty"`
 }
 
 type BackAccountResponse struct {
 	Bank           BankResponse `json:"bank,omitempty"`
 	AccountName    string       `json:"accountName,omitempty"`
 	OwnerName      string       `json:"ownerName,omitempty"`
-	OwnerBirthDate Date         `json:"ownerBirthDate,omitempty"`
+	OwnerBirthDate *Date        `json:"ownerBirthDate,omitempty"`
 	CpfCnpj        string       `json:"cpfCnpj,omitempty"`
 	Agency         string       `json:"agency,omitempty"`
 	Account        string       `json:"account,omitempty"`

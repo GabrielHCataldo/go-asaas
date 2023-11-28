@@ -66,7 +66,7 @@ type CustomerResponse struct {
 	Country               string          `json:"country,omitempty"`
 	Observations          string          `json:"observations,omitempty"`
 	Errors                []ErrorResponse `json:"errors,omitempty"`
-	DateCreated           Date            `json:"dateCreated,omitempty"`
+	DateCreated           *Date           `json:"dateCreated,omitempty"`
 }
 
 type customer struct {

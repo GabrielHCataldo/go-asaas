@@ -45,7 +45,15 @@ type AnticipationStatus string
 type NegativityStatus string
 type NegativityType string
 type FileMimeType string
+type BillPaymentStatus string
 
+const (
+	BillPaymentStatusPending        BillPaymentStatus = "PENDING"
+	BillPaymentStatusBankProcessing BillPaymentStatus = "BANK_PROCESSING"
+	BillPaymentStatusBankPaid       BillPaymentStatus = "PAID"
+	BillPaymentStatusFailed         BillPaymentStatus = "FAILED"
+	BillPaymentStatusCancelled      BillPaymentStatus = "CANCELLED"
+)
 const (
 	FileMimeTypePdf  FileMimeType = "application/pdf"
 	FileMimeTypeText FileMimeType = "text/plain"
@@ -217,7 +225,7 @@ const (
 	SubscriptionCycleYearly       SubscriptionCycle = "YEARLY"
 )
 const (
-	BillingTypeBoleto     BillingType = "BOLETO"
+	BillingTypeBill       BillingType = "BOLETO"
 	BillingTypeCreditCard BillingType = "CREDIT_CARD"
 	BillingTypeUndefined  BillingType = "UNDEFINED"
 	BillingTypeDebitCard  BillingType = "DEBIT_CARD"
@@ -333,6 +341,15 @@ const (
 	NotificationEventPaymentOverdue        NotificationEvent = "PAYMENT_OVERDUE"
 	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
 )
+
+func (f BillPaymentStatus) IsEnumValid() bool {
+	switch f {
+	case BillPaymentStatusPending, BillPaymentStatusBankProcessing, BillPaymentStatusBankPaid, BillPaymentStatusFailed,
+		BillPaymentStatusCancelled:
+		return true
+	}
+	return false
+}
 
 func (f FileMimeType) IsEnumValid() bool {
 	switch f {
@@ -582,7 +599,7 @@ func (c ChargebackReason) IsEnumValid() bool {
 
 func (c BillingType) IsEnumValid() bool {
 	switch c {
-	case BillingTypeBoleto, BillingTypeCreditCard, BillingTypeUndefined, BillingTypeDebitCard, BillingTypeTransfer, BillingTypeDeposit, BillingTypePix:
+	case BillingTypeBill, BillingTypeCreditCard, BillingTypeUndefined, BillingTypeDebitCard, BillingTypeTransfer, BillingTypeDeposit, BillingTypePix:
 		return true
 	}
 	return false

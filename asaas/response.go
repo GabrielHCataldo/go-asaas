@@ -13,6 +13,30 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (b BillPaymentSimulateResponse) IsSuccess() bool {
+	return len(b.Errors) == 0 && util.IsNotBlank(&b.BankSlipInfo.IdentificationField)
+}
+
+func (b BillPaymentSimulateResponse) IsFailure() bool {
+	return !b.IsSuccess()
+}
+
+func (b BillPaymentSimulateResponse) IsNoContent() bool {
+	return len(b.Errors) == 0 && util.IsBlank(&b.BankSlipInfo.IdentificationField)
+}
+
+func (b BillPaymentResponse) IsSuccess() bool {
+	return len(b.Errors) == 0 && util.IsNotBlank(&b.ID)
+}
+
+func (b BillPaymentResponse) IsFailure() bool {
+	return !b.IsSuccess()
+}
+
+func (b BillPaymentResponse) IsNoContent() bool {
+	return len(b.Errors) == 0 && util.IsBlank(&b.ID)
+}
+
 func (n NegativitySimulateResponse) IsSuccess() bool {
 	return util.IsNotBlank(&n.Payment)
 }

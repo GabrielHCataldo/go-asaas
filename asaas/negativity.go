@@ -28,7 +28,7 @@ type GetAllNegativitiesRequest struct {
 	Status           NegativityStatus `json:"status,omitempty"`
 	Type             NegativityType   `json:"type,omitempty"`
 	Payment          string           `json:"payment,omitempty"`
-	RequestStartDate Date             `json:"requestStartDate,omitempty"`
+	RequestStartDate *Date            `json:"requestStartDate,omitempty"`
 }
 
 type NegativityResendDocumentsRequest struct {
@@ -41,7 +41,7 @@ type NegativityResponse struct {
 	DunningNumber                  int              `json:"dunningNumber,omitempty"`
 	Type                           NegativityType   `json:"type,omitempty"`
 	Status                         NegativityStatus `json:"status,omitempty"`
-	RequestDate                    Date             `json:"requestDate,omitempty"`
+	RequestDate                    *Date            `json:"requestDate,omitempty"`
 	Description                    string           `json:"description,omitempty"`
 	Value                          float64          `json:"value,omitempty"`
 	FeeValue                       float64          `json:"feeValue,omitempty"`
@@ -67,19 +67,19 @@ type NegativityTypeSimulationResponse struct {
 	NotAllowedReason string         `json:"notAllowedReason,omitempty"`
 	FeeValue         float64        `json:"feeValue,omitempty"`
 	NetValue         float64        `json:"netValue,omitempty"`
-	StartDate        Date           `json:"startDate,omitempty"`
+	StartDate        *Date          `json:"startDate,omitempty"`
 }
 
 type NegativityHistoryResponse struct {
 	Status      NegativityStatus `json:"status,omitempty"`
 	Description string           `json:"description,omitempty"`
-	EventDate   Date             `json:"eventDate,omitempty"`
+	EventDate   *Date            `json:"eventDate,omitempty"`
 }
 
 type NegativityPaymentsResponse struct {
 	Value       float64 `json:"value,omitempty"`
 	Description string  `json:"description,omitempty"`
-	PaymentDate Date    `json:"paymentDate,omitempty"`
+	PaymentDate *Date   `json:"paymentDate,omitempty"`
 }
 
 type ChargesAvailableForDunningResponse struct {
@@ -88,7 +88,7 @@ type ChargesAvailableForDunningResponse struct {
 	BillingType     BillingType                        `json:"billingType,omitempty"`
 	Status          ChargeStatus                       `json:"status,omitempty"`
 	Value           float64                            `json:"value,omitempty"`
-	DueDate         Date                               `json:"dueDate,omitempty"`
+	DueDate         *Date                              `json:"dueDate,omitempty"`
 	TypeSimulations []NegativityTypeSimulationResponse `json:"typeSimulations,omitempty"`
 }
 

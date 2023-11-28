@@ -22,7 +22,7 @@ func (d *Datetime) UnmarshalJSON(b []byte) error {
 
 func (d Datetime) MarshalJSON() ([]byte, error) {
 	if time.Time(d).IsZero() {
-		return []byte(fmt.Sprintf(`null`)), nil
+		return []byte(fmt.Sprintf(``)), nil
 	}
 	return []byte(fmt.Sprintf(`"%s"`, d.Format())), nil
 }

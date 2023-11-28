@@ -58,13 +58,13 @@ func TestChangeCreatePixSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestChangeCreateBoletoSuccess(t *testing.T) {
+func TestChangeCreateBillSuccess(t *testing.T) {
 	accessToken, err := test.GetAccessTokenByEnv()
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &CreateChargeRequest{}
-	err = json.Unmarshal(test.GetCreateChargeBoletoRequestDefault(), req)
+	err = json.Unmarshal(test.GetCreateChargeBillRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
 	nCharge := NewCharge(EnvSandbox, *accessToken)
 	resp, errAsaas := nCharge.Create(ctx, *req)

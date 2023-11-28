@@ -16,7 +16,7 @@ type CreatePixKeyStaticRequest struct {
 	Description            string       `json:"description,omitempty"`
 	Value                  float64      `json:"value,omitempty" validate:"omitempty,gt=0"`
 	Format                 QrCodeFormat `json:"format,omitempty" validate:"omitempty,enum"`
-	ExpirationDate         Datetime     `json:"expirationDate,omitempty"`
+	ExpirationDate         *Datetime    `json:"expirationDate,omitempty"`
 	ExpirationSeconds      int          `json:"expirationSeconds,omitempty" validate:"omitempty,gt=0"`
 	AllowsMultiplePayments bool         `json:"allowsMultiplePayments"`
 }
@@ -25,7 +25,7 @@ type PayPixQrCodeRequest struct {
 	QrCode       PixQrCodeRequest `json:"qrCode,omitempty" validate:"required"`
 	Value        float64          `json:"value,omitempty" validate:"required,gt=0"`
 	Description  string           `json:"description,omitempty"`
-	ScheduleDate Date             `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
+	ScheduleDate *Date            `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
 }
 
 type PixQrCodeRequest struct {
@@ -49,7 +49,7 @@ type PixKeyResponse struct {
 	CannotBeDeletedReason string                `json:"cannotBeDeletedReason,omitempty"`
 	QrCode                *PixKeyQrCodeResponse `json:"qrCode,omitempty"`
 	Errors                []ErrorResponse       `json:"errors,omitempty"`
-	DateCreated           Date                  `json:"dateCreated,omitempty"`
+	DateCreated           *Date                 `json:"dateCreated,omitempty"`
 }
 
 type PixTransactionResponse struct {
@@ -62,8 +62,8 @@ type PixTransactionResponse struct {
 	Value                 float64                     `json:"value,omitempty"`
 	ChangeValue           float64                     `json:"changeValue,omitempty"`
 	RefundedValue         float64                     `json:"refundedValue,omitempty"`
-	EffectiveDate         Date                        `json:"effectiveDate,omitempty"`
-	ScheduledDate         Date                        `json:"scheduledDate,omitempty"`
+	EffectiveDate         *Date                       `json:"effectiveDate,omitempty"`
+	ScheduledDate         *Date                       `json:"scheduledDate,omitempty"`
 	OriginType            PixTransactionOriginType    `json:"originType,omitempty"`
 	Description           string                      `json:"description,omitempty"`
 	TransactionReceiptUrl string                      `json:"transactionReceiptUrl,omitempty"`
@@ -85,8 +85,8 @@ type PixCancelTransactionResponse struct {
 	Value                 float64                     `json:"value,omitempty"`
 	ChangeValue           float64                     `json:"changeValue,omitempty"`
 	RefundedValue         float64                     `json:"refundedValue,omitempty"`
-	EffectiveDate         Date                        `json:"effectiveDate,omitempty"`
-	ScheduledDate         Date                        `json:"scheduledDate,omitempty"`
+	EffectiveDate         *Date                       `json:"effectiveDate,omitempty"`
+	ScheduledDate         *Date                       `json:"scheduledDate,omitempty"`
 	OriginType            PixTransactionOriginType    `json:"originType,omitempty"`
 	Description           string                      `json:"description,omitempty"`
 	TransactionReceiptUrl string                      `json:"transactionReceiptUrl,omitempty"`
@@ -105,8 +105,8 @@ type DecodePixQrCodeResponse struct {
 	PixKey                      string                   `json:"pix,omitempty"`
 	ConciliationIdentifier      string                   `json:"conciliationIdentifier,omitempty"`
 	EndToEndIdentifier          string                   `json:"endToEndIdentifier,omitempty"`
-	DueDate                     Date                     `json:"dueDate,omitempty"`
-	ExpirationDate              Date                     `json:"expirationDate,omitempty"`
+	DueDate                     *Date                    `json:"dueDate,omitempty"`
+	ExpirationDate              *Date                    `json:"expirationDate,omitempty"`
 	Finality                    PixTransactionFinality   `json:"finality,omitempty"`
 	Value                       float64                  `json:"value,omitempty"`
 	ChangeValue                 float64                  `json:"changeValue,omitempty"`
@@ -149,11 +149,11 @@ type PixQrCodeResponse struct {
 	Payer                  *PixPayerResponse `json:"payer,omitempty"`
 	ConciliationIdentifier string            `json:"conciliationIdentifier,omitempty"`
 	OriginalValue          float64           `json:"originalValue,omitempty"`
-	DueDate                Date              `json:"dueDate,omitempty"`
+	DueDate                *Date             `json:"dueDate,omitempty"`
 	Interest               float64           `json:"interest,omitempty"`
 	Fine                   float64           `json:"fine,omitempty"`
 	Discount               float64           `json:"discount,omitempty"`
-	ExpirationDate         Date              `json:"expirationDate,omitempty"`
+	ExpirationDate         *Date             `json:"expirationDate,omitempty"`
 }
 
 type PixPayerResponse struct {
@@ -171,7 +171,7 @@ type QrCodeResponse struct {
 	EncodedImage           string          `json:"encodedImage,omitempty"`
 	Payload                string          `json:"payload,omitempty"`
 	AllowsMultiplePayments bool            `json:"allowsMultiplePayments,omitempty"`
-	ExpirationDate         Date            `json:"expirationDate,omitempty"`
+	ExpirationDate         *Date           `json:"expirationDate,omitempty"`
 	Errors                 []ErrorResponse `json:"errors,omitempty"`
 }
 

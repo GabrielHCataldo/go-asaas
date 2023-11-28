@@ -11,7 +11,7 @@ type CreateChargeRequest struct {
 	Customer             string                       `json:"customer,omitempty" validate:"required"`
 	BillingType          BillingType                  `json:"billingType,omitempty" validate:"required,enum"`
 	Value                float64                      `json:"value,omitempty" validate:"required"`
-	DueDate              Date                         `json:"dueDate,omitempty" validate:"required,after_now"`
+	DueDate              *Date                        `json:"dueDate,omitempty" validate:"required,after_now"`
 	Description          string                       `json:"description,omitempty" validate:"omitempty,lte=500"`
 	ExternalReference    string                       `json:"externalReference,omitempty"`
 	Discount             *DiscountRequest             `json:"discount,omitempty"`
@@ -55,22 +55,22 @@ type GetAllChargesRequest struct {
 	Installment           string       `json:"installment,omitempty"`
 	ExternalReference     string       `json:"externalReference,omitempty"`
 	InvoiceStatus         string       `json:"invoiceStatus,omitempty"`
-	EstimatedCreditDate   Date         `json:"estimatedCreditDate,omitempty"`
+	EstimatedCreditDate   *Date        `json:"estimatedCreditDate,omitempty"`
 	PixQrCodeId           string       `json:"pixQrCodeId,omitempty"`
 	Anticipated           bool         `json:"anticipated,omitempty"`
-	DateCreatedGe         Date         `json:"dateCreated[ge],omitempty"`
-	DateCreatedLe         Date         `json:"dateCreated[le],omitempty"`
-	EstimatedCreditDateGE Date         `json:"estimatedCreditDate[ge],omitempty"`
-	EstimatedCreditDateLE Date         `json:"estimatedCreditDate[le],omitempty"`
-	DueDateGE             Date         `json:"dueDate[ge],omitempty"`
-	DueDateLE             Date         `json:"dueDate[le],omitempty"`
+	DateCreatedGe         *Date        `json:"dateCreated[ge],omitempty"`
+	DateCreatedLe         *Date        `json:"dateCreated[le],omitempty"`
+	EstimatedCreditDateGE *Date        `json:"estimatedCreditDate[ge],omitempty"`
+	EstimatedCreditDateLE *Date        `json:"estimatedCreditDate[le],omitempty"`
+	DueDateGE             *Date        `json:"dueDate[ge],omitempty"`
+	DueDateLE             *Date        `json:"dueDate[le],omitempty"`
 	User                  string       `json:"user,omitempty"`
 	Offset                int          `json:"offset,omitempty"`
 	Limit                 int          `json:"limit,omitempty"`
 }
 
 type ChargeReceiveInCashRequest struct {
-	PaymentDate    Date    `json:"paymentDate,omitempty" validate:"required"`
+	PaymentDate    *Date   `json:"paymentDate,omitempty" validate:"required"`
 	Value          float64 `json:"value,omitempty" validate:"required,gt=0"`
 	NotifyCustomer bool    `json:"notifyCustomer,omitempty"`
 }
@@ -96,7 +96,7 @@ type ChargeResponse struct {
 	Customer              string              `json:"customer,omitempty"`
 	Status                ChargeStatus        `json:"status,omitempty"`
 	PaymentLink           string              `json:"paymentLink,omitempty"`
-	DueDate               Date                `json:"dueDate,omitempty"`
+	DueDate               *Date               `json:"dueDate,omitempty"`
 	Value                 float64             `json:"value,omitempty"`
 	NetValue              float64             `json:"netValue,omitempty"`
 	BillingType           BillingType         `json:"billingType,omitempty"`
@@ -106,9 +106,9 @@ type ChargeResponse struct {
 	ExternalReference     string              `json:"externalReference,omitempty"`
 	OriginalValue         string              `json:"originalValue,omitempty"`
 	InterestValue         string              `json:"interestValue,omitempty"`
-	OriginalDueDate       Date                `json:"originalDueDate,omitempty"`
-	PaymentDate           Date                `json:"paymentDate,omitempty"`
-	ClientPaymentDate     Date                `json:"clientPaymentDate,omitempty"`
+	OriginalDueDate       *Date               `json:"originalDueDate,omitempty"`
+	PaymentDate           *Date               `json:"paymentDate,omitempty"`
+	ClientPaymentDate     *Date               `json:"clientPaymentDate,omitempty"`
 	InstallmentNumber     int                 `json:"installmentCount,omitempty"`
 	TransactionReceiptUrl string              `json:"transactionReceiptUrl,omitempty"`
 	NossoNumero           string              `json:"nossoNumero,omitempty"`
@@ -125,7 +125,7 @@ type ChargeResponse struct {
 	Anticipable           bool                `json:"anticipable,omitempty"`
 	Refunds               []RefundResponse    `json:"refunds,omitempty"`
 	Errors                []ErrorResponse     `json:"errors,omitempty"`
-	DateCreated           Date                `json:"dateCreated,omitempty"`
+	DateCreated           *Date               `json:"dateCreated,omitempty"`
 }
 
 type ChargeStatusResponse struct {
@@ -141,7 +141,7 @@ type IdentificationFieldResponse struct {
 type ChargePixQrCodeResponse struct {
 	EncodedImage   string `json:"encodedImage,omitempty"`
 	Payload        string `json:"payload,omitempty"`
-	ExpirationDate Date   `json:"expirationDate,omitempty"`
+	ExpirationDate *Date  `json:"expirationDate,omitempty"`
 }
 
 type ChargeDocumentResponse struct {

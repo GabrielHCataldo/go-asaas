@@ -33,8 +33,8 @@ type InvoiceTaxesRequest struct {
 }
 
 type GetAllInvoicesRequest struct {
-	EffectiveDateGE   Date          `json:"effectiveDate[ge],omitempty"`
-	EffectiveDateLE   Date          `json:"effectiveDate[le],omitempty"`
+	EffectiveDateGE   *Date         `json:"effectiveDate[ge],omitempty"`
+	EffectiveDateLE   *Date         `json:"effectiveDate[le],omitempty"`
 	ExternalReference string        `json:"externalReference,omitempty"`
 	Status            InvoiceStatus `json:"status,omitempty"`
 	Customer          string        `json:"customer,omitempty"`
@@ -71,7 +71,7 @@ type InvoiceResponse struct {
 	ValidationCode            string                `json:"validationCode,omitempty"`
 	Value                     float64               `json:"value,omitempty"`
 	Deductions                float64               `json:"deductions,omitempty"`
-	EffectiveDate             Date                  `json:"effectiveDate,omitempty"`
+	EffectiveDate             *Date                 `json:"effectiveDate,omitempty"`
 	Observations              string                `json:"observations,omitempty"`
 	EstimatedTaxesDescription string                `json:"estimatedTaxesDescription,omitempty"`
 	Installment               string                `json:"installment,omitempty"`

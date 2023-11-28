@@ -45,7 +45,7 @@ func GetCreateChargePixRequestDefault() []byte {
 	`)
 }
 
-func GetCreateChargeBoletoRequestDefault() []byte {
+func GetCreateChargeBillRequestDefault() []byte {
 	return []byte(`
 		{
 			"customer": "cus_000005791749",
@@ -61,7 +61,7 @@ func GetCreateChargeBoletoRequestDefault() []byte {
 			"fine": {
 				"value": 1
 			},
-			"dueDate": "2100-11-26",
+			"dueDate": "2023-11-29",
 			"value": 100,
 			"description": "Cobrança via teste unitário em Golang",
 			"remoteIp": "191.253.125.194"
