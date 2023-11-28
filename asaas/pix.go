@@ -2,11 +2,9 @@ package asaas
 
 import (
 	"context"
-	berrors "errors"
 	"fmt"
 	"net/http"
 	"net/url"
-	"time"
 )
 
 type createPixKeyRequest struct {
@@ -27,7 +25,7 @@ type PayPixQrCodeRequest struct {
 	QrCode       PixQrCodeRequest `json:"qrCode,omitempty" validate:"required"`
 	Value        float64          `json:"value,omitempty" validate:"required,gt=0"`
 	Description  string           `json:"description,omitempty"`
-	ScheduleDate Date             `json:"scheduleDate,omitempty"`
+	ScheduleDate Date             `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
 }
 
 type PixQrCodeRequest struct {
@@ -204,7 +202,7 @@ func NewPix(env Env, accessToken string) Pix {
 }
 
 func (p pix) PayQrCode(ctx context.Context, body PayPixQrCodeRequest) (*PixTransactionResponse, Error) {
-	if err := p.validatePayQrCodeBodyRequest(body); err != nil {
+	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[PixTransactionResponse](ctx, p.env, p.accessToken)
@@ -230,7 +228,7 @@ func (p pix) CreateKey(ctx context.Context) (*PixKeyResponse, Error) {
 }
 
 func (p pix) CreateStaticKey(ctx context.Context, body CreatePixKeyStaticRequest) (*QrCodeResponse, Error) {
-	if err := p.validateCreateStaticKeyBodyRequest(body); err != nil {
+	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	} else if !body.Format.IsEnumValid() {
 		body.Format = QrCodeFormatAll
@@ -263,22 +261,4 @@ func (p pix) GetAllTransactions(ctx context.Context) (*Pageable[PixTransactionRe
 func (p pix) GetAllKeys(ctx context.Context, filter GetAllPixKeysRequest) (*Pageable[PixKeyResponse], Error) {
 	req := NewRequest[Pageable[PixKeyResponse]](ctx, p.env, p.accessToken)
 	return req.make(http.MethodGet, "/v3/pix/addressKeys", filter)
-}
-
-func (p pix) validatePayQrCodeBodyRequest(body PayPixQrCodeRequest) error {
-	if err := Validate().Struct(body); err != nil {
-		return err
-	} else if !body.ScheduleDate.IsZero() && time.Now().After(body.ScheduleDate.Time()) {
-		return berrors.New("invalid scheduleDate")
-	}
-	return nil
-}
-
-func (p pix) validateCreateStaticKeyBodyRequest(body CreatePixKeyStaticRequest) error {
-	if err := Validate().Struct(body); err != nil {
-		return err
-	} else if !body.ExpirationDate.IsZero() && time.Now().After(body.ExpirationDate.Time()) {
-		return berrors.New("invalid expirationDate")
-	}
-	return nil
 }

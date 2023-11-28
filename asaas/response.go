@@ -13,6 +13,18 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (t TransferResponse) IsSuccess() bool {
+	return len(t.Errors) == 0 && util.IsNotBlank(&t.ID)
+}
+
+func (t TransferResponse) IsFailure() bool {
+	return !t.IsSuccess()
+}
+
+func (t TransferResponse) IsNoContent() bool {
+	return len(t.Errors) == 0 && util.IsBlank(&t.ID)
+}
+
 func (p PixTransactionResponse) IsSuccess() bool {
 	return len(p.Errors) == 0 && util.IsNotBlank(&p.ID)
 }

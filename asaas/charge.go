@@ -2,18 +2,16 @@ package asaas
 
 import (
 	"context"
-	berrors "errors"
 	"fmt"
 	"net/http"
 	"os"
-	"time"
 )
 
 type CreateChargeRequest struct {
 	Customer             string                       `json:"customer,omitempty" validate:"required"`
 	BillingType          BillingType                  `json:"billingType,omitempty" validate:"required,enum"`
 	Value                float64                      `json:"value,omitempty" validate:"required"`
-	DueDate              Date                         `json:"dueDate,omitempty" validate:"required"`
+	DueDate              Date                         `json:"dueDate,omitempty" validate:"required,after_now"`
 	Description          string                       `json:"description,omitempty" validate:"omitempty,lte=500"`
 	ExternalReference    string                       `json:"externalReference,omitempty"`
 	Discount             *DiscountRequest             `json:"discount,omitempty"`
@@ -60,8 +58,8 @@ type GetAllChargesRequest struct {
 	EstimatedCreditDate   *Date        `json:"estimatedCreditDate,omitempty"`
 	PixQrCodeId           string       `json:"pixQrCodeId,omitempty"`
 	Anticipated           bool         `json:"anticipated,omitempty"`
-	DateCreatedGE         *Date        `json:"dateCreated[ge],omitempty"`
-	DateCreatedLE         *Date        `json:"dateCreated[le],omitempty"`
+	DateCreatedGe         *Date        `json:"dateCreated[ge],omitempty"`
+	DateCreatedLe         *Date        `json:"dateCreated[le],omitempty"`
 	EstimatedCreditDateGE *Date        `json:"estimatedCreditDate[ge],omitempty"`
 	EstimatedCreditDateLE *Date        `json:"estimatedCreditDate[le],omitempty"`
 	DueDateGE             *Date        `json:"dueDate[ge],omitempty"`
@@ -350,20 +348,12 @@ func (c charge) GetAll(ctx context.Context, filter GetAllChargesRequest) (
 func (c charge) validateCreateBodyRequest(body CreateChargeRequest) error {
 	if err := Validate().Struct(body); err != nil {
 		return err
-	} else {
-		dueDate := time.Date(body.DueDate.Time().Year(), body.DueDate.Month(), body.DueDate.Day(), 23, 59, 0, 0,
-			body.DueDate.Location())
-		if time.Now().UTC().After(dueDate.UTC()) {
-			return berrors.New("invalid dueDate")
-		}
 	}
 	return validateBillingBody(body.BillingType, body.CreditCard, body.CreditCardHolderInfo, body.CreditCardToken,
 		body.RemoteIp)
 }
 
 func (c charge) prepareCreateBodyRequest(body *CreateChargeRequest) {
-	body.DueDate = NewDate(body.DueDate.Year(), body.DueDate.Month(), body.DueDate.Day(),
-		23, 59, 0, 0, body.DueDate.Location())
 	switch body.BillingType {
 	case BillingTypeCreditCard:
 		if body.Fine != nil {

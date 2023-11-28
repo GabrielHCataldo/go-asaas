@@ -39,8 +39,8 @@ func (d Date) Time() time.Time {
 	return time.Time(d)
 }
 
-func NewDate(year int, month time.Month, day, hour, min, sec, nSec int, loc *time.Location) Date {
-	return Date(time.Date(year, month, day, hour, min, sec, nSec, loc))
+func NewDate(year int, month time.Month, day int, loc *time.Location) Date {
+	return Date(time.Date(year, month, day, 23, 59, 0, 0, loc))
 }
 
 func (d Date) Year() int {

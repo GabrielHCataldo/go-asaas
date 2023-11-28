@@ -7,7 +7,7 @@ import (
 )
 
 type UpdateCustomerRequest struct {
-	Name                 string `json:"name,omitempty" validate:"required,full_name"`
+	Name                 string `json:"name,omitempty" validate:"required"`
 	CpfCnpj              string `json:"cpfCnpj,omitempty" validate:"required,document"`
 	Email                string `json:"email,omitempty" validate:"omitempty,email"`
 	Phone                string `json:"phone,omitempty" validate:"omitempty,phone"`

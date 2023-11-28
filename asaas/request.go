@@ -90,9 +90,10 @@ func (r request[T]) createHttpRequest(ctx context.Context, method string, path s
 	rUrl := r.env.BaseUrl() + path
 	var payloadToSend io.Reader
 	var payloadBytes []byte
+	var err error
 	if payload != nil {
 		switch method {
-		case http.MethodGet:
+		case http.MethodGet, http.MethodDelete:
 			fields := structs.Fields(payload)
 			params := url.Values{}
 			for _, f := range fields {
@@ -108,7 +109,7 @@ func (r request[T]) createHttpRequest(ctx context.Context, method string, path s
 			}
 			break
 		default:
-			payloadBytes, err := json.Marshal(payload)
+			payloadBytes, err = json.Marshal(payload)
 			if err != nil {
 				return nil, err
 			}

@@ -14,8 +14,7 @@ func assertFatalErrorNonnull(t *testing.T, err error) {
 }
 
 func assertSuccessNonnull(t *testing.T, v any) {
-	r := reflect.ValueOf(v)
-	if r.IsNil() {
+	if v == nil || reflect.ValueOf(v).IsNil() {
 		logErrorSkipCaller(4, "unexpect: object is nil")
 		t.Fail()
 		return

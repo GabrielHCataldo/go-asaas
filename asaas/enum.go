@@ -36,19 +36,24 @@ type PixTransactionOriginType string
 type AccountType string
 type SortPaymentBookField string
 type PersonType string
+type TransferType string
 type TransferStatus string
 type TransferAsaasStatus string
 type TransferOperationType string
+type BankAccountType string
 
+const (
+	TransferTypeBankAccount  TransferType = "BANK_ACCOUNT"
+	TransferTypeAsaasAccount TransferType = "ASAAS_ACCOUNT"
+)
+const (
+	BankAccountTypeChecking BankAccountType = "CONTA_CORRENTE"
+	BankAccountTypeSavings  BankAccountType = "CONTA_POUPANCA"
+)
 const (
 	TransferOperationTypePix      TransferOperationType = "PIX"
 	TransferOperationTypeTed      TransferOperationType = "TED"
 	TransferOperationTypeInternal TransferOperationType = "INTERNAL"
-)
-const (
-	TransferAsaasStatusPending   TransferAsaasStatus = "PENDING"
-	TransferAsaasStatusDone      TransferAsaasStatus = "DONE"
-	TransferAsaasStatusCancelled TransferAsaasStatus = "CANCELLED"
 )
 const (
 	TransferStatusPending        TransferStatus = "PENDING"
@@ -287,6 +292,22 @@ const (
 	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
 )
 
+func (t TransferType) IsEnumValid() bool {
+	switch t {
+	case TransferTypeBankAccount, TransferTypeAsaasAccount:
+		return true
+	}
+	return false
+}
+
+func (b BankAccountType) IsEnumValid() bool {
+	switch b {
+	case BankAccountTypeChecking, BankAccountTypeSavings:
+		return true
+	}
+	return false
+}
+
 func (t TransferOperationType) IsEnumValid() bool {
 	switch t {
 	case TransferOperationTypePix, TransferOperationTypeTed, TransferOperationTypeInternal:
@@ -299,14 +320,6 @@ func (t TransferStatus) IsEnumValid() bool {
 	switch t {
 	case TransferStatusPending, TransferStatusDone, TransferStatusCancelled, TransferStatusFailed,
 		TransferStatusBankProcessing:
-		return true
-	}
-	return false
-}
-
-func (t TransferAsaasStatus) IsEnumValid() bool {
-	switch t {
-	case TransferAsaasStatusPending, TransferAsaasStatusDone, TransferAsaasStatusCancelled:
 		return true
 	}
 	return false

@@ -28,7 +28,11 @@ func Validate() *validator.Validate {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = v.RegisterValidation("birth-date", validateBirthDate)
+	err = v.RegisterValidation("before_now", validateBeforeNow)
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = v.RegisterValidation("after_now", validateAfterNow)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -51,7 +55,7 @@ func validateFullName(fl validator.FieldLevel) bool {
 	return util.ValidateFullName(fl.Field().String())
 }
 
-func validateBirthDate(fl validator.FieldLevel) bool {
+func validateBeforeNow(fl validator.FieldLevel) bool {
 	var timeValidate time.Time
 	if fl.Field().Kind() == reflect.String {
 		t, err := time.Parse(time.RFC3339, fl.Field().String())
@@ -59,6 +63,12 @@ func validateBirthDate(fl validator.FieldLevel) bool {
 			return false
 		}
 		timeValidate = t
+	} else if fl.Field().Type().String() == "asaas.Date" {
+		date, ok := fl.Field().Interface().(Date)
+		if !ok {
+			return false
+		}
+		timeValidate = time.Date(date.Year(), date.Month(), date.Day(), 0, 0, 0, 0, date.Location())
 	} else {
 		datetime, ok := fl.Field().Interface().(time.Time)
 		if !ok {
@@ -66,11 +76,35 @@ func validateBirthDate(fl validator.FieldLevel) bool {
 		}
 		timeValidate = datetime
 	}
-	return util.ValidateBirthDate(timeValidate)
+	return timeValidate.UTC().Before(time.Now().UTC())
+}
+
+func validateAfterNow(fl validator.FieldLevel) bool {
+	var timeValidate time.Time
+	if fl.Field().Kind() == reflect.String {
+		t, err := time.Parse(time.RFC3339, fl.Field().String())
+		if err != nil {
+			return false
+		}
+		timeValidate = t
+	} else if fl.Field().Type().String() == "asaas.Date" {
+		date, ok := fl.Field().Interface().(Date)
+		if !ok {
+			return false
+		}
+		timeValidate = time.Date(date.Year(), date.Month(), date.Day(), 23, 59, 0, 0, date.Location())
+	} else {
+		datetime, ok := fl.Field().Interface().(time.Time)
+		if !ok {
+			return false
+		}
+		timeValidate = datetime
+	}
+	return timeValidate.UTC().After(time.Now().UTC())
 }
 
 func validateDocument(fl validator.FieldLevel) bool {
-	return util.IsCPF(fl.Field().String())
+	return util.IsCpfCnpj(fl.Field().String())
 }
 
 func validatePostalCode(fl validator.FieldLevel) bool {

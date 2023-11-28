@@ -104,7 +104,7 @@ func GetCreateChargeCreditCardFailureRequestDefault() []byte {
 			"customer": "cus_000005791749",
 			"billingType": "CREDIT_CARD",
 			"value": 10.0,
-			"dueDate": "2080-11-26",
+			"dueDate": "2023-11-28",
 			"description": "Cobrança via teste unitário em Goland",
 			"creditCard": {
 				"holderName": "unit test go",
@@ -214,4 +214,72 @@ func GetCreateCustomerRequestDefault() []byte {
 			"observations": "unit test golang"
 		}
 	`)
+}
+
+func GetTransferToBankRequestDefault() []byte {
+	return []byte(`
+		{
+			"value": 1,
+			"bankAccount": {
+				"bank": {
+					"code": "237"
+				},
+				"accountName": "Conta do Bradesco",
+				"ownerName": "GC",
+				"ownerBirthDate": "1999-01-21",
+				"cpfCnpj": "45991590000108",
+				"type": "PAYMENT_ACCOUNT",
+				"agency": "0001",
+				"account": "103913",
+				"accountDigit": "8",
+				"bankAccountType": "CONTA_CORRENTE"
+			},
+			"operationType": "PIX",
+			"scheduleDate": null,
+			"description": "Test via Postman"
+		}
+`)
+}
+
+func GetTransferToBankFailureRequestDefault() []byte {
+	return []byte(`
+		{
+			"value": 0,
+			"bankAccount": {
+				"ownerName": "GC",
+				"ownerBirthDate": "1999-01-21",
+				"cpfCnpj": "45991590000108",
+				"type": "PAYMENT_ACCOUNT",
+				"agency": "0001",
+				"account": "103913",
+				"bankAccountType": "CONTA_CORRENTE"
+			},
+			"description": "Test via Postman"
+		}
+`)
+}
+
+func GetTransferToAsaasRequestDefault() []byte {
+	return []byte(`
+		{
+			"value": 1,
+			"bankAccount": {
+				"bank": {
+					"code": "237"
+				},
+				"accountName": "Conta do Bradesco",
+				"ownerName": "GC",
+				"ownerBirthDate": "1999-01-21",
+				"cpfCnpj": "45991590000108",
+				"type": "PAYMENT_ACCOUNT",
+				"agency": "0001",
+				"account": "103913",
+				"accountDigit": "8",
+				"bankAccountType": "CONTA_CORRENTE"
+			},
+			"operationType": "PIX",
+			"scheduleDate": null,
+			"description": "Test via Postman"
+		}
+`)
 }

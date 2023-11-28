@@ -2,17 +2,15 @@ package asaas
 
 import (
 	"context"
-	berrors "errors"
 	"fmt"
 	"net/http"
-	"time"
 )
 
 type CreateSubscriptionRequest struct {
 	Customer             string                       `json:"customer,omitempty" validate:"required"`
 	BillingType          BillingType                  `json:"billingType,omitempty" validate:"required,enum"`
 	Value                float64                      `json:"value,omitempty" validate:"required,gt=0"`
-	NextDueDate          Date                         `json:"nextDueDate,omitempty" validate:"required"`
+	NextDueDate          Date                         `json:"nextDueDate,omitempty" validate:"required,after_now"`
 	Discount             *DiscountRequest             `json:"discount,omitempty"`
 	Interest             *InterestRequest             `json:"interest,omitempty"`
 	Fine                 *FineRequest                 `json:"fine,omitempty"`
@@ -21,7 +19,7 @@ type CreateSubscriptionRequest struct {
 	CreditCard           *CreditCardRequest           `json:"creditCard,omitempty"`
 	CreditCardHolderInfo *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
 	CreditCardToken      string                       `json:"creditCardToken,omitempty"`
-	EndDate              *Date                        `json:"endDate,omitempty"`
+	EndDate              *Date                        `json:"endDate,omitempty" validate:"omitempty,after_now"`
 	MaxPayments          int                          `json:"maxPayments,omitempty" validate:"omitempty,gt=0"`
 	ExternalReference    string                       `json:"externalReference,omitempty"`
 	Split                []SplitRequest               `json:"split,omitempty"`
@@ -213,18 +211,12 @@ func (s subscription) GetAll(ctx context.Context, filter GetAllSubscriptionsRequ
 func (s subscription) validateCreateBodyRequest(body CreateSubscriptionRequest) error {
 	if err := Validate().Struct(body); err != nil {
 		return err
-	} else if time.Now().After(body.NextDueDate.Time()) {
-		return berrors.New("invalid nextDueDate")
-	} else if body.EndDate != nil && time.Now().After(body.EndDate.Time()) {
-		return berrors.New("invalid endDate")
 	}
 	return validateBillingBody(body.BillingType, body.CreditCard, body.CreditCardHolderInfo, body.CreditCardToken,
 		body.RemoteIp)
 }
 
 func (s subscription) prepareCreateBodyRequest(body *CreateSubscriptionRequest) {
-	body.NextDueDate = NewDate(body.NextDueDate.Year(), body.NextDueDate.Month(), body.NextDueDate.Day(),
-		23, 59, 0, 0, body.NextDueDate.Location())
 	switch body.BillingType {
 	case BillingTypeCreditCard:
 		if body.Fine != nil {

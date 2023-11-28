@@ -19,17 +19,13 @@ func IsPhoneNumber(value string) bool {
 	return false
 }
 
-func IsCPF(value string) bool {
-	return cpfcnpj.ValidateCPF(cpfcnpj.Clean(value))
+func IsCpfCnpj(value string) bool {
+	return cpfcnpj.ValidateCPF(cpfcnpj.Clean(value)) || cpfcnpj.ValidateCNPJ(cpfcnpj.Clean(value))
 }
 
 func ValidateFullName(value string) bool {
 	regex := regexp.MustCompile(`^([a-zA-Z]{2,}\s[a-zA-Z]+'?-?[a-zA-Z]+\s?([a-zA-Z]+)?)`)
 	return regex.MatchString(value)
-}
-
-func ValidateBirthDate(values time.Time) bool {
-	return time.Now().After(values)
 }
 
 func ValidatePostalCode(v string) bool {
