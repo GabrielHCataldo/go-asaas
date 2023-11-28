@@ -13,6 +13,54 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (a AnticipationResponse) IsSuccess() bool {
+	return len(a.Errors) == 0 && util.IsNotBlank(&a.ID)
+}
+
+func (a AnticipationResponse) IsFailure() bool {
+	return !a.IsSuccess()
+}
+
+func (a AnticipationResponse) IsNoContent() bool {
+	return len(a.Errors) == 0 && util.IsBlank(&a.ID)
+}
+
+func (a AnticipationSimulateResponse) IsSuccess() bool {
+	return len(a.Errors) == 0 && a.Value > 0
+}
+
+func (a AnticipationSimulateResponse) IsFailure() bool {
+	return !a.IsSuccess()
+}
+
+func (a AnticipationSimulateResponse) IsNoContent() bool {
+	return len(a.Errors) == 0 && a.Value == 0
+}
+
+func (a AgreementSignResponse) IsSuccess() bool {
+	return true
+}
+
+func (a AgreementSignResponse) IsFailure() bool {
+	return false
+}
+
+func (a AgreementSignResponse) IsNoContent() bool {
+	return false
+}
+
+func (a AnticipationLimitsResponse) IsSuccess() bool {
+	return true
+}
+
+func (a AnticipationLimitsResponse) IsFailure() bool {
+	return false
+}
+
+func (a AnticipationLimitsResponse) IsNoContent() bool {
+	return false
+}
+
 func (t TransferResponse) IsSuccess() bool {
 	return len(t.Errors) == 0 && util.IsNotBlank(&t.ID)
 }

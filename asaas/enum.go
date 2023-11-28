@@ -41,7 +41,17 @@ type TransferStatus string
 type TransferAsaasStatus string
 type TransferOperationType string
 type BankAccountType string
+type AnticipationStatus string
 
+const (
+	AnticipationStatusPending   AnticipationStatus = "PENDING"
+	AnticipationStatusDenied    AnticipationStatus = "DENIED"
+	AnticipationStatusCredited  AnticipationStatus = "CREDITED"
+	AnticipationStatusDebited   AnticipationStatus = "DEBITED"
+	AnticipationStatusCancelled AnticipationStatus = "CANCELLED"
+	AnticipationStatusOverdue   AnticipationStatus = "OVERDUE"
+	AnticipationStatusScheduled AnticipationStatus = "SCHEDULED"
+)
 const (
 	TransferTypeBankAccount  TransferType = "BANK_ACCOUNT"
 	TransferTypeAsaasAccount TransferType = "ASAAS_ACCOUNT"
@@ -291,6 +301,15 @@ const (
 	NotificationEventPaymentOverdue        NotificationEvent = "PAYMENT_OVERDUE"
 	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
 )
+
+func (a AnticipationStatus) IsEnumValid() bool {
+	switch a {
+	case AnticipationStatusCredited, AnticipationStatusCancelled, AnticipationStatusDenied, AnticipationStatusDebited,
+		AnticipationStatusOverdue, AnticipationStatusScheduled, AnticipationStatusPending:
+		return true
+	}
+	return false
+}
 
 func (t TransferType) IsEnumValid() bool {
 	switch t {

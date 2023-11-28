@@ -9,42 +9,42 @@ import (
 	"time"
 )
 
-var v *validator.Validate
+var vld *validator.Validate
 
 func Validate() *validator.Validate {
-	if v != nil {
-		return v
+	if vld != nil {
+		return vld
 	}
-	v = validator.New()
-	err := v.RegisterValidation("enum", validateEnum)
+	vld = validator.New()
+	err := vld.RegisterValidation("enum", validateEnum)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = v.RegisterValidation("phone", validatePhone)
+	err = vld.RegisterValidation("phone", validatePhone)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = v.RegisterValidation("full_name", validateFullName)
+	err = vld.RegisterValidation("full_name", validateFullName)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = v.RegisterValidation("before_now", validateBeforeNow)
+	err = vld.RegisterValidation("before_now", validateBeforeNow)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = v.RegisterValidation("after_now", validateAfterNow)
+	err = vld.RegisterValidation("after_now", validateAfterNow)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = v.RegisterValidation("document", validateDocument)
+	err = vld.RegisterValidation("document", validateDocument)
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = v.RegisterValidation("postal_code", validatePostalCode)
+	err = vld.RegisterValidation("postal_code", validatePostalCode)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return v
+	return vld
 }
 
 func validatePhone(fl validator.FieldLevel) bool {

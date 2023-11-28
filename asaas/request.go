@@ -131,7 +131,7 @@ func (r request[T]) createHttpRequest(ctx context.Context, method string, path s
 		accept = HttpContentTypeText
 	}
 	req.Header.Add("Accept", accept)
-	if accept == HttpContentTypeJSON {
+	if method != http.MethodGet && method != http.MethodDelete && accept == HttpContentTypeJSON {
 		req.Header.Add("Content-Type", HttpContentTypeJSON)
 	}
 	req.Header.Add("access_token", r.accessToken)
@@ -142,16 +142,18 @@ func (r request[T]) createHttpRequestMultipartForm(
 	ctx context.Context,
 	method string,
 	path string,
-	values map[string]io.Reader,
+	values map[string][]io.Reader,
 ) (req *http.Request, err error) {
 	rUrl := r.env.BaseUrl() + path
 	logInfoSkipCaller(5, r.env, "request url:", rUrl, "method:", method)
 	var b bytes.Buffer
 	w := multipart.NewWriter(&b)
 	for k, v := range values {
-		err = r.prepareMultipartWriter(w, k, v)
-		if err != nil {
-			return nil, err
+		for _, reader := range v {
+			err = r.prepareMultipartWriter(w, k, reader)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	logInfoSkipCaller(5, r.env, "request body:", util.ReplaceAllSpacesRepeat(b.String()))
@@ -199,23 +201,30 @@ func (r request[T]) readResponse(res *http.Response, result *T) error {
 	return json.Unmarshal(respBody, result)
 }
 
-func (r request[T]) prepareMultipartPayload(payload any) (map[string]io.Reader, error) {
-	multipartPayload := map[string]io.Reader{}
+func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader, error) {
+	multipartPayload := map[string][]io.Reader{}
 	for _, field := range structs.Fields(payload) {
 		k := strings.Replace(field.Tag("json"), ",omitempty", "", 1)
-		v := field.Value()
-		if b, ok := v.(bool); ok {
-			multipartPayload[k] = strings.NewReader(strconv.FormatBool(b))
-		} else if s, ok := v.(string); ok {
-			multipartPayload[k] = strings.NewReader(s)
-		} else if f, ok := v.(*os.File); ok {
-			multipartPayload[k] = f
-		} else if fs, ok := v.([]*os.File); ok {
+		vf := field.Value()
+		var b bool
+		var s string
+		var f *os.File
+		var fs []*os.File
+		var ok bool
+		if b, ok = vf.(bool); ok {
+			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.FormatBool(b))}
+		} else if s, ok = vf.(string); ok {
+			multipartPayload[k] = []io.Reader{strings.NewReader(s)}
+		} else if f, ok = vf.(*os.File); ok {
+			multipartPayload[k] = []io.Reader{f}
+		} else if fs, ok = vf.([]*os.File); ok {
+			files := []io.Reader{}
 			for _, file := range fs {
-				multipartPayload[file.Name()] = file
+				files = append(files, file)
 			}
+			multipartPayload[k] = files
 		} else {
-			multipartPayload[k] = strings.NewReader(fmt.Sprintf(`%s`, v))
+			multipartPayload[k] = []io.Reader{strings.NewReader(fmt.Sprintf(`%s`, vf))}
 		}
 	}
 	return multipartPayload, nil
