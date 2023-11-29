@@ -58,6 +58,16 @@ type GetAllSubscriptionsRequest struct {
 	Limit             int                   `json:"limit,omitempty"`
 }
 
+type GetAllSubscriptionInvoicesRequest struct {
+	EffectiveDateGE   *Date         `json:"effectiveDate[ge],omitempty"`
+	EffectiveDateLE   *Date         `json:"effectiveDate[le],omitempty"`
+	ExternalReference string        `json:"externalReference,omitempty"`
+	Status            InvoiceStatus `json:"status,omitempty"`
+	Customer          string        `json:"customer,omitempty"`
+	Offset            int           `json:"offset,omitempty"`
+	Limit             int           `json:"limit,omitempty"`
+}
+
 type GetAllChargesBySubscriptionRequest struct {
 	Status ChargeStatus `json:"status,omitempty"`
 }
@@ -108,7 +118,7 @@ type Subscription interface {
 	GetInvoiceSettingById(ctx context.Context, subscriptionId string) (*InvoiceSettingResponse, Error)
 	GetAllChargesBySubscription(ctx context.Context, subscriptionId string, filter GetAllChargesBySubscriptionRequest) (
 		*Pageable[ChargeResponse], Error)
-	GetAllInvoicesBySubscription(ctx context.Context, subscriptionId string, filter GetAllInvoicesRequest) (
+	GetAllInvoicesBySubscription(ctx context.Context, subscriptionId string, filter GetAllSubscriptionInvoicesRequest) (
 		*Pageable[InvoiceResponse], Error)
 	GetPaymentBookById(ctx context.Context, subscriptionId string, filter SubscriptionPaymentBookRequest) (
 		*FileTextPlainResponse, Error)
@@ -197,7 +207,7 @@ func (s subscription) GetAllChargesBySubscription(
 }
 
 func (s subscription) GetAllInvoicesBySubscription(ctx context.Context, subscriptionId string,
-	filter GetAllInvoicesRequest) (*Pageable[InvoiceResponse], Error) {
+	filter GetAllSubscriptionInvoicesRequest) (*Pageable[InvoiceResponse], Error) {
 	req := NewRequest[Pageable[InvoiceResponse]](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/invoices", subscriptionId), filter)
 }

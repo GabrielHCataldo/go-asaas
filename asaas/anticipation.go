@@ -60,8 +60,8 @@ type AnticipationLimitResponse struct {
 }
 
 type AnticipationSimulateResponse struct {
-	Installment             string          `json:"installment,omitempty"`
 	Payment                 string          `json:"payment,omitempty"`
+	Installment             string          `json:"installment,omitempty"`
 	AnticipationDate        *Date           `json:"anticipationDate,omitempty"`
 	DueDate                 *Date           `json:"dueDate,omitempty"`
 	Fee                     float64         `json:"fee,omitempty"`

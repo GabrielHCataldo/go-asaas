@@ -352,7 +352,7 @@ func (s SubscriptionResponse) IsNoContent() bool {
 }
 
 func (i InvoiceResponse) IsSuccess() bool {
-	return util.IsNotBlank(&i.Id)
+	return len(i.Errors) == 0 && util.IsNotBlank(&i.Id)
 }
 
 func (i InvoiceResponse) IsFailure() bool {
@@ -360,7 +360,7 @@ func (i InvoiceResponse) IsFailure() bool {
 }
 
 func (i InvoiceResponse) IsNoContent() bool {
-	return util.IsBlank(&i.Id)
+	return len(i.Errors) == 0 && util.IsBlank(&i.Id)
 }
 
 func (i InvoiceSettingResponse) IsSuccess() bool {

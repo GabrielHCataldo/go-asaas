@@ -47,26 +47,26 @@ type UpdateChargeRequest struct {
 }
 
 type GetAllChargesRequest struct {
-	Customer              string       `json:"customer,omitempty"`
-	CustomerGroupName     string       `json:"customerGroupName,omitempty"`
-	BillingType           BillingType  `json:"billingType,omitempty"`
-	Status                ChargeStatus `json:"status,omitempty"`
-	Subscription          string       `json:"subscription,omitempty"`
-	Installment           string       `json:"installment,omitempty"`
-	ExternalReference     string       `json:"externalReference,omitempty"`
-	InvoiceStatus         string       `json:"invoiceStatus,omitempty"`
-	EstimatedCreditDate   *Date        `json:"estimatedCreditDate,omitempty"`
-	PixQrCodeId           string       `json:"pixQrCodeId,omitempty"`
-	Anticipated           bool         `json:"anticipated,omitempty"`
-	DateCreatedGe         *Date        `json:"dateCreated[ge],omitempty"`
-	DateCreatedLe         *Date        `json:"dateCreated[le],omitempty"`
-	EstimatedCreditDateGE *Date        `json:"estimatedCreditDate[ge],omitempty"`
-	EstimatedCreditDateLE *Date        `json:"estimatedCreditDate[le],omitempty"`
-	DueDateGE             *Date        `json:"dueDate[ge],omitempty"`
-	DueDateLE             *Date        `json:"dueDate[le],omitempty"`
-	User                  string       `json:"user,omitempty"`
-	Offset                int          `json:"offset,omitempty"`
-	Limit                 int          `json:"limit,omitempty"`
+	Customer              string        `json:"customer,omitempty"`
+	Installment           string        `json:"installment,omitempty"`
+	CustomerGroupName     string        `json:"customerGroupName,omitempty"`
+	BillingType           BillingType   `json:"billingType,omitempty"`
+	Status                ChargeStatus  `json:"status,omitempty"`
+	Subscription          string        `json:"subscription,omitempty"`
+	ExternalReference     string        `json:"externalReference,omitempty"`
+	InvoiceStatus         InvoiceStatus `json:"invoiceStatus,omitempty"`
+	EstimatedCreditDate   *Date         `json:"estimatedCreditDate,omitempty"`
+	PixQrCodeId           string        `json:"pixQrCodeId,omitempty"`
+	Anticipated           bool          `json:"anticipated,omitempty"`
+	DateCreatedGe         *Date         `json:"dateCreated[ge],omitempty"`
+	DateCreatedLe         *Date         `json:"dateCreated[le],omitempty"`
+	EstimatedCreditDateGE *Date         `json:"estimatedCreditDate[ge],omitempty"`
+	EstimatedCreditDateLE *Date         `json:"estimatedCreditDate[le],omitempty"`
+	DueDateGE             *Date         `json:"dueDate[ge],omitempty"`
+	DueDateLE             *Date         `json:"dueDate[le],omitempty"`
+	User                  string        `json:"user,omitempty"`
+	Offset                int           `json:"offset,omitempty"`
+	Limit                 int           `json:"limit,omitempty"`
 }
 
 type ChargeReceiveInCashRequest struct {
