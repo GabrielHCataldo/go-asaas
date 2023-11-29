@@ -9,8 +9,8 @@ type SaveWebhookSettingRequest struct {
 	Url         string `json:"url,omitempty" validate:"required,url"`
 	Email       string `json:"email,omitempty" validate:"required,email"`
 	ApiVersion  string `json:"apiVersion,omitempty" validate:"required,numeric,max=4"`
-	Enabled     bool   `json:"enabled,omitempty"`
-	Interrupted bool   `json:"interrupted,omitempty"`
+	Enabled     bool   `json:"enabled"`
+	Interrupted bool   `json:"interrupted"`
 	AuthToken   string `json:"authToken,omitempty"`
 }
 

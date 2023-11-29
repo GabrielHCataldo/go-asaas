@@ -51,15 +51,30 @@ type FinanceTransType string
 type AccountStatus string
 type CompanyType string
 type TypeOfWebhook string
+type SubaccountDocumentStatus string
+type SubaccountDocumentType string
 
 const (
-	TypeOfWebhookCharges                TypeOfWebhook = "CHARGES"
-	TypeOfWebhookInvoices               TypeOfWebhook = "INVOICES"
-	TypeOfWebhookTransfers              TypeOfWebhook = "TRANSFERS"
-	TypeOfWebhookBillPayments           TypeOfWebhook = "BILL_PAYMENTS"
-	TypeOfWebhookAnticipations          TypeOfWebhook = "ANTICIPATIONS"
-	TypeOfWebhookMobilePhoneRecharges   TypeOfWebhook = "MOBILE_PHONE_RECHARGES"
-	TypeOfWebhookMobileAccountSituation TypeOfWebhook = "ACCOUNT_SITUATION"
+	AccountDocumentTypeIdentification          SubaccountDocumentType = "IDENTIFICATION"
+	AccountDocumentTypeSocialContract          SubaccountDocumentType = "SOCIAL_CONTRACT"
+	AccountDocumentTypeEntrepreneurRequirement SubaccountDocumentType = "ENTREPRENEUR_REQUIREMENT"
+	AccountDocumentTypeMinutesOfElection       SubaccountDocumentType = "MINUTES_OF_ELECTION"
+	AccountDocumentTypeCustom                  SubaccountDocumentType = "CUSTOM"
+)
+const (
+	SubaccountDocumentStatusNotSent  SubaccountDocumentStatus = "NOT_SENT"
+	SubaccountDocumentStatusPending  SubaccountDocumentStatus = "PENDING"
+	SubaccountDocumentStatusApproved SubaccountDocumentStatus = "APPROVED"
+	SubaccountDocumentStatusRejected SubaccountDocumentStatus = "REJECTED"
+)
+const (
+	TypeOfWebhookPayment                TypeOfWebhook = "PAYMENT"
+	TypeOfWebhookInvoice                TypeOfWebhook = "INVOICE"
+	TypeOfWebhookTransfer               TypeOfWebhook = "TRANSFER"
+	TypeOfWebhookBill                   TypeOfWebhook = "BILL"
+	TypeOfWebhookReceivableAnticipation TypeOfWebhook = "RECEIVABLE_ANTICIPATION"
+	TypeOfWebhookMobilePhoneRecharge    TypeOfWebhook = "MOBILE_PHONE_RECHARGE"
+	TypeOfWebhookMobileAccountStatus    TypeOfWebhook = "ACCOUNT_STATUS"
 )
 const (
 	CompanyTypeMei         CompanyType = "MEI"
@@ -472,10 +487,28 @@ const (
 	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
 )
 
+func (s SubaccountDocumentType) IsEnumValid() bool {
+	switch s {
+	case AccountDocumentTypeIdentification, AccountDocumentTypeSocialContract, AccountDocumentTypeEntrepreneurRequirement,
+		AccountDocumentTypeMinutesOfElection, AccountDocumentTypeCustom:
+		return true
+	}
+	return false
+}
+
+func (s SubaccountDocumentStatus) IsEnumValid() bool {
+	switch s {
+	case SubaccountDocumentStatusPending, SubaccountDocumentStatusNotSent, SubaccountDocumentStatusApproved,
+		SubaccountDocumentStatusRejected:
+		return true
+	}
+	return false
+}
+
 func (t TypeOfWebhook) IsEnumValid() bool {
 	switch t {
-	case TypeOfWebhookCharges, TypeOfWebhookInvoices, TypeOfWebhookTransfers, TypeOfWebhookAnticipations,
-		TypeOfWebhookMobilePhoneRecharges, TypeOfWebhookBillPayments, TypeOfWebhookMobileAccountSituation:
+	case TypeOfWebhookPayment, TypeOfWebhookInvoice, TypeOfWebhookTransfer, TypeOfWebhookReceivableAnticipation,
+		TypeOfWebhookMobilePhoneRecharge, TypeOfWebhookBill, TypeOfWebhookMobileAccountStatus:
 		return true
 	}
 	return false
@@ -854,7 +887,8 @@ func (s SplitStatus) IsEnumValid() bool {
 
 func (t DocumentType) IsEnumValid() bool {
 	switch t {
-	case DocumentTypeInvoice, DocumentTypeContract, DocumentTypeDocument, DocumentTypeSpreadsheet, DocumentTypeProgram, DocumentTypeOther:
+	case DocumentTypeInvoice, DocumentTypeContract, DocumentTypeDocument, DocumentTypeSpreadsheet, DocumentTypeProgram,
+		DocumentTypeOther:
 		return true
 	}
 	return false
@@ -977,17 +1011,17 @@ func (f FileMimeType) Extension() string {
 
 func (t TypeOfWebhook) PathUrl() string {
 	switch t {
-	case TypeOfWebhookInvoices:
+	case TypeOfWebhookInvoice:
 		return "/invoice"
-	case TypeOfWebhookAnticipations:
+	case TypeOfWebhookReceivableAnticipation:
 		return "/anticipation"
-	case TypeOfWebhookTransfers:
+	case TypeOfWebhookTransfer:
 		return "/transfer"
-	case TypeOfWebhookBillPayments:
+	case TypeOfWebhookBill:
 		return "/bill"
-	case TypeOfWebhookMobilePhoneRecharges:
+	case TypeOfWebhookMobilePhoneRecharge:
 		return "/mobilePhoneRecharge"
-	case TypeOfWebhookMobileAccountSituation:
+	case TypeOfWebhookMobileAccountStatus:
 		return "/accountStatus"
 	}
 	return ""

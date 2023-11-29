@@ -13,6 +13,18 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (a SubaccountDocumentsResponse) IsSuccess() bool {
+	return true
+}
+
+func (a SubaccountDocumentsResponse) IsFailure() bool {
+	return !a.IsSuccess()
+}
+
+func (a SubaccountDocumentsResponse) IsNoContent() bool {
+	return len(a.Data) == 0 && util.IsBlank(&a.RejectReasons)
+}
+
 func (w WebhookResponse) IsSuccess() bool {
 	return len(w.Errors) == 0 && util.IsNotBlank(&w.Url)
 }

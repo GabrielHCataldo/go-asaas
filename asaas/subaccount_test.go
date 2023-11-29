@@ -7,12 +7,12 @@ import (
 	"time"
 )
 
-func TestWebhookGetSettingNoContent(t *testing.T) {
+func TestSubaccountGetAll(t *testing.T) {
 	accessToken, err := test.GetAccessTokenByEnv()
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nWebhook := NewWebhook(EnvSandbox, *accessToken)
-	resp, errAsaas := nWebhook.GetSetting(ctx, TypeOfWebhookPayment)
+	nSubaccount := NewSubaccount(EnvSandbox, *accessToken)
+	resp, errAsaas := nSubaccount.GetAll(ctx, GetAllSubaccountsRequest{})
 	assertResponseNoContent(t, resp, errAsaas)
 }
