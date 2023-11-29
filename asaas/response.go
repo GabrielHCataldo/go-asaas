@@ -13,6 +13,30 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (m MobilePhoneProviderResponse) IsSuccess() bool {
+	return len(m.Errors) == 0 && len(m.Values) > 0
+}
+
+func (m MobilePhoneProviderResponse) IsFailure() bool {
+	return !m.IsSuccess()
+}
+
+func (m MobilePhoneProviderResponse) IsNoContent() bool {
+	return len(m.Errors) == 0 && len(m.Values) == 0
+}
+
+func (m MobilePhoneRechargeResponse) IsSuccess() bool {
+	return len(m.Errors) == 0 && util.IsNotBlank(&m.ID)
+}
+
+func (m MobilePhoneRechargeResponse) IsFailure() bool {
+	return !m.IsSuccess()
+}
+
+func (m MobilePhoneRechargeResponse) IsNoContent() bool {
+	return len(m.Errors) == 0 && util.IsBlank(&m.ID)
+}
+
 func (b BillPaymentSimulateResponse) IsSuccess() bool {
 	return len(b.Errors) == 0 && util.IsNotBlank(&b.BankSlipInfo.IdentificationField)
 }

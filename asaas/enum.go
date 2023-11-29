@@ -46,7 +46,14 @@ type NegativityStatus string
 type NegativityType string
 type FileMimeType string
 type BillPaymentStatus string
+type MobilePhoneRechargeStatus string
 
+const (
+	MobilePhoneRechargeStatusWaitingCriticalAction MobilePhoneRechargeStatus = "WAITING_CRITICAL_ACTION"
+	MobilePhoneRechargeStatusPending               MobilePhoneRechargeStatus = "PENDING"
+	MobilePhoneRechargeStatusConfirmed             MobilePhoneRechargeStatus = "CONFIRMED"
+	MobilePhoneRechargeStatusCancelled             MobilePhoneRechargeStatus = "CANCELLED"
+)
 const (
 	BillPaymentStatusPending        BillPaymentStatus = "PENDING"
 	BillPaymentStatusBankProcessing BillPaymentStatus = "BANK_PROCESSING"
@@ -341,6 +348,15 @@ const (
 	NotificationEventPaymentOverdue        NotificationEvent = "PAYMENT_OVERDUE"
 	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
 )
+
+func (m MobilePhoneRechargeStatus) IsEnumValid() bool {
+	switch m {
+	case MobilePhoneRechargeStatusPending, MobilePhoneRechargeStatusWaitingCriticalAction,
+		MobilePhoneRechargeStatusConfirmed, MobilePhoneRechargeStatusCancelled:
+		return true
+	}
+	return false
+}
 
 func (f BillPaymentStatus) IsEnumValid() bool {
 	switch f {
