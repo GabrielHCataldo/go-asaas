@@ -92,7 +92,7 @@ type ChargeCallbackRequest struct {
 }
 
 type ChargeResponse struct {
-	ID                    string              `json:"id,omitempty"`
+	Id                    string              `json:"id,omitempty"`
 	Customer              string              `json:"customer,omitempty"`
 	Status                ChargeStatus        `json:"status,omitempty"`
 	PaymentLink           string              `json:"paymentLink,omitempty"`
@@ -145,7 +145,7 @@ type ChargePixQrCodeResponse struct {
 }
 
 type ChargeDocumentResponse struct {
-	ID                    string              `json:"id,omitempty"`
+	Id                    string              `json:"id,omitempty"`
 	Name                  string              `json:"name,omitempty"`
 	AvailableAfterPayment bool                `json:"availableAfterPayment,omitempty"`
 	Type                  DocumentType        `json:"type,omitempty"`
@@ -155,7 +155,7 @@ type ChargeDocumentResponse struct {
 }
 
 type ChargeFileResponse struct {
-	PublicID     string `json:"publicId,omitempty"`
+	PublicId     string `json:"publicId,omitempty"`
 	OriginalName string `json:"originalName,omitempty"`
 	Size         int    `json:"size,omitempty"`
 	Extension    string `json:"extension,omitempty"`
@@ -184,24 +184,24 @@ type charge struct {
 
 type Charge interface {
 	Create(ctx context.Context, body CreateChargeRequest) (*ChargeResponse, Error)
-	PayWithCreditCard(ctx context.Context, chargeID string, body CreditCardRequest) (*ChargeResponse, Error)
-	UpdateByID(ctx context.Context, chargeID string, body UpdateChargeRequest) (*ChargeResponse, Error)
-	DeleteByID(ctx context.Context, chargeID string) (*DeleteResponse, Error)
-	RestoreByID(ctx context.Context, chargeID string) (*ChargeResponse, Error)
-	RefundByID(ctx context.Context, chargeID string, body RefundRequest) (*ChargeResponse, Error)
-	ReceiveInCashByID(ctx context.Context, chargeID string, body ChargeReceiveInCashRequest) (*ChargeResponse, Error)
-	UndoReceivedInCashByID(ctx context.Context, chargeID string) (*ChargeResponse, Error)
-	UploadDocumentByID(ctx context.Context, chargeID string, body UploadChargeDocumentRequest) (*ChargeDocumentResponse, Error)
-	UpdateDocumentDefinitionsByID(ctx context.Context, chargeID, docID string, body UpdateChargeDocumentDefinitionsRequest) (
+	PayWithCreditCard(ctx context.Context, chargeId string, body CreditCardRequest) (*ChargeResponse, Error)
+	UpdateById(ctx context.Context, chargeId string, body UpdateChargeRequest) (*ChargeResponse, Error)
+	DeleteById(ctx context.Context, chargeId string) (*DeleteResponse, Error)
+	RestoreById(ctx context.Context, chargeId string) (*ChargeResponse, Error)
+	RefundById(ctx context.Context, chargeId string, body RefundRequest) (*ChargeResponse, Error)
+	ReceiveInCashById(ctx context.Context, chargeId string, body ChargeReceiveInCashRequest) (*ChargeResponse, Error)
+	UndoReceivedInCashById(ctx context.Context, chargeId string) (*ChargeResponse, Error)
+	UploadDocumentById(ctx context.Context, chargeId string, body UploadChargeDocumentRequest) (*ChargeDocumentResponse, Error)
+	UpdateDocumentDefinitionsById(ctx context.Context, chargeId, docId string, body UpdateChargeDocumentDefinitionsRequest) (
 		*ChargeDocumentResponse, Error)
-	DeleteDocumentByID(ctx context.Context, chargeID, docID string) (*DeleteResponse, Error)
-	GetByID(ctx context.Context, chargeID string) (*ChargeResponse, Error)
+	DeleteDocumentById(ctx context.Context, chargeId, docId string) (*DeleteResponse, Error)
+	GetById(ctx context.Context, chargeId string) (*ChargeResponse, Error)
 	GetCreationLimit(ctx context.Context) (*ChargeCreationLimitResponse, Error)
-	GetStatusByID(ctx context.Context, chargeID string) (*ChargeStatus, Error)
-	GetIdentificationFieldByID(ctx context.Context, chargeID string) (*IdentificationFieldResponse, Error)
-	GetPixQrCodeByID(ctx context.Context, chargeID string) (*ChargePixQrCodeResponse, Error)
-	GetDocumentByID(ctx context.Context, chargeID, docID string) (*ChargeDocumentResponse, Error)
-	GetAllDocumentsByID(ctx context.Context, chargeID string, filter PageableDefaultRequest) (
+	GetStatusById(ctx context.Context, chargeId string) (*ChargeStatus, Error)
+	GetIdentificationFieldById(ctx context.Context, chargeId string) (*IdentificationFieldResponse, Error)
+	GetPixQrCodeById(ctx context.Context, chargeId string) (*ChargePixQrCodeResponse, Error)
+	GetDocumentById(ctx context.Context, chargeId, docId string) (*ChargeDocumentResponse, Error)
+	GetAllDocumentsById(ctx context.Context, chargeId string, filter PageableDefaultRequest) (
 		*Pageable[ChargeDocumentResponse], Error)
 	GetAll(ctx context.Context, filter GetAllChargesRequest) (*Pageable[ChargeResponse], Error)
 }
@@ -223,79 +223,79 @@ func (c charge) Create(ctx context.Context, body CreateChargeRequest) (*ChargeRe
 	return req.make(http.MethodPost, "/v3/payments", body)
 }
 
-func (c charge) PayWithCreditCard(ctx context.Context, chargeID string, body CreditCardRequest) (*ChargeResponse,
+func (c charge) PayWithCreditCard(ctx context.Context, chargeId string, body CreditCardRequest) (*ChargeResponse,
 	Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/payWithCreditCard`, chargeID), body)
+	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/payWithCreditCard`, chargeId), body)
 }
 
-func (c charge) UpdateByID(ctx context.Context, chargeID string, body UpdateChargeRequest) (*ChargeResponse,
+func (c charge) UpdateById(ctx context.Context, chargeId string, body UpdateChargeRequest) (*ChargeResponse,
 	Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s`, chargeID), body)
+	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s`, chargeId), body)
 }
 
-func (c charge) DeleteByID(ctx context.Context, chargeID string) (*DeleteResponse, Error) {
+func (c charge) DeleteById(ctx context.Context, chargeId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodDelete, fmt.Sprintf(`/v3/payments/%s`, chargeID), nil)
+	return req.make(http.MethodDelete, fmt.Sprintf(`/v3/payments/%s`, chargeId), nil)
 }
 
-func (c charge) RestoreByID(ctx context.Context, chargeID string) (*ChargeResponse, Error) {
+func (c charge) RestoreById(ctx context.Context, chargeId string) (*ChargeResponse, Error) {
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/restore`, chargeID), nil)
+	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/restore`, chargeId), nil)
 }
 
-func (c charge) RefundByID(ctx context.Context, chargeID string, body RefundRequest) (
+func (c charge) RefundById(ctx context.Context, chargeId string, body RefundRequest) (
 	*ChargeResponse, Error) {
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/refund`, chargeID), body)
+	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/refund`, chargeId), body)
 }
 
-func (c charge) ReceiveInCashByID(ctx context.Context, chargeID string, body ChargeReceiveInCashRequest) (
+func (c charge) ReceiveInCashById(ctx context.Context, chargeId string, body ChargeReceiveInCashRequest) (
 	*ChargeResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/receiveInCash`, chargeID), body)
+	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/receiveInCash`, chargeId), body)
 }
 
-func (c charge) UndoReceivedInCashByID(ctx context.Context, chargeID string) (*ChargeResponse, Error) {
+func (c charge) UndoReceivedInCashById(ctx context.Context, chargeId string) (*ChargeResponse, Error) {
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/undoReceivedInCash`, chargeID), nil)
+	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/undoReceivedInCash`, chargeId), nil)
 }
 
-func (c charge) UploadDocumentByID(ctx context.Context, chargeID string, body UploadChargeDocumentRequest) (
+func (c charge) UploadDocumentById(ctx context.Context, chargeId string, body UploadChargeDocumentRequest) (
 	*ChargeDocumentResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeDocumentResponse](ctx, c.env, c.accessToken)
-	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/documents`, chargeID), body)
+	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/documents`, chargeId), body)
 }
 
-func (c charge) UpdateDocumentDefinitionsByID(
+func (c charge) UpdateDocumentDefinitionsById(
 	ctx context.Context,
-	chargeID,
-	docID string,
+	chargeId,
+	docId string,
 	body UpdateChargeDocumentDefinitionsRequest,
 ) (*ChargeDocumentResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[ChargeDocumentResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeID, docID), body)
+	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeId, docId), body)
 }
 
-func (c charge) DeleteDocumentByID(ctx context.Context, chargeID, docID string) (*DeleteResponse, Error) {
+func (c charge) DeleteDocumentById(ctx context.Context, chargeId, docId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodDelete, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeID, docID), nil)
+	return req.make(http.MethodDelete, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeId, docId), nil)
 }
 
 func (c charge) GetCreationLimit(ctx context.Context) (*ChargeCreationLimitResponse, Error) {
@@ -303,40 +303,40 @@ func (c charge) GetCreationLimit(ctx context.Context) (*ChargeCreationLimitRespo
 	return req.make(http.MethodGet, "/v3/payments/limits", nil)
 }
 
-func (c charge) GetByID(ctx context.Context, chargeID string) (*ChargeResponse, Error) {
+func (c charge) GetById(ctx context.Context, chargeId string) (*ChargeResponse, Error) {
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s`, chargeID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s`, chargeId), nil)
 }
 
-func (c charge) GetStatusByID(ctx context.Context, chargeID string) (*ChargeStatus, Error) {
+func (c charge) GetStatusById(ctx context.Context, chargeId string) (*ChargeStatus, Error) {
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
-	resp, err := req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/status`, chargeID), nil)
+	resp, err := req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/status`, chargeId), nil)
 	if err != nil {
 		return nil, err
 	}
 	return &resp.Status, nil
 }
 
-func (c charge) GetIdentificationFieldByID(ctx context.Context, chargeID string) (*IdentificationFieldResponse,
+func (c charge) GetIdentificationFieldById(ctx context.Context, chargeId string) (*IdentificationFieldResponse,
 	Error) {
 	req := NewRequest[IdentificationFieldResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/identificationField`, chargeID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/identificationField`, chargeId), nil)
 }
 
-func (c charge) GetPixQrCodeByID(ctx context.Context, chargeID string) (*ChargePixQrCodeResponse, Error) {
+func (c charge) GetPixQrCodeById(ctx context.Context, chargeId string) (*ChargePixQrCodeResponse, Error) {
 	req := NewRequest[ChargePixQrCodeResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/pixQrCode`, chargeID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/pixQrCode`, chargeId), nil)
 }
 
-func (c charge) GetDocumentByID(ctx context.Context, chargeID, docID string) (*ChargeDocumentResponse, Error) {
+func (c charge) GetDocumentById(ctx context.Context, chargeId, docId string) (*ChargeDocumentResponse, Error) {
 	req := NewRequest[ChargeDocumentResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeID, docID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeId, docId), nil)
 }
 
-func (c charge) GetAllDocumentsByID(ctx context.Context, chargeID string, filter PageableDefaultRequest) (
+func (c charge) GetAllDocumentsById(ctx context.Context, chargeId string, filter PageableDefaultRequest) (
 	*Pageable[ChargeDocumentResponse], Error) {
 	req := NewRequest[Pageable[ChargeDocumentResponse]](ctx, c.env, c.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/documents`, chargeID), filter)
+	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/documents`, chargeId), filter)
 }
 
 func (c charge) GetAll(ctx context.Context, filter GetAllChargesRequest) (

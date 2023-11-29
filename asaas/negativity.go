@@ -36,7 +36,7 @@ type NegativityResendDocumentsRequest struct {
 }
 
 type NegativityResponse struct {
-	ID                             string           `json:"id,omitempty"`
+	Id                             string           `json:"id,omitempty"`
 	Payment                        string           `json:"payment,omitempty"`
 	DunningNumber                  int              `json:"dunningNumber,omitempty"`
 	Type                           NegativityType   `json:"type,omitempty"`
@@ -99,14 +99,14 @@ type negativity struct {
 
 type Negativity interface {
 	Create(ctx context.Context, body CreateNegativityRequest) (*NegativityResponse, Error)
-	Simulate(ctx context.Context, chargeID string) (*NegativitySimulateResponse, Error)
-	ResendDocumentsByID(ctx context.Context, negativityID string, body NegativityResendDocumentsRequest) (
+	Simulate(ctx context.Context, chargeId string) (*NegativitySimulateResponse, Error)
+	ResendDocumentsById(ctx context.Context, negativityId string, body NegativityResendDocumentsRequest) (
 		*NegativityResponse, Error)
-	CancelByID(ctx context.Context, negativityID string) (*NegativityResponse, Error)
-	GetByID(ctx context.Context, negativityID string) (*NegativityResponse, Error)
-	GetHistoryByID(ctx context.Context, negativityID string, filter PageableDefaultRequest) (
+	CancelById(ctx context.Context, negativityId string) (*NegativityResponse, Error)
+	GetById(ctx context.Context, negativityId string) (*NegativityResponse, Error)
+	GetHistoryById(ctx context.Context, negativityId string, filter PageableDefaultRequest) (
 		*Pageable[NegativityHistoryResponse], Error)
-	GetPaymentsByID(ctx context.Context, negativityID string, filter PageableDefaultRequest) (
+	GetPaymentsById(ctx context.Context, negativityId string, filter PageableDefaultRequest) (
 		*Pageable[NegativityPaymentsResponse], Error)
 	GetChargesAvailableForDunning(ctx context.Context, filter PageableDefaultRequest) (
 		*Pageable[ChargesAvailableForDunningResponse], Error)
@@ -129,43 +129,43 @@ func (n negativity) Create(ctx context.Context, body CreateNegativityRequest) (*
 	return req.make(http.MethodPost, "/v3/paymentDunnings", body)
 }
 
-func (n negativity) Simulate(ctx context.Context, chargeID string) (*NegativitySimulateResponse, Error) {
-	if util.IsBlank(&chargeID) {
-		return nil, NewError(ErrorTypeValidation, "chargeID is required")
+func (n negativity) Simulate(ctx context.Context, chargeId string) (*NegativitySimulateResponse, Error) {
+	if util.IsBlank(&chargeId) {
+		return nil, NewError(ErrorTypeValidation, "chargeId is required")
 	}
 	req := NewRequest[NegativitySimulateResponse](ctx, n.env, n.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/simulate?payment=%s", chargeID), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/simulate?payment=%s", chargeId), nil)
 }
 
-func (n negativity) ResendDocumentsByID(ctx context.Context, negativityID string, body NegativityResendDocumentsRequest) (
+func (n negativity) ResendDocumentsById(ctx context.Context, negativityId string, body NegativityResendDocumentsRequest) (
 	*NegativityResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
-	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/%s/documents", negativityID), body)
+	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/%s/documents", negativityId), body)
 }
 
-func (n negativity) CancelByID(ctx context.Context, negativityID string) (*NegativityResponse, Error) {
+func (n negativity) CancelById(ctx context.Context, negativityId string) (*NegativityResponse, Error) {
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
-	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/%s/cancel", negativityID), nil)
+	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/%s/cancel", negativityId), nil)
 }
 
-func (n negativity) GetByID(ctx context.Context, negativityID string) (*NegativityResponse, Error) {
+func (n negativity) GetById(ctx context.Context, negativityId string) (*NegativityResponse, Error) {
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentDunnings/%s", negativityID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentDunnings/%s", negativityId), nil)
 }
 
-func (n negativity) GetHistoryByID(ctx context.Context, negativityID string, filter PageableDefaultRequest) (
+func (n negativity) GetHistoryById(ctx context.Context, negativityId string, filter PageableDefaultRequest) (
 	*Pageable[NegativityHistoryResponse], Error) {
 	req := NewRequest[Pageable[NegativityHistoryResponse]](ctx, n.env, n.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentDunnings/%s/history", negativityID), filter)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentDunnings/%s/history", negativityId), filter)
 }
 
-func (n negativity) GetPaymentsByID(ctx context.Context, negativityID string, filter PageableDefaultRequest) (
+func (n negativity) GetPaymentsById(ctx context.Context, negativityId string, filter PageableDefaultRequest) (
 	*Pageable[NegativityPaymentsResponse], Error) {
 	req := NewRequest[Pageable[NegativityPaymentsResponse]](ctx, n.env, n.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentDunnings/%s/partialPayments", negativityID), filter)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentDunnings/%s/partialPayments", negativityId), filter)
 }
 
 func (n negativity) GetChargesAvailableForDunning(ctx context.Context, filter PageableDefaultRequest) (

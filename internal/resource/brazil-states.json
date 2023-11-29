@@ -1,0 +1,110 @@
+[
+  {
+    "abbreviation": "AC",
+    "name": "Acre"
+  },
+  {
+    "abbreviation": "AL",
+    "name": "Alagoas"
+  },
+  {
+    "abbreviation": "AP",
+    "name": "Amapá"
+  },
+  {
+    "abbreviation": "AM",
+    "name": "Amazonas"
+  },
+  {
+    "abbreviation": "BA",
+    "name": "Bahia"
+  },
+  {
+    "abbreviation": "CE",
+    "name": "Ceará"
+  },
+  {
+    "abbreviation": "DF",
+    "name": "Distrito Federal"
+  },
+  {
+    "abbreviation": "GO",
+    "name": "Goiás"
+  },
+  {
+    "abbreviation": "ES",
+    "name": "Espirito Santo"
+  },
+  {
+    "abbreviation": "MA",
+    "name": "Maranhão"
+  },
+  {
+    "abbreviation": "MT",
+    "name": "Mato Grosso"
+  },
+  {
+    "abbreviation": "MS",
+    "name": "Mato Grosso do Sul"
+  },
+  {
+    "abbreviation": "MG",
+    "name": "Minas Gerais"
+  },
+  {
+    "abbreviation": "PA",
+    "name": "Pará"
+  },
+  {
+    "abbreviation": "PB",
+    "name": "Paraíba"
+  },
+  {
+    "abbreviation": "PR",
+    "name": "Paraná"
+  },
+  {
+    "abbreviation": "PE",
+    "name": "Pernambuco"
+  },
+  {
+    "abbreviation": "PI",
+    "name": "Piauí"
+  },
+  {
+    "abbreviation": "RJ",
+    "name": "Rio de Janeiro"
+  },
+  {
+    "abbreviation": "RN",
+    "name": "Rio Grande do Norte"
+  },
+  {
+    "abbreviation": "RS",
+    "name": "Rio Grande do Sul"
+  },
+  {
+    "abbreviation": "RO",
+    "name": "Rondônia"
+  },
+  {
+    "abbreviation": "RR",
+    "name": "Roraima"
+  },
+  {
+    "abbreviation": "SP",
+    "name": "São Paulo"
+  },
+  {
+    "abbreviation": "SC",
+    "name": "Santa Catarina"
+  },
+  {
+    "abbreviation": "SE",
+    "name": "Sergipe"
+  },
+  {
+    "abbreviation": "TO",
+    "name": "Tocantins"
+  }
+]

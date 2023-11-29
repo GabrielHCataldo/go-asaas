@@ -12,7 +12,7 @@ type MobilePhoneRechargeRequest struct {
 }
 
 type MobilePhoneRechargeResponse struct {
-	ID             string                    `json:"id,omitempty"`
+	Id             string                    `json:"id,omitempty"`
 	PhoneNumber    string                    `json:"phoneNumber,omitempty"`
 	Value          float64                   `json:"value,omitempty"`
 	Status         MobilePhoneRechargeStatus `json:"status,omitempty"`
@@ -42,8 +42,8 @@ type mobilePhone struct {
 
 type MobilePhone interface {
 	Recharge(ctx context.Context, body MobilePhoneRechargeRequest) (*MobilePhoneRechargeResponse, Error)
-	CancelRechargeByID(ctx context.Context, rechargeID string) (*MobilePhoneRechargeResponse, Error)
-	GetRechargeByID(ctx context.Context, rechargeID string) (*MobilePhoneRechargeResponse, Error)
+	CancelRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error)
+	GetRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error)
 	GetProviderByPhoneNumber(ctx context.Context, phoneNumber string) (*MobilePhoneProviderResponse, Error)
 	GetAllRecharges(ctx context.Context, filter PageableDefaultRequest) (*Pageable[MobilePhoneRechargeResponse], Error)
 }
@@ -64,14 +64,14 @@ func (m mobilePhone) Recharge(ctx context.Context, body MobilePhoneRechargeReque
 	return req.make(http.MethodPost, "/v3/mobilePhoneRecharges", body)
 }
 
-func (m mobilePhone) CancelRechargeByID(ctx context.Context, rechargeID string) (*MobilePhoneRechargeResponse, Error) {
+func (m mobilePhone) CancelRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error) {
 	req := NewRequest[MobilePhoneRechargeResponse](ctx, m.env, m.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/mobilePhoneRecharges/%s/cancel", rechargeID), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/mobilePhoneRecharges/%s/cancel", rechargeId), nil)
 }
 
-func (m mobilePhone) GetRechargeByID(ctx context.Context, rechargeID string) (*MobilePhoneRechargeResponse, Error) {
+func (m mobilePhone) GetRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error) {
 	req := NewRequest[MobilePhoneRechargeResponse](ctx, m.env, m.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/mobilePhoneRecharges/%s", rechargeID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/mobilePhoneRecharges/%s", rechargeId), nil)
 }
 
 func (m mobilePhone) GetProviderByPhoneNumber(ctx context.Context, phoneNumber string) (*MobilePhoneProviderResponse,

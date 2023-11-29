@@ -56,7 +56,7 @@ type InvoiceSettingResponse struct {
 }
 
 type InvoiceResponse struct {
-	ID                        string                `json:"id,omitempty"`
+	Id                        string                `json:"id,omitempty"`
 	Payment                   string                `json:"payment,omitempty"`
 	Customer                  string                `json:"customer,omitempty"`
 	Status                    InvoiceStatus         `json:"status,omitempty"`

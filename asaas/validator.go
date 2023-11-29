@@ -44,6 +44,10 @@ func Validate() *validator.Validate {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = vld.RegisterValidation("state", validateState)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return vld
 }
 
@@ -109,6 +113,10 @@ func validateDocument(fl validator.FieldLevel) bool {
 
 func validatePostalCode(fl validator.FieldLevel) bool {
 	return util.ValidatePostalCode(fl.Field().String())
+}
+
+func validateState(fl validator.FieldLevel) bool {
+	return util.ValidateState(fl.Field().String())
 }
 
 func validateEnum(fl validator.FieldLevel) bool {

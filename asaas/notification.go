@@ -24,7 +24,7 @@ type UpdateManyNotificationsRequest struct {
 }
 
 type UpdateManyNotificationRequest struct {
-	ID                          string `json:"id,omitempty" validate:"required"`
+	Id                          string `json:"id,omitempty" validate:"required"`
 	Enabled                     bool   `json:"enabled,omitempty"`
 	EmailEnabledForProvider     bool   `json:"emailEnabledForProvider,omitempty"`
 	SmsEnabledForProvider       bool   `json:"smsEnabledForProvider,omitempty"`
@@ -37,7 +37,7 @@ type UpdateManyNotificationRequest struct {
 }
 
 type NotificationResponse struct {
-	ID                          string            `json:"id,omitempty"`
+	Id                          string            `json:"id,omitempty"`
 	Customer                    string            `json:"customer,omitempty"`
 	Enabled                     bool              `json:"enabled,omitempty"`
 	EmailEnabledForProvider     bool              `json:"emailEnabledForProvider,omitempty"`
@@ -63,10 +63,10 @@ type notification struct {
 }
 
 type Notification interface {
-	UpdateByID(ctx context.Context, notificationID string, body UpdateNotificationRequest) (*NotificationResponse, Error)
+	UpdateById(ctx context.Context, notificationId string, body UpdateNotificationRequest) (*NotificationResponse, Error)
 	UpdateManyByCustomer(ctx context.Context, body UpdateManyNotificationsRequest) (*UpdateManyNotificationsResponse,
 		Error)
-	GetAllByCustomer(ctx context.Context, customerID string) (*Pageable[NotificationResponse], Error)
+	GetAllByCustomer(ctx context.Context, customerId string) (*Pageable[NotificationResponse], Error)
 }
 
 func NewNotification(env Env, accessToken string) Notification {
@@ -77,13 +77,13 @@ func NewNotification(env Env, accessToken string) Notification {
 	}
 }
 
-func (n notification) UpdateByID(ctx context.Context, notificationID string, body UpdateNotificationRequest) (
+func (n notification) UpdateById(ctx context.Context, notificationId string, body UpdateNotificationRequest) (
 	*NotificationResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[NotificationResponse](ctx, n.env, n.accessToken)
-	return req.make(http.MethodPut, fmt.Sprintf("/v3/notifications/%s", notificationID), body)
+	return req.make(http.MethodPut, fmt.Sprintf("/v3/notifications/%s", notificationId), body)
 }
 
 func (n notification) UpdateManyByCustomer(ctx context.Context, body UpdateManyNotificationsRequest) (
@@ -95,7 +95,7 @@ func (n notification) UpdateManyByCustomer(ctx context.Context, body UpdateManyN
 	return req.make(http.MethodPut, "/v3/notifications/batch", body)
 }
 
-func (n notification) GetAllByCustomer(ctx context.Context, customerID string) (*Pageable[NotificationResponse], Error) {
+func (n notification) GetAllByCustomer(ctx context.Context, customerId string) (*Pageable[NotificationResponse], Error) {
 	req := NewRequest[Pageable[NotificationResponse]](ctx, n.env, n.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/customers/%s/notifications", customerID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/customers/%s/notifications", customerId), nil)
 }

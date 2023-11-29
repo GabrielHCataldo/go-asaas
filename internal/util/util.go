@@ -1,8 +1,10 @@
 package util
 
 import (
+	"encoding/json"
 	"github.com/klassmann/cpfcnpj"
 	"github.com/nyaruka/phonenumbers"
+	"os"
 	"path"
 	"regexp"
 	"runtime"
@@ -10,6 +12,14 @@ import (
 	"strings"
 	"time"
 )
+
+func GetFileJson(uriFile string, dest any) error {
+	bytes, err := os.ReadFile(uriFile)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(bytes, dest)
+}
 
 func IsPhoneNumber(value string) bool {
 	num, err := phonenumbers.Parse(value, "BR")
@@ -44,6 +54,20 @@ func ValidateExpirationCreditCard(expiryYear, expiryMonth string) bool {
 		return false
 	}
 	return true
+}
+
+func ValidateState(v string) bool {
+	var brazilStates []map[string]string
+	err := GetFileJson("resource/brazil-states.json", &brazilStates)
+	if err == nil {
+		return true
+	}
+	for _, state := range brazilStates {
+		if state["abbreviation"] == v {
+			return true
+		}
+	}
+	return false
 }
 
 func IsBlank(value *string) bool {

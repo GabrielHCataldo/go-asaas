@@ -25,7 +25,7 @@ type BillPaymentSimulateRequest struct {
 }
 
 type BillPaymentResponse struct {
-	ID                    string            `json:"id,omitempty"`
+	Id                    string            `json:"id,omitempty"`
 	IdentificationField   string            `json:"identificationField,omitempty"`
 	Status                BillPaymentStatus `json:"status,omitempty"`
 	Discount              float64           `json:"discount,omitempty"`
@@ -79,8 +79,8 @@ type billPayment struct {
 type BillPayment interface {
 	Create(ctx context.Context, body BillPaymentRequest) (*BillPaymentResponse, Error)
 	Simulate(ctx context.Context, body BillPaymentSimulateRequest) (*BillPaymentSimulateResponse, Error)
-	CancelByID(ctx context.Context, billPaymentID string) (*BillPaymentResponse, Error)
-	GetByID(ctx context.Context, billPaymentID string) (*BillPaymentResponse, Error)
+	CancelById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, Error)
+	GetById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, Error)
 	GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[BillPaymentResponse], Error)
 }
 
@@ -108,14 +108,14 @@ func (b billPayment) Simulate(ctx context.Context, body BillPaymentSimulateReque
 	return req.make(http.MethodPost, "/v3/bill/simulate", body)
 }
 
-func (b billPayment) CancelByID(ctx context.Context, billPaymentID string) (*BillPaymentResponse, Error) {
+func (b billPayment) CancelById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, Error) {
 	req := NewRequest[BillPaymentResponse](ctx, b.env, b.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/bill/%s/cancel", billPaymentID), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/bill/%s/cancel", billPaymentId), nil)
 }
 
-func (b billPayment) GetByID(ctx context.Context, billPaymentID string) (*BillPaymentResponse, Error) {
+func (b billPayment) GetById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, Error) {
 	req := NewRequest[BillPaymentResponse](ctx, b.env, b.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/bill/%s", billPaymentID), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/bill/%s", billPaymentId), nil)
 }
 
 func (b billPayment) GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[BillPaymentResponse], Error) {

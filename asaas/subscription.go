@@ -70,7 +70,7 @@ type SubscriptionPaymentBookRequest struct {
 }
 
 type SubscriptionResponse struct {
-	ID                string             `json:"id,omitempty"`
+	Id                string             `json:"id,omitempty"`
 	Customer          string             `json:"customer,omitempty"`
 	Status            SubscriptionStatus `json:"status,omitempty"`
 	Refunds           []RefundResponse   `json:"refunds,omitempty"`
@@ -97,20 +97,20 @@ type subscription struct {
 
 type Subscription interface {
 	Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, Error)
-	CreateInvoiceSettingByID(ctx context.Context, subscriptionID string, body CreateInvoiceSettingRequest) (
+	CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body CreateInvoiceSettingRequest) (
 		*InvoiceSettingResponse, Error)
-	UpdateByID(ctx context.Context, subscriptionID string, body UpdateSubscriptionRequest) (*SubscriptionResponse, Error)
-	UpdateInvoiceSettingsByID(ctx context.Context, subscriptionID string, body UpdateInvoiceSettingRequest) (
+	UpdateById(ctx context.Context, subscriptionId string, body UpdateSubscriptionRequest) (*SubscriptionResponse, Error)
+	UpdateInvoiceSettingsById(ctx context.Context, subscriptionId string, body UpdateInvoiceSettingRequest) (
 		*InvoiceSettingResponse, Error)
-	DeleteByID(ctx context.Context, subscriptionID string) (*DeleteResponse, Error)
-	DeleteInvoiceSettingByID(ctx context.Context, subscriptionID string) (*DeleteResponse, Error)
-	GetByID(ctx context.Context, subscriptionID string) (*SubscriptionResponse, Error)
-	GetInvoiceSettingByID(ctx context.Context, subscriptionID string) (*InvoiceSettingResponse, Error)
-	GetAllChargesBySubscription(ctx context.Context, subscriptionID string, filter GetAllChargesBySubscriptionRequest) (
+	DeleteById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error)
+	DeleteInvoiceSettingById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error)
+	GetById(ctx context.Context, subscriptionId string) (*SubscriptionResponse, Error)
+	GetInvoiceSettingById(ctx context.Context, subscriptionId string) (*InvoiceSettingResponse, Error)
+	GetAllChargesBySubscription(ctx context.Context, subscriptionId string, filter GetAllChargesBySubscriptionRequest) (
 		*Pageable[ChargeResponse], Error)
-	GetAllInvoicesBySubscription(ctx context.Context, subscriptionID string, filter GetAllInvoicesRequest) (
+	GetAllInvoicesBySubscription(ctx context.Context, subscriptionId string, filter GetAllInvoicesRequest) (
 		*Pageable[InvoiceResponse], Error)
-	GetPaymentBookByID(ctx context.Context, subscriptionID string, filter SubscriptionPaymentBookRequest) (
+	GetPaymentBookById(ctx context.Context, subscriptionId string, filter SubscriptionPaymentBookRequest) (
 		*FileTextPlainResponse, Error)
 	GetAll(ctx context.Context, filter GetAllSubscriptionsRequest) (*Pageable[SubscriptionResponse], Error)
 }
@@ -132,74 +132,74 @@ func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest
 	return req.make(http.MethodPost, "/v3/subscriptions", body)
 }
 
-func (s subscription) CreateInvoiceSettingByID(ctx context.Context, subscriptionID string, body CreateInvoiceSettingRequest) (
+func (s subscription) CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body CreateInvoiceSettingRequest) (
 	*InvoiceSettingResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionID), body)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), body)
 }
 
-func (s subscription) UpdateByID(ctx context.Context, subscriptionID string, body UpdateSubscriptionRequest) (
+func (s subscription) UpdateById(ctx context.Context, subscriptionId string, body UpdateSubscriptionRequest) (
 	*SubscriptionResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[SubscriptionResponse](ctx, s.env, s.accessToken)
-	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s", subscriptionID), body)
+	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s", subscriptionId), body)
 }
 
-func (s subscription) UpdateInvoiceSettingsByID(ctx context.Context, subscriptionID string, body UpdateInvoiceSettingRequest) (
+func (s subscription) UpdateInvoiceSettingsById(ctx context.Context, subscriptionId string, body UpdateInvoiceSettingRequest) (
 	*InvoiceSettingResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
-	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionID), body)
+	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), body)
 }
 
-func (s subscription) DeleteByID(ctx context.Context, subscriptionID string) (*DeleteResponse, Error) {
+func (s subscription) DeleteById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, s.env, s.accessToken)
-	return req.make(http.MethodDelete, fmt.Sprintf("/v3/subscriptions/%s", subscriptionID), nil)
+	return req.make(http.MethodDelete, fmt.Sprintf("/v3/subscriptions/%s", subscriptionId), nil)
 }
 
-func (s subscription) DeleteInvoiceSettingByID(ctx context.Context, subscriptionID string) (*DeleteResponse, Error) {
+func (s subscription) DeleteInvoiceSettingById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, s.env, s.accessToken)
-	return req.make(http.MethodDelete, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionID), nil)
+	return req.make(http.MethodDelete, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), nil)
 }
 
-func (s subscription) GetByID(ctx context.Context, subscriptionID string) (*SubscriptionResponse, Error) {
+func (s subscription) GetById(ctx context.Context, subscriptionId string) (*SubscriptionResponse, Error) {
 	req := NewRequest[SubscriptionResponse](ctx, s.env, s.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s", subscriptionID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s", subscriptionId), nil)
 }
 
-func (s subscription) GetInvoiceSettingByID(ctx context.Context, subscriptionID string) (*InvoiceSettingResponse, Error) {
+func (s subscription) GetInvoiceSettingById(ctx context.Context, subscriptionId string) (*InvoiceSettingResponse, Error) {
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), nil)
 }
 
-func (s subscription) GetPaymentBookByID(ctx context.Context, subscriptionID string, filter SubscriptionPaymentBookRequest) (
+func (s subscription) GetPaymentBookById(ctx context.Context, subscriptionId string, filter SubscriptionPaymentBookRequest) (
 	*FileTextPlainResponse, Error) {
 	if err := Validate().Struct(filter); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[FileTextPlainResponse](ctx, s.env, s.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/paymentBook", subscriptionID), filter)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/paymentBook", subscriptionId), filter)
 }
 
 func (s subscription) GetAllChargesBySubscription(
 	ctx context.Context,
-	subscriptionID string,
+	subscriptionId string,
 	filter GetAllChargesBySubscriptionRequest) (*Pageable[ChargeResponse], Error) {
 	req := NewRequest[Pageable[ChargeResponse]](ctx, s.env, s.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/payments", subscriptionID), filter)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/payments", subscriptionId), filter)
 }
 
-func (s subscription) GetAllInvoicesBySubscription(ctx context.Context, subscriptionID string,
+func (s subscription) GetAllInvoicesBySubscription(ctx context.Context, subscriptionId string,
 	filter GetAllInvoicesRequest) (*Pageable[InvoiceResponse], Error) {
 	req := NewRequest[Pageable[InvoiceResponse]](ctx, s.env, s.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/invoices", subscriptionID), filter)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/invoices", subscriptionId), filter)
 }
 
 func (s subscription) GetAll(ctx context.Context, filter GetAllSubscriptionsRequest) (*Pageable[SubscriptionResponse],

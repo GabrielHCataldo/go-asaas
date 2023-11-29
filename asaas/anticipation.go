@@ -33,7 +33,7 @@ type GetAllAnticipationsRequest struct {
 }
 
 type AnticipationResponse struct {
-	ID                string             `json:"id,omitempty"`
+	Id                string             `json:"id,omitempty"`
 	Installment       string             `json:"installment,omitempty"`
 	Payment           string             `json:"payment,omitempty"`
 	Status            AnticipationStatus `json:"status,omitempty"`
@@ -86,7 +86,7 @@ type Anticipation interface {
 	Request(ctx context.Context, body AnticipationRequest) (*AnticipationResponse, Error)
 	Simulate(ctx context.Context, body AnticipationSimulateRequest) (*AnticipationSimulateResponse, Error)
 	AgreementSign(ctx context.Context, body AgreementSignRequest) (*AgreementSignResponse, Error)
-	GetByID(ctx context.Context, anticipationID string) (*AnticipationResponse, Error)
+	GetById(ctx context.Context, anticipationId string) (*AnticipationResponse, Error)
 	GetLimits(ctx context.Context) (*AnticipationLimitsResponse, Error)
 	GetAll(ctx context.Context, filter GetAllAnticipationsRequest) (*Pageable[AnticipationResponse], Error)
 }
@@ -121,9 +121,9 @@ func (a anticipation) AgreementSign(ctx context.Context, body AgreementSignReque
 	return req.make(http.MethodPost, "/v3/anticipations/agreement/sign", body)
 }
 
-func (a anticipation) GetByID(ctx context.Context, anticipationID string) (*AnticipationResponse, Error) {
+func (a anticipation) GetById(ctx context.Context, anticipationId string) (*AnticipationResponse, Error) {
 	req := NewRequest[AnticipationResponse](ctx, a.env, a.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/anticipations/%s", anticipationID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/anticipations/%s", anticipationId), nil)
 }
 
 func (a anticipation) GetLimits(ctx context.Context) (*AnticipationLimitsResponse, Error) {

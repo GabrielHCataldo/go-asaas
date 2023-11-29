@@ -41,7 +41,7 @@ type GetAllPixKeysRequest struct {
 }
 
 type PixKeyResponse struct {
-	ID                    string                `json:"id,omitempty"`
+	Id                    string                `json:"id,omitempty"`
 	Key                   string                `json:"key,omitempty"`
 	Type                  PixKeyType            `json:"type,omitempty"`
 	Status                PixKeyStatus          `json:"status,omitempty"`
@@ -53,7 +53,7 @@ type PixKeyResponse struct {
 }
 
 type PixTransactionResponse struct {
-	ID                    string                      `json:"id,omitempty"`
+	Id                    string                      `json:"id,omitempty"`
 	Payment               string                      `json:"payment,omitempty"`
 	EndToEndIdentifier    string                      `json:"endToEndIdentifier,omitempty"`
 	Type                  PixTransactionType          `json:"type,omitempty"`
@@ -76,7 +76,7 @@ type PixTransactionResponse struct {
 }
 
 type PixCancelTransactionResponse struct {
-	ID                    string                      `json:"id,omitempty"`
+	Id                    string                      `json:"id,omitempty"`
 	Payment               string                      `json:"payment,omitempty"`
 	EndToEndIdentifier    string                      `json:"endToEndIdentifier,omitempty"`
 	Type                  PixTransactionType          `json:"type,omitempty"`
@@ -167,7 +167,7 @@ type PixKeyQrCodeResponse struct {
 }
 
 type QrCodeResponse struct {
-	ID                     string          `json:"id,omitempty"`
+	Id                     string          `json:"id,omitempty"`
 	EncodedImage           string          `json:"encodedImage,omitempty"`
 	Payload                string          `json:"payload,omitempty"`
 	AllowsMultiplePayments bool            `json:"allowsMultiplePayments,omitempty"`
@@ -183,12 +183,12 @@ type pix struct {
 type Pix interface {
 	PayQrCode(ctx context.Context, body PayPixQrCodeRequest) (*PixTransactionResponse, Error)
 	DecodeQrCode(ctx context.Context, body PixQrCodeRequest) (*DecodePixQrCodeResponse, Error)
-	CancelTransactionByID(ctx context.Context, pixTransactionID string) (*PixCancelTransactionResponse, Error)
+	CancelTransactionById(ctx context.Context, pixTransactionId string) (*PixCancelTransactionResponse, Error)
 	CreateKey(ctx context.Context) (*PixKeyResponse, Error)
 	CreateStaticKey(ctx context.Context, body CreatePixKeyStaticRequest) (*QrCodeResponse, Error)
-	DeleteKeyByID(ctx context.Context, pixKeyID string) (*DeleteResponse, Error)
-	GetKeyByID(ctx context.Context, pixKeyID string) (*PixKeyResponse, Error)
-	GetTransactionByID(ctx context.Context, pixTransactionID string) (*PixTransactionResponse, Error)
+	DeleteKeyById(ctx context.Context, pixKeyId string) (*DeleteResponse, Error)
+	GetKeyById(ctx context.Context, pixKeyId string) (*PixKeyResponse, Error)
+	GetTransactionById(ctx context.Context, pixTransactionId string) (*PixTransactionResponse, Error)
 	GetAllTransactions(ctx context.Context) (*Pageable[PixTransactionResponse], Error)
 	GetAllKeys(ctx context.Context, filter GetAllPixKeysRequest) (*Pageable[PixKeyResponse], Error)
 }
@@ -217,9 +217,9 @@ func (p pix) DecodeQrCode(ctx context.Context, body PixQrCodeRequest) (*DecodePi
 	return req.make(http.MethodPost, "/v3/pix/qrCodes/decode", body)
 }
 
-func (p pix) CancelTransactionByID(ctx context.Context, pixTransactionID string) (*PixCancelTransactionResponse, Error) {
+func (p pix) CancelTransactionById(ctx context.Context, pixTransactionId string) (*PixCancelTransactionResponse, Error) {
 	req := NewRequest[PixCancelTransactionResponse](ctx, p.env, p.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/pix/transactions/%s/cancel", pixTransactionID), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/pix/transactions/%s/cancel", pixTransactionId), nil)
 }
 
 func (p pix) CreateKey(ctx context.Context) (*PixKeyResponse, Error) {
@@ -237,20 +237,20 @@ func (p pix) CreateStaticKey(ctx context.Context, body CreatePixKeyStaticRequest
 	return req.make(http.MethodPost, "/v3/pix/qrCodes/static", body)
 }
 
-func (p pix) DeleteKeyByID(ctx context.Context, pixKeyID string) (*DeleteResponse, Error) {
+func (p pix) DeleteKeyById(ctx context.Context, pixKeyId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, p.env, p.accessToken)
-	return req.make(http.MethodDelete, fmt.Sprintf("/v3/pix/addressKeys/%s", pixKeyID), nil)
+	return req.make(http.MethodDelete, fmt.Sprintf("/v3/pix/addressKeys/%s", pixKeyId), nil)
 }
 
-func (p pix) GetTransactionByID(ctx context.Context, pixTransactionID string) (*PixTransactionResponse, Error) {
+func (p pix) GetTransactionById(ctx context.Context, pixTransactionId string) (*PixTransactionResponse, Error) {
 	req := NewRequest[PixTransactionResponse](ctx, p.env, p.accessToken)
-	urlValues := url.Values{"id": []string{pixTransactionID}}
+	urlValues := url.Values{"id": []string{pixTransactionId}}
 	return req.make(http.MethodGet, "/v3/pix/transactions?"+urlValues.Encode(), nil)
 }
 
-func (p pix) GetKeyByID(ctx context.Context, pixKeyID string) (*PixKeyResponse, Error) {
+func (p pix) GetKeyById(ctx context.Context, pixKeyId string) (*PixKeyResponse, Error) {
 	req := NewRequest[PixKeyResponse](ctx, p.env, p.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/pix/addressKeys/%s", pixKeyID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/pix/addressKeys/%s", pixKeyId), nil)
 }
 
 func (p pix) GetAllTransactions(ctx context.Context) (*Pageable[PixTransactionResponse], Error) {

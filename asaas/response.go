@@ -3,7 +3,7 @@ package asaas
 import "github.com/GabrielHCataldo/go-asaas/internal/util"
 
 type DeleteResponse struct {
-	ID      string `json:"id,omitempty"`
+	Id      string `json:"id,omitempty"`
 	Deleted bool   `json:"deleted,omitempty"`
 }
 
@@ -13,8 +13,116 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (a SplitStatisticResponse) IsSuccess() bool {
+	return true
+}
+
+func (a SplitStatisticResponse) IsFailure() bool {
+	return !a.IsSuccess()
+}
+
+func (a SplitStatisticResponse) IsNoContent() bool {
+	return false
+}
+
+func (a PaymentStatisticResponse) IsSuccess() bool {
+	return true
+}
+
+func (a PaymentStatisticResponse) IsFailure() bool {
+	return !a.IsSuccess()
+}
+
+func (a PaymentStatisticResponse) IsNoContent() bool {
+	return false
+}
+
+func (a AccountRegistrationStatusResponse) IsSuccess() bool {
+	return util.IsNotBlank(&a.Id)
+}
+
+func (a AccountRegistrationStatusResponse) IsFailure() bool {
+	return !a.IsSuccess()
+}
+
+func (a AccountRegistrationStatusResponse) IsNoContent() bool {
+	return util.IsBlank(&a.Id)
+}
+
+func (g AccountBalanceResponse) IsSuccess() bool {
+	return true
+}
+
+func (g AccountBalanceResponse) IsFailure() bool {
+	return !g.IsSuccess()
+}
+
+func (g AccountBalanceResponse) IsNoContent() bool {
+	return false
+}
+
+func (a AccountFeesResponse) IsSuccess() bool {
+	return true
+}
+
+func (a AccountFeesResponse) IsFailure() bool {
+	return !a.IsSuccess()
+}
+
+func (a AccountFeesResponse) IsNoContent() bool {
+	return false
+}
+
+func (a AccountBankInfoResponse) IsSuccess() bool {
+	return util.IsNotBlank(&a.Agency) && util.IsNotBlank(&a.Account) && util.IsNotBlank(&a.AccountDigit)
+}
+
+func (a AccountBankInfoResponse) IsFailure() bool {
+	return !a.IsSuccess()
+}
+
+func (a AccountBankInfoResponse) IsNoContent() bool {
+	return util.IsBlank(&a.Agency) && util.IsBlank(&a.Account) && util.IsBlank(&a.AccountDigit)
+}
+
+func (d DeleteWhiteLabelSubaccountResponse) IsSuccess() bool {
+	return len(d.Errors) == 0
+}
+
+func (d DeleteWhiteLabelSubaccountResponse) IsFailure() bool {
+	return !d.IsSuccess()
+}
+
+func (d DeleteWhiteLabelSubaccountResponse) IsNoContent() bool {
+	return false
+}
+
+func (i InvoiceCustomizationResponse) IsSuccess() bool {
+	return len(i.Errors) == 0 && util.IsNotBlank(&i.LogoBackgroundColor)
+}
+
+func (i InvoiceCustomizationResponse) IsFailure() bool {
+	return !i.IsSuccess()
+}
+
+func (i InvoiceCustomizationResponse) IsNoContent() bool {
+	return len(i.Errors) == 0 && util.IsBlank(&i.LogoBackgroundColor)
+}
+
+func (a AccountResponse) IsSuccess() bool {
+	return len(a.Errors) == 0 && util.IsNotBlank(&a.CpfCnpj)
+}
+
+func (a AccountResponse) IsFailure() bool {
+	return !a.IsSuccess()
+}
+
+func (a AccountResponse) IsNoContent() bool {
+	return len(a.Errors) == 0 && util.IsBlank(&a.CpfCnpj)
+}
+
 func (c CreditBureauReportResponse) IsSuccess() bool {
-	return len(c.Errors) == 0 && util.IsNotBlank(&c.ID)
+	return len(c.Errors) == 0 && util.IsNotBlank(&c.Id)
 }
 
 func (c CreditBureauReportResponse) IsFailure() bool {
@@ -22,7 +130,7 @@ func (c CreditBureauReportResponse) IsFailure() bool {
 }
 
 func (c CreditBureauReportResponse) IsNoContent() bool {
-	return len(c.Errors) == 0 && util.IsBlank(&c.ID)
+	return len(c.Errors) == 0 && util.IsBlank(&c.Id)
 }
 
 func (m MobilePhoneProviderResponse) IsSuccess() bool {
@@ -38,7 +146,7 @@ func (m MobilePhoneProviderResponse) IsNoContent() bool {
 }
 
 func (m MobilePhoneRechargeResponse) IsSuccess() bool {
-	return len(m.Errors) == 0 && util.IsNotBlank(&m.ID)
+	return len(m.Errors) == 0 && util.IsNotBlank(&m.Id)
 }
 
 func (m MobilePhoneRechargeResponse) IsFailure() bool {
@@ -46,7 +154,7 @@ func (m MobilePhoneRechargeResponse) IsFailure() bool {
 }
 
 func (m MobilePhoneRechargeResponse) IsNoContent() bool {
-	return len(m.Errors) == 0 && util.IsBlank(&m.ID)
+	return len(m.Errors) == 0 && util.IsBlank(&m.Id)
 }
 
 func (b BillPaymentSimulateResponse) IsSuccess() bool {
@@ -62,7 +170,7 @@ func (b BillPaymentSimulateResponse) IsNoContent() bool {
 }
 
 func (b BillPaymentResponse) IsSuccess() bool {
-	return len(b.Errors) == 0 && util.IsNotBlank(&b.ID)
+	return len(b.Errors) == 0 && util.IsNotBlank(&b.Id)
 }
 
 func (b BillPaymentResponse) IsFailure() bool {
@@ -70,7 +178,7 @@ func (b BillPaymentResponse) IsFailure() bool {
 }
 
 func (b BillPaymentResponse) IsNoContent() bool {
-	return len(b.Errors) == 0 && util.IsBlank(&b.ID)
+	return len(b.Errors) == 0 && util.IsBlank(&b.Id)
 }
 
 func (n NegativitySimulateResponse) IsSuccess() bool {
@@ -86,7 +194,7 @@ func (n NegativitySimulateResponse) IsNoContent() bool {
 }
 
 func (n NegativityResponse) IsSuccess() bool {
-	return len(n.Errors) == 0 && util.IsNotBlank(&n.ID)
+	return len(n.Errors) == 0 && util.IsNotBlank(&n.Id)
 }
 
 func (n NegativityResponse) IsFailure() bool {
@@ -94,11 +202,11 @@ func (n NegativityResponse) IsFailure() bool {
 }
 
 func (n NegativityResponse) IsNoContent() bool {
-	return len(n.Errors) == 0 && util.IsBlank(&n.ID)
+	return len(n.Errors) == 0 && util.IsBlank(&n.Id)
 }
 
 func (a AnticipationResponse) IsSuccess() bool {
-	return len(a.Errors) == 0 && util.IsNotBlank(&a.ID)
+	return len(a.Errors) == 0 && util.IsNotBlank(&a.Id)
 }
 
 func (a AnticipationResponse) IsFailure() bool {
@@ -106,7 +214,7 @@ func (a AnticipationResponse) IsFailure() bool {
 }
 
 func (a AnticipationResponse) IsNoContent() bool {
-	return len(a.Errors) == 0 && util.IsBlank(&a.ID)
+	return len(a.Errors) == 0 && util.IsBlank(&a.Id)
 }
 
 func (a AnticipationSimulateResponse) IsSuccess() bool {
@@ -146,7 +254,7 @@ func (a AnticipationLimitsResponse) IsNoContent() bool {
 }
 
 func (t TransferResponse) IsSuccess() bool {
-	return len(t.Errors) == 0 && util.IsNotBlank(&t.ID)
+	return len(t.Errors) == 0 && util.IsNotBlank(&t.Id)
 }
 
 func (t TransferResponse) IsFailure() bool {
@@ -154,11 +262,11 @@ func (t TransferResponse) IsFailure() bool {
 }
 
 func (t TransferResponse) IsNoContent() bool {
-	return len(t.Errors) == 0 && util.IsBlank(&t.ID)
+	return len(t.Errors) == 0 && util.IsBlank(&t.Id)
 }
 
 func (p PixTransactionResponse) IsSuccess() bool {
-	return len(p.Errors) == 0 && util.IsNotBlank(&p.ID)
+	return len(p.Errors) == 0 && util.IsNotBlank(&p.Id)
 }
 
 func (p PixTransactionResponse) IsFailure() bool {
@@ -166,7 +274,7 @@ func (p PixTransactionResponse) IsFailure() bool {
 }
 
 func (p PixTransactionResponse) IsNoContent() bool {
-	return len(p.Errors) == 0 && util.IsBlank(&p.ID)
+	return len(p.Errors) == 0 && util.IsBlank(&p.Id)
 }
 
 func (f FileTextPlainResponse) IsSuccess() bool {
@@ -184,7 +292,7 @@ func (f FileTextPlainResponse) IsNoContent() bool {
 }
 
 func (p PixCancelTransactionResponse) IsSuccess() bool {
-	return len(p.Errors) == 0 && util.IsNotBlank(&p.ID)
+	return len(p.Errors) == 0 && util.IsNotBlank(&p.Id)
 }
 
 func (p PixCancelTransactionResponse) IsFailure() bool {
@@ -192,7 +300,7 @@ func (p PixCancelTransactionResponse) IsFailure() bool {
 }
 
 func (p PixCancelTransactionResponse) IsNoContent() bool {
-	return len(p.Errors) == 0 && util.IsBlank(&p.ID)
+	return len(p.Errors) == 0 && util.IsBlank(&p.Id)
 }
 
 func (d DecodePixQrCodeResponse) IsSuccess() bool {
@@ -208,7 +316,7 @@ func (d DecodePixQrCodeResponse) IsNoContent() bool {
 }
 
 func (p PixKeyResponse) IsSuccess() bool {
-	return len(p.Errors) == 0 && util.IsNotBlank(&p.ID)
+	return len(p.Errors) == 0 && util.IsNotBlank(&p.Id)
 }
 
 func (p PixKeyResponse) IsFailure() bool {
@@ -216,11 +324,11 @@ func (p PixKeyResponse) IsFailure() bool {
 }
 
 func (p PixKeyResponse) IsNoContent() bool {
-	return len(p.Errors) == 0 && util.IsBlank(&p.ID)
+	return len(p.Errors) == 0 && util.IsBlank(&p.Id)
 }
 
 func (q QrCodeResponse) IsSuccess() bool {
-	return len(q.Errors) == 0 && util.IsNotBlank(&q.ID)
+	return len(q.Errors) == 0 && util.IsNotBlank(&q.Id)
 }
 
 func (q QrCodeResponse) IsFailure() bool {
@@ -228,11 +336,11 @@ func (q QrCodeResponse) IsFailure() bool {
 }
 
 func (q QrCodeResponse) IsNoContent() bool {
-	return len(q.Errors) == 0 && util.IsBlank(&q.ID)
+	return len(q.Errors) == 0 && util.IsBlank(&q.Id)
 }
 
 func (s SubscriptionResponse) IsSuccess() bool {
-	return len(s.Errors) == 0 && util.IsNotBlank(&s.ID)
+	return len(s.Errors) == 0 && util.IsNotBlank(&s.Id)
 }
 
 func (s SubscriptionResponse) IsFailure() bool {
@@ -240,11 +348,11 @@ func (s SubscriptionResponse) IsFailure() bool {
 }
 
 func (s SubscriptionResponse) IsNoContent() bool {
-	return len(s.Errors) == 0 && util.IsBlank(&s.ID)
+	return len(s.Errors) == 0 && util.IsBlank(&s.Id)
 }
 
 func (i InvoiceResponse) IsSuccess() bool {
-	return util.IsNotBlank(&i.ID)
+	return util.IsNotBlank(&i.Id)
 }
 
 func (i InvoiceResponse) IsFailure() bool {
@@ -252,7 +360,7 @@ func (i InvoiceResponse) IsFailure() bool {
 }
 
 func (i InvoiceResponse) IsNoContent() bool {
-	return util.IsBlank(&i.ID)
+	return util.IsBlank(&i.Id)
 }
 
 func (i InvoiceSettingResponse) IsSuccess() bool {
@@ -274,7 +382,7 @@ func (i InvoiceSettingResponse) IsNoContent() bool {
 }
 
 func (n NotificationResponse) IsSuccess() bool {
-	return len(n.Errors) == 0 && util.IsNotBlank(&n.ID)
+	return len(n.Errors) == 0 && util.IsNotBlank(&n.Id)
 }
 
 func (n NotificationResponse) IsFailure() bool {
@@ -282,7 +390,7 @@ func (n NotificationResponse) IsFailure() bool {
 }
 
 func (n NotificationResponse) IsNoContent() bool {
-	return len(n.Errors) == 0 && util.IsBlank(&n.ID)
+	return len(n.Errors) == 0 && util.IsBlank(&n.Id)
 }
 
 func (u UpdateManyNotificationsResponse) IsSuccess() bool {
@@ -310,7 +418,7 @@ func (p Pageable[T]) IsNoContent() bool {
 }
 
 func (c ChargeResponse) IsSuccess() bool {
-	return len(c.Errors) == 0 && util.IsNotBlank(&c.ID)
+	return len(c.Errors) == 0 && util.IsNotBlank(&c.Id)
 }
 
 func (c ChargeResponse) IsFailure() bool {
@@ -318,11 +426,11 @@ func (c ChargeResponse) IsFailure() bool {
 }
 
 func (c ChargeResponse) IsNoContent() bool {
-	return len(c.Errors) == 0 && util.IsBlank(&c.ID)
+	return len(c.Errors) == 0 && util.IsBlank(&c.Id)
 }
 
 func (d DeleteResponse) IsSuccess() bool {
-	return d.Deleted && util.IsNotBlank(&d.ID)
+	return d.Deleted && util.IsNotBlank(&d.Id)
 }
 
 func (d DeleteResponse) IsFailure() bool {
@@ -330,11 +438,11 @@ func (d DeleteResponse) IsFailure() bool {
 }
 
 func (d DeleteResponse) IsNoContent() bool {
-	return util.IsBlank(&d.ID)
+	return util.IsBlank(&d.Id)
 }
 
 func (c ChargeDocumentResponse) IsSuccess() bool {
-	return len(c.Errors) == 0 && util.IsNotBlank(&c.ID) && c.File != nil
+	return len(c.Errors) == 0 && util.IsNotBlank(&c.Id) && c.File != nil
 }
 
 func (c ChargeDocumentResponse) IsFailure() bool {
@@ -342,7 +450,7 @@ func (c ChargeDocumentResponse) IsFailure() bool {
 }
 
 func (c ChargeDocumentResponse) IsNoContent() bool {
-	return len(c.Errors) == 0 && util.IsBlank(&c.ID)
+	return len(c.Errors) == 0 && util.IsBlank(&c.Id)
 }
 
 func (i IdentificationFieldResponse) IsSuccess() bool {
@@ -394,7 +502,7 @@ func (c CreditCardTokenizeResponse) IsNoContent() bool {
 }
 
 func (c CustomerResponse) IsSuccess() bool {
-	return len(c.Errors) == 0 && util.IsNotBlank(&c.ID)
+	return len(c.Errors) == 0 && util.IsNotBlank(&c.Id)
 }
 
 func (c CustomerResponse) IsFailure() bool {
@@ -402,5 +510,5 @@ func (c CustomerResponse) IsFailure() bool {
 }
 
 func (c CustomerResponse) IsNoContent() bool {
-	return len(c.Errors) == 0 && util.IsBlank(&c.ID)
+	return len(c.Errors) == 0 && util.IsBlank(&c.Id)
 }

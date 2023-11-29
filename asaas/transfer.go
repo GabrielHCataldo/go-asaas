@@ -18,7 +18,7 @@ type TransferToBankRequest struct {
 
 type TransferToAssasRequest struct {
 	Value    float64 `json:"value,omitempty" validate:"required,gt=0"`
-	WalletID string  `json:"walletId,omitempty" validate:"required"`
+	WalletId string  `json:"walletId,omitempty" validate:"required"`
 }
 
 type BackAccountRequest struct {
@@ -47,7 +47,7 @@ type GetAllTransfersRequest struct {
 }
 
 type TransferResponse struct {
-	ID                    string                `json:"id,omitempty"`
+	Id                    string                `json:"id,omitempty"`
 	Type                  TransferType          `json:"type,omitempty"`
 	Status                TransferStatus        `json:"status,omitempty"`
 	Value                 float64               `json:"value,omitempty"`
@@ -58,7 +58,7 @@ type TransferResponse struct {
 	ScheduleDate          *Date                 `json:"scheduleDate,omitempty"`
 	Authorized            bool                  `json:"authorized,omitempty"`
 	FailReason            string                `json:"failReason,omitempty"`
-	WalletID              string                `json:"walletId,omitempty"`
+	WalletId              string                `json:"walletId,omitempty"`
 	BackAccount           *BackAccountResponse  `json:"backAccount,omitempty"`
 	TransactionReceiptUrl string                `json:"transactionReceiptUrl,omitempty"`
 	OperationType         TransferOperationType `json:"operationType,omitempty"`
@@ -93,8 +93,8 @@ type transfer struct {
 type Transfer interface {
 	TransferToBank(ctx context.Context, body TransferToBankRequest) (*TransferResponse, Error)
 	TransferToAsaas(ctx context.Context, body TransferToAssasRequest) (*TransferResponse, Error)
-	CancelByID(ctx context.Context, transferID string) (*TransferResponse, Error)
-	GetByID(ctx context.Context, transferID string) (*TransferResponse, Error)
+	CancelById(ctx context.Context, transferId string) (*TransferResponse, Error)
+	GetById(ctx context.Context, transferId string) (*TransferResponse, Error)
 	GetAll(ctx context.Context, filter GetAllTransfersRequest) (*Pageable[TransferResponse], Error)
 }
 
@@ -123,14 +123,14 @@ func (t transfer) TransferToAsaas(ctx context.Context, body TransferToAssasReque
 	return req.make(http.MethodPost, "/v3/transfers", body)
 }
 
-func (t transfer) CancelByID(ctx context.Context, transferID string) (*TransferResponse, Error) {
+func (t transfer) CancelById(ctx context.Context, transferId string) (*TransferResponse, Error) {
 	req := NewRequest[TransferResponse](ctx, t.env, t.accessToken)
-	return req.make(http.MethodDelete, fmt.Sprintf("/v3/transfers/%s/cancel", transferID), nil)
+	return req.make(http.MethodDelete, fmt.Sprintf("/v3/transfers/%s/cancel", transferId), nil)
 }
 
-func (t transfer) GetByID(ctx context.Context, transferID string) (*TransferResponse, Error) {
+func (t transfer) GetById(ctx context.Context, transferId string) (*TransferResponse, Error) {
 	req := NewRequest[TransferResponse](ctx, t.env, t.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/transfers/%s", transferID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/transfers/%s", transferId), nil)
 }
 
 func (t transfer) GetAll(ctx context.Context, filter GetAllTransfersRequest) (*Pageable[TransferResponse], Error) {

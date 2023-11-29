@@ -12,7 +12,7 @@ type InstallmentPaymentBookRequest struct {
 }
 
 type InstallmentResponse struct {
-	ID                    string                         `json:"id,omitempty"`
+	Id                    string                         `json:"id,omitempty"`
 	Customer              string                         `json:"customer,omitempty"`
 	Value                 float64                        `json:"value,omitempty"`
 	NetValue              float64                        `json:"netValue,omitempty"`
@@ -44,12 +44,12 @@ type installment struct {
 }
 
 type Installment interface {
-	UpdateSplitsByID(ctx context.Context, installmentID string, body []SplitRequest) (*UpdateInstallmentSplitsResponse,
+	UpdateSplitsById(ctx context.Context, installmentId string, body []SplitRequest) (*UpdateInstallmentSplitsResponse,
 		Error)
-	RefundByID(ctx context.Context, installmentID string) (*InstallmentResponse, Error)
-	DeleteByID(ctx context.Context, installmentID string) (*DeleteResponse, Error)
-	GetByID(ctx context.Context, installmentID string) (*InstallmentResponse, Error)
-	GetPaymentBookByID(ctx context.Context, installmentID string, filter InstallmentPaymentBookRequest) (
+	RefundById(ctx context.Context, installmentId string) (*InstallmentResponse, Error)
+	DeleteById(ctx context.Context, installmentId string) (*DeleteResponse, Error)
+	GetById(ctx context.Context, installmentId string) (*InstallmentResponse, Error)
+	GetPaymentBookById(ctx context.Context, installmentId string, filter InstallmentPaymentBookRequest) (
 		*FileTextPlainResponse, Error)
 	GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[InstallmentResponse], Error)
 }
@@ -62,33 +62,33 @@ func NewInstallment(env Env, accessToken string) Installment {
 	}
 }
 
-func (i installment) UpdateSplitsByID(ctx context.Context, installmentID string, body []SplitRequest) (
+func (i installment) UpdateSplitsById(ctx context.Context, installmentId string, body []SplitRequest) (
 	*UpdateInstallmentSplitsResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[UpdateInstallmentSplitsResponse](ctx, i.env, i.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/splits", installmentID), body)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/splits", installmentId), body)
 }
 
-func (i installment) RefundByID(ctx context.Context, installmentID string) (*InstallmentResponse, Error) {
+func (i installment) RefundById(ctx context.Context, installmentId string) (*InstallmentResponse, Error) {
 	req := NewRequest[InstallmentResponse](ctx, i.env, i.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/refund", installmentID), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/refund", installmentId), nil)
 }
 
-func (i installment) DeleteByID(ctx context.Context, installmentID string) (*DeleteResponse, Error) {
+func (i installment) DeleteById(ctx context.Context, installmentId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, i.env, i.accessToken)
-	return req.make(http.MethodDelete, fmt.Sprintf("/v3/installments/%s", installmentID), nil)
+	return req.make(http.MethodDelete, fmt.Sprintf("/v3/installments/%s", installmentId), nil)
 }
 
-func (i installment) GetByID(ctx context.Context, installmentID string) (*InstallmentResponse, Error) {
+func (i installment) GetById(ctx context.Context, installmentId string) (*InstallmentResponse, Error) {
 	req := NewRequest[InstallmentResponse](ctx, i.env, i.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/installments/%s", installmentID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/installments/%s", installmentId), nil)
 }
 
-func (i installment) GetPaymentBookByID(ctx context.Context, installmentID string, filter InstallmentPaymentBookRequest) (*FileTextPlainResponse, Error) {
+func (i installment) GetPaymentBookById(ctx context.Context, installmentId string, filter InstallmentPaymentBookRequest) (*FileTextPlainResponse, Error) {
 	req := NewRequest[FileTextPlainResponse](ctx, i.env, i.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/installments/%s/paymentBook", installmentID), filter)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/installments/%s/paymentBook", installmentId), filter)
 }
 
 func (i installment) GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[InstallmentResponse], Error) {

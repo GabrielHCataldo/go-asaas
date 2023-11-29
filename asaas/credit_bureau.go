@@ -11,7 +11,7 @@ import (
 type GetReportRequest struct {
 	Customer string `json:"customer,omitempty"`
 	CpfCnpj  string `json:"cpfCnpj,omitempty" validate:"omitempty,document"`
-	State    string `json:"state,omitempty"` //todo -> passar para enum ou criar uma validacao
+	State    string `json:"state,omitempty" validate:"omitempty,state"`
 }
 
 type GetAllReportsRequest struct {
@@ -22,7 +22,7 @@ type GetAllReportsRequest struct {
 }
 
 type CreditBureauReportResponse struct {
-	ID          string          `json:"id,omitempty"`
+	Id          string          `json:"id,omitempty"`
 	Customer    string          `json:"customer,omitempty"`
 	CpfCnpj     string          `json:"cpfCnpj,omitempty"`
 	State       string          `json:"state,omitempty"`
@@ -38,7 +38,7 @@ type creditBureau struct {
 
 type CreditBureau interface {
 	GetReport(ctx context.Context, body GetReportRequest) (*CreditBureauReportResponse, Error)
-	GetReportByID(ctx context.Context, creditBureauReportID string) (*CreditBureauReportResponse, Error)
+	GetReportById(ctx context.Context, creditBureauReportId string) (*CreditBureauReportResponse, Error)
 	GetAllReports(ctx context.Context, filter GetAllReportsRequest) (*Pageable[CreditBureauReportResponse], Error)
 }
 
@@ -58,9 +58,9 @@ func (c creditBureau) GetReport(ctx context.Context, body GetReportRequest) (*Cr
 	return req.make(http.MethodPost, "/v3/creditBureauReport", body)
 }
 
-func (c creditBureau) GetReportByID(ctx context.Context, creditBureauReportID string) (*CreditBureauReportResponse, Error) {
+func (c creditBureau) GetReportById(ctx context.Context, creditBureauReportId string) (*CreditBureauReportResponse, Error) {
 	req := NewRequest[CreditBureauReportResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/creditBureauReport/%s", creditBureauReportID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/creditBureauReport/%s", creditBureauReportId), nil)
 }
 
 func (c creditBureau) GetAllReports(ctx context.Context, filter GetAllReportsRequest) (

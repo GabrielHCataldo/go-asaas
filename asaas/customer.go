@@ -38,7 +38,7 @@ type GetAllCustomersRequest struct {
 }
 
 type CustomerResponse struct {
-	ID                    string          `json:"id,omitempty"`
+	Id                    string          `json:"id,omitempty"`
 	Name                  string          `json:"name,omitempty"`
 	Email                 string          `json:"email,omitempty"`
 	Phone                 string          `json:"phone,omitempty"`
@@ -76,10 +76,10 @@ type customer struct {
 
 type Customer interface {
 	Create(ctx context.Context, body UpdateCustomerRequest) (*CustomerResponse, Error)
-	UpdateByID(ctx context.Context, customerID string, body UpdateCustomerRequest) (*CustomerResponse, Error)
-	DeleteByID(ctx context.Context, customerID string) (*DeleteResponse, Error)
-	RestoreByID(ctx context.Context, customerID string) (*CustomerResponse, Error)
-	GetByID(ctx context.Context, customerID string) (*CustomerResponse, Error)
+	UpdateById(ctx context.Context, customerId string, body UpdateCustomerRequest) (*CustomerResponse, Error)
+	DeleteById(ctx context.Context, customerId string) (*DeleteResponse, Error)
+	RestoreById(ctx context.Context, customerId string) (*CustomerResponse, Error)
+	GetById(ctx context.Context, customerId string) (*CustomerResponse, Error)
 	GetAll(ctx context.Context, filter GetAllCustomersRequest) (*Pageable[CustomerResponse], Error)
 }
 
@@ -99,27 +99,27 @@ func (c customer) Create(ctx context.Context, body UpdateCustomerRequest) (*Cust
 	return req.make(http.MethodPost, "/v3/customers", body)
 }
 
-func (c customer) UpdateByID(ctx context.Context, customerID string, body UpdateCustomerRequest) (*CustomerResponse, Error) {
+func (c customer) UpdateById(ctx context.Context, customerId string, body UpdateCustomerRequest) (*CustomerResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerID), body)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerId), body)
 }
 
-func (c customer) DeleteByID(ctx context.Context, customerID string) (*DeleteResponse, Error) {
+func (c customer) DeleteById(ctx context.Context, customerId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodDelete, fmt.Sprintf("/v3/customers/%s", customerID), nil)
+	return req.make(http.MethodDelete, fmt.Sprintf("/v3/customers/%s", customerId), nil)
 }
 
-func (c customer) RestoreByID(ctx context.Context, customerID string) (*CustomerResponse, Error) {
+func (c customer) RestoreById(ctx context.Context, customerId string) (*CustomerResponse, Error) {
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerID), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerId), nil)
 }
 
-func (c customer) GetByID(ctx context.Context, customerID string) (*CustomerResponse, Error) {
+func (c customer) GetById(ctx context.Context, customerId string) (*CustomerResponse, Error) {
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf("/v3/customers/%s", customerID), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/customers/%s", customerId), nil)
 }
 
 func (c customer) GetAll(ctx context.Context, filter GetAllCustomersRequest) (*Pageable[CustomerResponse], Error) {
