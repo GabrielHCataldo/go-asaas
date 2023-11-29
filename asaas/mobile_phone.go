@@ -49,6 +49,7 @@ type MobilePhone interface {
 }
 
 func NewMobilePhone(env Env, accessToken string) MobilePhone {
+	logWarning("MobilePhone service running on", env.String())
 	return mobilePhone{
 		env:         env,
 		accessToken: accessToken,

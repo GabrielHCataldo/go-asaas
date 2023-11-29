@@ -13,6 +13,18 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (c CreditBureauReportResponse) IsSuccess() bool {
+	return len(c.Errors) == 0 && util.IsNotBlank(&c.ID)
+}
+
+func (c CreditBureauReportResponse) IsFailure() bool {
+	return !c.IsSuccess()
+}
+
+func (c CreditBureauReportResponse) IsNoContent() bool {
+	return len(c.Errors) == 0 && util.IsBlank(&c.ID)
+}
+
 func (m MobilePhoneProviderResponse) IsSuccess() bool {
 	return len(m.Errors) == 0 && len(m.Values) > 0
 }
