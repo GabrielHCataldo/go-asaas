@@ -32,6 +32,10 @@ func GetDocumentIdDefault() string {
 	return "1864d2cb-5420-4e95-85b8-57ddeda30225"
 }
 
+func GetPaymentLinkIdDefault() string {
+	return "le5jqxz8as7pgwn9"
+}
+
 func GetCreateChargePixRequestDefault() []byte {
 	return []byte(`
 		{

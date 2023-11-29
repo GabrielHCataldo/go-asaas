@@ -19,7 +19,7 @@ type CreateChargeRequest struct {
 	Fine                 *FineRequest                 `json:"fine,omitempty"`
 	PostalService        bool                         `json:"postalService,omitempty"`
 	Split                []SplitRequest               `json:"split,omitempty"`
-	Callback             *ChargeCallbackRequest       `json:"callback,omitempty"`
+	Callback             *CallbackRequest             `json:"callback,omitempty"`
 	CreditCard           *CreditCardRequest           `json:"creditCard,omitempty"`
 	CreditCardHolderInfo *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
 	CreditCardToken      string                       `json:"creditCardToken,omitempty"`
@@ -30,20 +30,20 @@ type CreateChargeRequest struct {
 }
 
 type UpdateChargeRequest struct {
-	Customer          string                 `json:"customer,omitempty" validate:"required"`
-	BillingType       BillingType            `json:"billingType,omitempty" validate:"required,enum"`
-	Value             float64                `json:"value,omitempty" validate:"required,gt=0"`
-	DueDate           Date                   `json:"dueDate,omitempty" validate:"required"`
-	Description       string                 `json:"description,omitempty"`
-	ExternalReference string                 `json:"externalReference,omitempty"`
-	Discount          *DiscountRequest       `json:"discount,omitempty"`
-	Interest          *InterestRequest       `json:"interest,omitempty"`
-	Fine              *FineRequest           `json:"fine,omitempty"`
-	PostalService     bool                   `json:"postalService,omitempty"`
-	Split             []SplitRequest         `json:"split,omitempty"`
-	Callback          *ChargeCallbackRequest `json:"callback,omitempty"`
-	InstallmentCount  int                    `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
-	InstallmentValue  float64                `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
+	Customer          string           `json:"customer,omitempty" validate:"required"`
+	BillingType       BillingType      `json:"billingType,omitempty" validate:"required,enum"`
+	Value             float64          `json:"value,omitempty" validate:"required,gt=0"`
+	DueDate           Date             `json:"dueDate,omitempty" validate:"required"`
+	Description       string           `json:"description,omitempty"`
+	ExternalReference string           `json:"externalReference,omitempty"`
+	Discount          *DiscountRequest `json:"discount,omitempty"`
+	Interest          *InterestRequest `json:"interest,omitempty"`
+	Fine              *FineRequest     `json:"fine,omitempty"`
+	PostalService     bool             `json:"postalService,omitempty"`
+	Split             []SplitRequest   `json:"split,omitempty"`
+	Callback          *CallbackRequest `json:"callback,omitempty"`
+	InstallmentCount  int              `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
+	InstallmentValue  float64          `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
 }
 
 type GetAllChargesRequest struct {
@@ -86,7 +86,7 @@ type UpdateChargeDocumentDefinitionsRequest struct {
 	Type                  DocumentType `json:"type,omitempty" validate:"required,enum"`
 }
 
-type ChargeCallbackRequest struct {
+type CallbackRequest struct {
 	SuccessUrl   string `json:"successUrl,omitempty" validate:"required,url"`
 	AutoRedirect bool   `json:"autoRedirect,omitempty"`
 }

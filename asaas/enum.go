@@ -6,6 +6,7 @@ type BaseEnum interface {
 
 type BillingType string
 type ChargeStatus string
+type ChargeType string
 type ChargebackReason string
 type ChargebackStatus string
 type DiscountType string
@@ -54,6 +55,11 @@ type TypeOfWebhook string
 type SubaccountDocumentStatus string
 type SubaccountDocumentType string
 
+const (
+	ChargeTypeDetached    ChargeType = "DETACHED"
+	ChargeTypeRecurrent   ChargeType = "RECURRENT"
+	ChargeTypeInstallment ChargeType = "INSTALLMENT"
+)
 const (
 	AccountDocumentTypeIdentification          SubaccountDocumentType = "IDENTIFICATION"
 	AccountDocumentTypeSocialContract          SubaccountDocumentType = "SOCIAL_CONTRACT"
@@ -486,6 +492,14 @@ const (
 	NotificationEventPaymentOverdue        NotificationEvent = "PAYMENT_OVERDUE"
 	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
 )
+
+func (c ChargeType) IsEnumValid() bool {
+	switch c {
+	case ChargeTypeDetached, ChargeTypeRecurrent, ChargeTypeInstallment:
+		return true
+	}
+	return false
+}
 
 func (s SubaccountDocumentType) IsEnumValid() bool {
 	switch s {

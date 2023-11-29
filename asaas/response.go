@@ -13,6 +13,30 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (p PaymentLinkImageResponse) IsSuccess() bool {
+	return util.IsNotBlank(&p.Id) && util.IsNotBlank(&p.Image.DownloadUrl)
+}
+
+func (p PaymentLinkImageResponse) IsFailure() bool {
+	return !p.IsSuccess()
+}
+
+func (p PaymentLinkImageResponse) IsNoContent() bool {
+	return util.IsBlank(&p.Id) && util.IsBlank(&p.Image.DownloadUrl)
+}
+
+func (p PaymentLinkResponse) IsSuccess() bool {
+	return len(p.Errors) == 0 && util.IsNotBlank(&p.Id)
+}
+
+func (p PaymentLinkResponse) IsFailure() bool {
+	return !p.IsSuccess()
+}
+
+func (p PaymentLinkResponse) IsNoContent() bool {
+	return len(p.Errors) == 0 && util.IsBlank(&p.Id)
+}
+
 func (a SubaccountDocumentsResponse) IsSuccess() bool {
 	return true
 }
