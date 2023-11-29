@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-type UpdateFiscalInfoRequest struct {
+type SaveFiscalInfoRequest struct {
 	Email                    string   `json:"email,omitempty" validate:"required,email"`
 	MunicipalInscription     string   `json:"municipalInscription,omitempty"`
 	SimplesNacional          bool     `json:"simplesNacional"`
@@ -80,7 +80,7 @@ type fiscalInfo struct {
 }
 
 type FiscalInfo interface {
-	Update(ctx context.Context, body UpdateFiscalInfoRequest) (*FiscalInfoResponse, Error)
+	Save(ctx context.Context, body SaveFiscalInfoRequest) (*FiscalInfoResponse, Error)
 	Get(ctx context.Context) (*FiscalInfoResponse, Error)
 	GetMunicipalSettings(ctx context.Context) (*MunicipalSettingsResponse, Error)
 	GetAllServices(ctx context.Context, filter GetAllServicesRequest) (*Pageable[FiscalInfoServiceResponse], Error)
@@ -94,7 +94,7 @@ func NewFiscalInfo(env Env, accessToken string) FiscalInfo {
 	}
 }
 
-func (f fiscalInfo) Update(ctx context.Context, body UpdateFiscalInfoRequest) (*FiscalInfoResponse, Error) {
+func (f fiscalInfo) Save(ctx context.Context, body SaveFiscalInfoRequest) (*FiscalInfoResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
 	}

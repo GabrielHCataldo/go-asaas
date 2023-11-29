@@ -50,7 +50,17 @@ type MobilePhoneRechargeStatus string
 type FinanceTransType string
 type AccountStatus string
 type CompanyType string
+type TypeOfWebhook string
 
+const (
+	TypeOfWebhookCharges                TypeOfWebhook = "CHARGES"
+	TypeOfWebhookInvoices               TypeOfWebhook = "INVOICES"
+	TypeOfWebhookTransfers              TypeOfWebhook = "TRANSFERS"
+	TypeOfWebhookBillPayments           TypeOfWebhook = "BILL_PAYMENTS"
+	TypeOfWebhookAnticipations          TypeOfWebhook = "ANTICIPATIONS"
+	TypeOfWebhookMobilePhoneRecharges   TypeOfWebhook = "MOBILE_PHONE_RECHARGES"
+	TypeOfWebhookMobileAccountSituation TypeOfWebhook = "ACCOUNT_SITUATION"
+)
 const (
 	CompanyTypeMei         CompanyType = "MEI"
 	CompanyTypeLimited     CompanyType = "LIMITED"
@@ -461,6 +471,15 @@ const (
 	NotificationEventPaymentOverdue        NotificationEvent = "PAYMENT_OVERDUE"
 	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
 )
+
+func (t TypeOfWebhook) IsEnumValid() bool {
+	switch t {
+	case TypeOfWebhookCharges, TypeOfWebhookInvoices, TypeOfWebhookTransfers, TypeOfWebhookAnticipations,
+		TypeOfWebhookMobilePhoneRecharges, TypeOfWebhookBillPayments, TypeOfWebhookMobileAccountSituation:
+		return true
+	}
+	return false
+}
 
 func (c CompanyType) IsEnumValid() bool {
 	switch c {
@@ -954,6 +973,24 @@ func (f FileMimeType) Extension() string {
 	default:
 		return ""
 	}
+}
+
+func (t TypeOfWebhook) PathUrl() string {
+	switch t {
+	case TypeOfWebhookInvoices:
+		return "/invoice"
+	case TypeOfWebhookAnticipations:
+		return "/anticipation"
+	case TypeOfWebhookTransfers:
+		return "/transfer"
+	case TypeOfWebhookBillPayments:
+		return "/bill"
+	case TypeOfWebhookMobilePhoneRecharges:
+		return "/mobilePhoneRecharge"
+	case TypeOfWebhookMobileAccountSituation:
+		return "/accountStatus"
+	}
+	return ""
 }
 
 func (f FinanceTransType) IsEnumValid() bool {

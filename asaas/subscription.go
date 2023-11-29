@@ -107,7 +107,7 @@ type subscription struct {
 
 type Subscription interface {
 	Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, Error)
-	CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body CreateInvoiceSettingRequest) (
+	SaveInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
 		*InvoiceSettingResponse, Error)
 	UpdateById(ctx context.Context, subscriptionId string, body UpdateSubscriptionRequest) (*SubscriptionResponse, Error)
 	UpdateInvoiceSettingsById(ctx context.Context, subscriptionId string, body UpdateInvoiceSettingRequest) (
@@ -142,7 +142,7 @@ func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest
 	return req.make(http.MethodPost, "/v3/subscriptions", body)
 }
 
-func (s subscription) CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body CreateInvoiceSettingRequest) (
+func (s subscription) SaveInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
 	*InvoiceSettingResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)

@@ -13,6 +13,18 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (w WebhookResponse) IsSuccess() bool {
+	return len(w.Errors) == 0 && util.IsNotBlank(&w.Url)
+}
+
+func (w WebhookResponse) IsFailure() bool {
+	return !w.IsSuccess()
+}
+
+func (w WebhookResponse) IsNoContent() bool {
+	return len(w.Errors) == 0 && util.IsBlank(&w.Url)
+}
+
 func (a SplitStatisticResponse) IsSuccess() bool {
 	return true
 }

@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type CreateInvoiceSettingRequest struct {
+type SaveInvoiceSettingRequest struct {
 	MunicipalServiceId   string                   `json:"municipalServiceId,omitempty"`
 	MunicipalServiceCode string                   `json:"municipalServiceCode,omitempty"`
 	MunicipalServiceName string                   `json:"municipalServiceName,omitempty"`

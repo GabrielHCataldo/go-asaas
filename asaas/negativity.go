@@ -148,7 +148,7 @@ func (n negativity) ResendDocumentsById(ctx context.Context, negativityId string
 
 func (n negativity) CancelById(ctx context.Context, negativityId string) (*NegativityResponse, Error) {
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
-	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/%s/cancel", negativityId), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/%s/cancel", negativityId), nil)
 }
 
 func (n negativity) GetById(ctx context.Context, negativityId string) (*NegativityResponse, Error) {
