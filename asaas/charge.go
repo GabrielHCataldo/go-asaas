@@ -467,7 +467,7 @@ type Charge interface {
 	//
 	// ID(s) informado no parâmetro não foi encontrado.
 	//
-	// # Resposta: 400/401/500
+	// # Resposta: 401/500
 	//
 	// DeleteResponse = not nil
 	//
@@ -475,10 +475,9 @@ type Charge interface {
 	//
 	// DeleteResponse.IsFailure() = true
 	//
-	// Para qualquer outra resposta inesperada da API, possuímos o campo DeleteResponse.Errors preenchido com as informações
-	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
-	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
-	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// Para qualquer outra resposta inesperada da API, possuímos o campo DeleteResponse.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
 	// "response status code not expected".
 	//
 	// # Error
@@ -973,11 +972,11 @@ type Charge interface {
 	//
 	// # Resposta: 404
 	//
-	// ChargeDocumentResponse = not nil
+	// CustomerResponse = not nil
 	//
 	// Error = nil
 	//
-	// ChargeDocumentResponse.IsNoContent() = true
+	// CustomerResponse.IsNoContent() = true
 	//
 	// ID(s) informado no parâmetro não foi encontrado.
 	//
@@ -1328,6 +1327,64 @@ type Charge interface {
 	//
 	// Recuperar um único documento da cobrança: https://docs.asaas.com/reference/recuperar-um-unico-documento-da-cobranca
 	GetDocumentById(ctx context.Context, chargeId, docId string) (*ChargeDocumentResponse, Error)
+	// GetAll (Listar cobranças)
+	//
+	// Diferente da recuperação de uma cobrança específica, este método retorna uma lista paginada com todas as
+	// cobranças para os filtros informados.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(ChargeResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(ChargeResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(ChargeResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar cobranças: https://docs.asaas.com/reference/listar-cobrancas
+	GetAll(ctx context.Context, filter GetAllChargesRequest) (*Pageable[ChargeResponse], Error)
 	// GetAllDocumentsById (Listar documentos de uma cobrança)
 	//
 	// Para listar os documentos de uma cobrança, é necessário que você tenha o ID da cobrança retornado pelo Asaas.
@@ -1386,63 +1443,6 @@ type Charge interface {
 	// Listar documentos de uma cobrança: https://docs.asaas.com/reference/listar-documentos-de-uma-cobranca
 	GetAllDocumentsById(ctx context.Context, chargeId string, filter PageableDefaultRequest) (
 		*Pageable[ChargeDocumentResponse], Error)
-	// GetAll (Listar documentos de uma cobrança)
-	//
-	// Para listar os documentos de uma cobrança, é necessário que você tenha o ID da cobrança retornado pelo Asaas.
-	//
-	// # Resposta: 200
-	//
-	// Pageable(ChargeResponse) = not nil
-	//
-	// Error = nil
-	//
-	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
-	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
-	//
-	// Error = nil
-	//
-	// Pageable.IsNoContent() = true
-	//
-	// Pageable.Data retornou vazio.
-	//
-	// # Resposta: 401/500
-	//
-	// Pageable(ChargeResponse) = not nil
-	//
-	// Error = nil
-	//
-	// Pageable.IsFailure() = true
-	//
-	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
-	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-	// "response status code not expected".
-	//
-	// # Error
-	//
-	// Pageable(ChargeDocumentResponse) = nil
-	//
-	// Error = not nil
-	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-	// na lib go-asaas.
-	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-	//
-	// # DOCS
-	//
-	// Listar cobranças: https://docs.asaas.com/reference/listar-cobrancas
-	GetAll(ctx context.Context, filter GetAllChargesRequest) (*Pageable[ChargeResponse], Error)
 }
 
 func NewCharge(env Env, accessCode string) Charge {
@@ -1568,16 +1568,16 @@ func (c charge) GetDocumentById(ctx context.Context, chargeId, docId string) (*C
 	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeId, docId), nil)
 }
 
-func (c charge) GetAllDocumentsById(ctx context.Context, chargeId string, filter PageableDefaultRequest) (
-	*Pageable[ChargeDocumentResponse], Error) {
-	req := NewRequest[Pageable[ChargeDocumentResponse]](ctx, c.env, c.accessToken)
-	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/documents`, chargeId), filter)
-}
-
 func (c charge) GetAll(ctx context.Context, filter GetAllChargesRequest) (
 	*Pageable[ChargeResponse], Error) {
 	req := NewRequest[Pageable[ChargeResponse]](ctx, c.env, c.accessToken)
 	return req.make(http.MethodGet, "/v3/payments", filter)
+}
+
+func (c charge) GetAllDocumentsById(ctx context.Context, chargeId string, filter PageableDefaultRequest) (
+	*Pageable[ChargeDocumentResponse], Error) {
+	req := NewRequest[Pageable[ChargeDocumentResponse]](ctx, c.env, c.accessToken)
+	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/documents`, chargeId), filter)
 }
 
 func (c charge) validateCreateBodyRequest(body CreateChargeRequest) error {

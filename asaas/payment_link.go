@@ -75,17 +75,17 @@ type paymentLink struct {
 
 type PaymentLink interface {
 	Create(ctx context.Context, body PaymentLinkRequest) (*PaymentLinkResponse, Error)
-	SendImageByID(ctx context.Context, paymentLinkId string, body SendImagePaymentLinksRequest) (
+	SendImageById(ctx context.Context, paymentLinkId string, body SendImagePaymentLinksRequest) (
 		*PaymentLinkImageResponse, Error)
-	UpdateByID(ctx context.Context, paymentLinkId string, body PaymentLinkRequest) (*PaymentLinkResponse, Error)
-	UpdateImageAsMainByID(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, Error)
-	RestoreByID(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error)
-	DeleteByID(ctx context.Context, paymentLinkId string) (*DeleteResponse, Error)
-	DeleteImageByID(ctx context.Context, paymentLinkId, imageId string) (*DeleteResponse, Error)
-	GetByID(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error)
-	GetImageByID(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, Error)
+	UpdateById(ctx context.Context, paymentLinkId string, body PaymentLinkRequest) (*PaymentLinkResponse, Error)
+	UpdateImageAsMainById(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, Error)
+	RestoreById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error)
+	DeleteById(ctx context.Context, paymentLinkId string) (*DeleteResponse, Error)
+	DeleteImageById(ctx context.Context, paymentLinkId, imageId string) (*DeleteResponse, Error)
+	GetById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error)
+	GetImageById(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, Error)
 	GetAll(ctx context.Context, filter GetAllPaymentLinksRequest) (*Pageable[PaymentLinkResponse], Error)
-	GetImagesByID(ctx context.Context, paymentLinkId string) (*Pageable[PaymentLinkImageResponse], Error)
+	GetImagesById(ctx context.Context, paymentLinkId string) (*Pageable[PaymentLinkImageResponse], Error)
 }
 
 func NewPaymentLink(env Env, accessToken string) PaymentLink {
@@ -104,45 +104,45 @@ func (p paymentLink) Create(ctx context.Context, body PaymentLinkRequest) (*Paym
 	return req.make(http.MethodPost, "/v3/paymentLinks", body)
 }
 
-func (p paymentLink) SendImageByID(ctx context.Context, paymentLinkId string, body SendImagePaymentLinksRequest) (
+func (p paymentLink) SendImageById(ctx context.Context, paymentLinkId string, body SendImagePaymentLinksRequest) (
 	*PaymentLinkImageResponse, Error) {
 	req := NewRequest[PaymentLinkImageResponse](ctx, p.env, p.accessToken)
 	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/paymentLinks/%s/images", paymentLinkId), body)
 }
 
-func (p paymentLink) UpdateByID(ctx context.Context, paymentLinkId string, body PaymentLinkRequest) (
+func (p paymentLink) UpdateById(ctx context.Context, paymentLinkId string, body PaymentLinkRequest) (
 	*PaymentLinkResponse, Error) {
 	req := NewRequest[PaymentLinkResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/paymentLinks/%s", paymentLinkId), body)
 }
 
-func (p paymentLink) UpdateImageAsMainByID(ctx context.Context, paymentLinkId, imageId string) (
+func (p paymentLink) UpdateImageAsMainById(ctx context.Context, paymentLinkId, imageId string) (
 	*PaymentLinkImageResponse, Error) {
 	req := NewRequest[PaymentLinkImageResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/paymentLinks/%s/images/%s/setAsMain", paymentLinkId, imageId), nil)
 }
 
-func (p paymentLink) RestoreByID(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error) {
+func (p paymentLink) RestoreById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error) {
 	req := NewRequest[PaymentLinkResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/paymentLinks/%s", paymentLinkId), nil)
 }
 
-func (p paymentLink) DeleteByID(ctx context.Context, paymentLinkId string) (*DeleteResponse, Error) {
+func (p paymentLink) DeleteById(ctx context.Context, paymentLinkId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/paymentLinks/%s", paymentLinkId), nil)
 }
 
-func (p paymentLink) DeleteImageByID(ctx context.Context, paymentLinkId, imageId string) (*DeleteResponse, Error) {
+func (p paymentLink) DeleteImageById(ctx context.Context, paymentLinkId, imageId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/paymentLinks/%s/images/%s", paymentLinkId, imageId), nil)
 }
 
-func (p paymentLink) GetByID(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error) {
+func (p paymentLink) GetById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error) {
 	req := NewRequest[PaymentLinkResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentLinks/%s", paymentLinkId), nil)
 }
 
-func (p paymentLink) GetImageByID(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, Error) {
+func (p paymentLink) GetImageById(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, Error) {
 	req := NewRequest[PaymentLinkImageResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentLinks/%s/images/%s", paymentLinkId, imageId), nil)
 }
@@ -152,7 +152,7 @@ func (p paymentLink) GetAll(ctx context.Context, filter GetAllPaymentLinksReques
 	return req.make(http.MethodGet, "/v3/paymentLinks", filter)
 }
 
-func (p paymentLink) GetImagesByID(ctx context.Context, paymentLinkId string) (*Pageable[PaymentLinkImageResponse], Error) {
+func (p paymentLink) GetImagesById(ctx context.Context, paymentLinkId string) (*Pageable[PaymentLinkImageResponse], Error) {
 	req := NewRequest[Pageable[PaymentLinkImageResponse]](ctx, p.env, p.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentLinks/%s/images", paymentLinkId), nil)
 }

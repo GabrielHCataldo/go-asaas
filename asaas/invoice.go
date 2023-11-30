@@ -144,8 +144,8 @@ type Invoice interface {
 	Schedule(ctx context.Context, body ScheduleInvoiceRequest) (*InvoiceResponse, Error)
 	Authorize(ctx context.Context, invoiceId string) (*InvoiceResponse, Error)
 	Cancel(ctx context.Context, invoiceId string) (*InvoiceResponse, Error)
-	UpdateByID(ctx context.Context, invoiceId string, body UpdateInvoiceRequest) (*InvoiceResponse, Error)
-	GetByID(ctx context.Context, invoiceId string) (*InvoiceResponse, Error)
+	UpdateById(ctx context.Context, invoiceId string, body UpdateInvoiceRequest) (*InvoiceResponse, Error)
+	GetById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error)
 	GetAll(ctx context.Context, filter GetAllInvoicesRequest) (*Pageable[InvoiceResponse], Error)
 }
 
@@ -175,12 +175,12 @@ func (i invoice) Cancel(ctx context.Context, invoiceId string) (*InvoiceResponse
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/invoices/%s/cancel", invoiceId), nil)
 }
 
-func (i invoice) UpdateByID(ctx context.Context, invoiceId string, body UpdateInvoiceRequest) (*InvoiceResponse, Error) {
+func (i invoice) UpdateById(ctx context.Context, invoiceId string, body UpdateInvoiceRequest) (*InvoiceResponse, Error) {
 	req := NewRequest[InvoiceResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/invoices/%s", invoiceId), body)
 }
 
-func (i invoice) GetByID(ctx context.Context, invoiceId string) (*InvoiceResponse, Error) {
+func (i invoice) GetById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error) {
 	req := NewRequest[InvoiceResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/invoices/%s", invoiceId), nil)
 }

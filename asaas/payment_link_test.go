@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestPaymentLinkSendImageByID(t *testing.T) {
+func TestPaymentLinkSendImageById(t *testing.T) {
 	accessToken, err := test.GetAccessTokenByEnv()
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -15,20 +15,20 @@ func TestPaymentLinkSendImageByID(t *testing.T) {
 	f, err := test.GetSimpleFile()
 	assertFatalErrorNonnull(t, err)
 	nPaymentLink := NewPaymentLink(EnvSandbox, *accessToken)
-	resp, errAsaas := nPaymentLink.SendImageByID(ctx, test.GetPaymentLinkIdDefault(), SendImagePaymentLinksRequest{
+	resp, errAsaas := nPaymentLink.SendImageById(ctx, test.GetPaymentLinkIdDefault(), SendImagePaymentLinksRequest{
 		Main:  true,
 		Image: f,
 	})
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestPaymentLinkGetByID(t *testing.T) {
+func TestPaymentLinkGetById(t *testing.T) {
 	accessToken, err := test.GetAccessTokenByEnv()
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, *accessToken)
-	resp, errAsaas := nPaymentLink.GetByID(ctx, test.GetPaymentLinkIdDefault())
+	resp, errAsaas := nPaymentLink.GetById(ctx, test.GetPaymentLinkIdDefault())
 	assertResponseSuccess(t, resp, errAsaas)
 }
 func TestPaymentLinkGetAll(t *testing.T) {

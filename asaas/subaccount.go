@@ -114,11 +114,11 @@ type Subaccount interface {
 	Create(ctx context.Context, body CreateSubaccountRequest) (*SubaccountResponse, Error)
 	SendDocument(ctx context.Context, accountId string, body SubaccountSendDocumentRequest) (
 		*SubaccountDocumentSentResponse, Error)
-	UpdateDocumentSentByID(ctx context.Context, documentSentId string, body SubaccountUpdateDocumentSentRequest) (
+	UpdateDocumentSentById(ctx context.Context, documentSentId string, body SubaccountUpdateDocumentSentRequest) (
 		*SubaccountDocumentSentResponse, Error)
-	DeleteDocumentSentByID(ctx context.Context, documentSentId string) (*DeleteResponse, Error)
-	GetByID(ctx context.Context, subaccountId string) (*SubaccountResponse, Error)
-	GetDocumentSentByID(ctx context.Context, documentSentId string) (*SubaccountDocumentSentResponse, Error)
+	DeleteDocumentSentById(ctx context.Context, documentSentId string) (*DeleteResponse, Error)
+	GetById(ctx context.Context, subaccountId string) (*SubaccountResponse, Error)
+	GetDocumentSentById(ctx context.Context, documentSentId string) (*SubaccountDocumentSentResponse, Error)
 	GetAll(ctx context.Context, filter GetAllSubaccountsRequest) (*Pageable[SubaccountResponse], Error)
 	GetDocuments(ctx context.Context) (*SubaccountDocumentsResponse, Error)
 }
@@ -148,7 +148,7 @@ func (s subaccount) SendDocument(ctx context.Context, accountId string, body Sub
 	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/myAccount/documents/%s", accountId), body)
 }
 
-func (s subaccount) UpdateDocumentSentByID(
+func (s subaccount) UpdateDocumentSentById(
 	ctx context.Context,
 	documentSentId string,
 	body SubaccountUpdateDocumentSentRequest,
@@ -160,17 +160,17 @@ func (s subaccount) UpdateDocumentSentByID(
 	return req.makeMultipartForm(http.MethodPut, fmt.Sprintf("/v3/myAccount/documents/files/%s", documentSentId), body)
 }
 
-func (s subaccount) DeleteDocumentSentByID(ctx context.Context, documentSentId string) (*DeleteResponse, Error) {
+func (s subaccount) DeleteDocumentSentById(ctx context.Context, documentSentId string) (*DeleteResponse, Error) {
 	req := NewRequest[DeleteResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/myAccount/documents/files/%s", documentSentId), nil)
 }
 
-func (s subaccount) GetByID(ctx context.Context, subaccountId string) (*SubaccountResponse, Error) {
+func (s subaccount) GetById(ctx context.Context, subaccountId string) (*SubaccountResponse, Error) {
 	req := NewRequest[SubaccountResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/accounts/%s", subaccountId), nil)
 }
 
-func (s subaccount) GetDocumentSentByID(ctx context.Context, documentSentId string) (*SubaccountDocumentSentResponse,
+func (s subaccount) GetDocumentSentById(ctx context.Context, documentSentId string) (*SubaccountDocumentSentResponse,
 	Error) {
 	req := NewRequest[SubaccountDocumentSentResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/myAccount/documents/files/%s", documentSentId), nil)
