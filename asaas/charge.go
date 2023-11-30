@@ -49,65 +49,115 @@ type CreateChargeRequest struct {
 }
 
 type UpdateChargeRequest struct {
-	Customer          string           `json:"customer,omitempty" validate:"required"`
-	BillingType       BillingType      `json:"billingType,omitempty" validate:"required,enum"`
-	Value             float64          `json:"value,omitempty" validate:"required,gt=0"`
-	DueDate           Date             `json:"dueDate,omitempty" validate:"required"`
-	Description       string           `json:"description,omitempty"`
-	ExternalReference string           `json:"externalReference,omitempty"`
-	Discount          *DiscountRequest `json:"discount,omitempty"`
-	Interest          *InterestRequest `json:"interest,omitempty"`
-	Fine              *FineRequest     `json:"fine,omitempty"`
-	PostalService     bool             `json:"postalService,omitempty"`
-	Split             []SplitRequest   `json:"split,omitempty"`
-	Callback          *CallbackRequest `json:"callback,omitempty"`
-	InstallmentCount  int              `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
-	InstallmentValue  float64          `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
+	// Identificador único do cliente no Asaas
+	Customer string `json:"customer,omitempty" validate:"required"`
+	// Forma de pagamento (Default: BillingTypeUndefined)
+	BillingType BillingType `json:"billingType,omitempty" validate:"required,enum"`
+	// Valor da cobrança
+	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	// Data de vencimento da cobrança
+	DueDate Date `json:"dueDate,omitempty" validate:"required"`
+	// Descrição da cobrança (máx. 500 caracteres)
+	Description string `json:"description,omitempty"`
+	// Campo livre para busca
+	ExternalReference string `json:"externalReference,omitempty"`
+	// Informações de desconto
+	Discount *DiscountRequest `json:"discount,omitempty"`
+	// Informações de juros para pagamento após o vencimento
+	Interest *InterestRequest `json:"interest,omitempty"`
+	// Informações de multa para pagamento após o vencimento
+	Fine *FineRequest `json:"fine,omitempty"`
+	// Define se a cobrança será enviada via Correios
+	PostalService bool `json:"postalService,omitempty"`
+	// Configurações do split
+	Split []SplitRequest `json:"split,omitempty"`
+	// Informações de redirecionamento automático após pagamento na tela de fatura
+	Callback *CallbackRequest `json:"callback,omitempty"`
+	// Número de parcelas (somente no caso de cobrança parcelada)
+	InstallmentCount int `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
+	// Valor de cada parcela (somente no caso de cobrança parcelada)
+	InstallmentValue float64 `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
 }
 
 type GetAllChargesRequest struct {
-	Customer              string        `json:"customer,omitempty"`
-	Installment           string        `json:"installment,omitempty"`
-	CustomerGroupName     string        `json:"customerGroupName,omitempty"`
-	BillingType           BillingType   `json:"billingType,omitempty"`
-	Status                ChargeStatus  `json:"status,omitempty"`
-	Subscription          string        `json:"subscription,omitempty"`
-	ExternalReference     string        `json:"externalReference,omitempty"`
-	InvoiceStatus         InvoiceStatus `json:"invoiceStatus,omitempty"`
-	EstimatedCreditDate   *Date         `json:"estimatedCreditDate,omitempty"`
-	PixQrCodeId           string        `json:"pixQrCodeId,omitempty"`
-	Anticipated           bool          `json:"anticipated,omitempty"`
-	DateCreatedGe         *Date         `json:"dateCreated[ge],omitempty"`
-	DateCreatedLe         *Date         `json:"dateCreated[le],omitempty"`
-	EstimatedCreditDateGE *Date         `json:"estimatedCreditDate[ge],omitempty"`
-	EstimatedCreditDateLE *Date         `json:"estimatedCreditDate[le],omitempty"`
-	DueDateGE             *Date         `json:"dueDate[ge],omitempty"`
-	DueDateLE             *Date         `json:"dueDate[le],omitempty"`
-	User                  string        `json:"user,omitempty"`
-	Offset                int           `json:"offset,omitempty"`
-	Limit                 int           `json:"limit,omitempty"`
+	// Filtrar pelo Identificador único do cliente
+	Customer string `json:"customer,omitempty"`
+	// Filtrar pelo Identificador único da assinatura
+	Subscription string `json:"subscription,omitempty"`
+	// Filtrar pelo Identificador único do parcelamento
+	Installment string `json:"installment,omitempty"`
+	// Filtrar pelo nome do grupo de cliente
+	CustomerGroupName string `json:"customerGroupName,omitempty"`
+	// Filtrar por forma de pagamento
+	BillingType BillingType `json:"billingType,omitempty"`
+	// Filtrar por status
+	Status ChargeStatus `json:"status,omitempty"`
+	// Filtrar pelo Identificador do seu sistema
+	ExternalReference string `json:"externalReference,omitempty"`
+	// Filtro para retornar cobranças que possuem ou não nota fiscal.
+	InvoiceStatus InvoiceStatus `json:"invoiceStatus,omitempty"`
+	// Filtrar pela data estimada de crédito.
+	EstimatedCreditDate *Date `json:"estimatedCreditDate,omitempty"`
+	// Filtrar recebimentos originados de um QrCode estático utilizando o id gerado na hora da criação do QrCode.
+	PixQrCodeId string `json:"pixQrCodeId,omitempty"`
+	// Filtrar registros antecipados ou não
+	Anticipated bool `json:"anticipated,omitempty"`
+	// Filtrar pela data de pagamento
+	PaymentDate *Date `json:"paymentDate,omitempty"`
+	// Filtrar a partir da data de criação inicial
+	DateCreatedGe *Date `json:"dateCreated[ge],omitempty"`
+	// Filtrar a partir da data de criação final
+	DateCreatedLe *Date `json:"dateCreated[le],omitempty"`
+	// Filtrar a partir da data de recebimento inicial
+	PaymentDateGe *Date `json:"paymentDate[ge],omitempty"`
+	// Filtrar a partir da data de recebimento final
+	PaymentDateLe *Date `json:"paymentDate[le],omitempty"`
+	// Filtrar a partir da data estimada de crédito inicial
+	EstimatedCreditDateGE *Date `json:"estimatedCreditDate[ge],omitempty"`
+	// Filtrar a partir da data estimada de crédito final
+	EstimatedCreditDateLE *Date `json:"estimatedCreditDate[le],omitempty"`
+	// Filtrar a partir da data de vencimento inicial
+	DueDateGe *Date `json:"dueDate[ge],omitempty"`
+	// Filtrar a partir da data de vencimento final
+	DueDateLe *Date `json:"dueDate[le],omitempty"`
+	// Filtrar pelo endereço de e-mail do usuário que criou a cobrança.
+	User string `json:"user,omitempty"`
+	// Elemento inicial da lista
+	Offset int `json:"offset,omitempty"`
+	// Número de elementos da lista (max: 100)
+	Limit int `json:"limit,omitempty"`
 }
 
 type ChargeReceiveInCashRequest struct {
-	PaymentDate    *Date   `json:"paymentDate,omitempty" validate:"required"`
-	Value          float64 `json:"value,omitempty" validate:"required,gt=0"`
-	NotifyCustomer bool    `json:"notifyCustomer,omitempty"`
+	// Data em que o cliente efetuou o pagamento (REQUIRED)
+	PaymentDate *Date `json:"paymentDate,omitempty" validate:"required"`
+	// Valor pago pelo cliente (REQUIRED)
+	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	// Enviar ou não notificação de pagamento confirmado para o cliente
+	NotifyCustomer bool `json:"notifyCustomer,omitempty"`
 }
 
 type UploadChargeDocumentRequest struct {
-	AvailableAfterPayment bool         `json:"availableAfterPayment,omitempty"`
-	Type                  DocumentType `json:"type,omitempty" validate:"required,enum"`
-	File                  *os.File     `json:"file,omitempty" validate:"required"`
+	// true para disponibilizar o arquivo somente após o recebimento da cobrança
+	AvailableAfterPayment bool `json:"availableAfterPayment"`
+	// Tipo de documento (REQUIRED)
+	Type DocumentType `json:"type,omitempty" validate:"required,enum"`
+	// Arquivo a ser anexado (REQUIRED)
+	File *os.File `json:"file,omitempty" validate:"required"`
 }
 
 type UpdateChargeDocumentDefinitionsRequest struct {
-	AvailableAfterPayment bool         `json:"availableAfterPayment,omitempty"`
-	Type                  DocumentType `json:"type,omitempty" validate:"required,enum"`
+	// Define se o arquivo será disponibilizado somente após o pagamento
+	AvailableAfterPayment bool `json:"availableAfterPayment"`
+	// Novo tipo do documento (REQUIRED)
+	Type DocumentType `json:"type,omitempty" validate:"required,enum"`
 }
 
 type CallbackRequest struct {
-	SuccessUrl   string `json:"successUrl,omitempty" validate:"required,url"`
-	AutoRedirect bool   `json:"autoRedirect,omitempty"`
+	// URL que o cliente será redirecionado após o pagamento com sucesso da fatura ou link de pagamento (REQUIRED)
+	SuccessUrl string `json:"successUrl,omitempty" validate:"required,url"`
+	// Definir se o cliente será redirecionado automaticamente ou será apenas informado com um botão para retornar ao site. O padrão é true, caso queira desativar informar false
+	AutoRedirect bool `json:"autoRedirect,omitempty"`
 }
 
 type ChargeResponse struct {
@@ -1082,11 +1132,316 @@ type Charge interface {
 	//
 	// Recuperar uma única cobrança: https://docs.asaas.com/reference/recuperar-uma-unica-cobranca
 	GetStatusById(ctx context.Context, chargeId string) (*ChargeStatusResponse, Error)
+	// GetIdentificationFieldById (Obter linha digitável do boleto)
+	//
+	// A linha digitável do boleto é a representação numérica do código de barras.
+	// Essa informação pode ser disponibilizada ao seu cliente para pagamento do boleto diretamente no Internet Banking.
+	// Ao gerar uma cobrança com as formas de pagamento BOLETO ou UNDEFINED, a linha digitável pode ser recuperada.
+	// Para recuperar a linha digitável do boleto, é necessário informar o ID da cobrança que o Asaas retornou no momento
+	// da criação. Como retorno, você receberá a linha digitável.
+	//
+	// # Resposta: 200
+	//
+	// IdentificationFieldResponse = not nil
+	//
+	// Error = nil
+	//
+	// IdentificationFieldResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// IdentificationFieldResponse = not nil
+	//
+	// Error = nil
+	//
+	// IdentificationFieldResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// IdentificationFieldResponse = not nil
+	//
+	// Error = nil
+	//
+	// IdentificationFieldResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo IdentificationFieldResponse.Errors preenchido
+	// com as informações de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// IdentificationFieldResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Obter linha digitável do boleto: https://docs.asaas.com/reference/obter-linha-digitavel-do-boleto
 	GetIdentificationFieldById(ctx context.Context, chargeId string) (*IdentificationFieldResponse, Error)
+	// GetPixQrCodeById (Obter QR Code para pagamentos via pix)
+	//
+	// O recebimento via pix é um meio rápido, eficaz e seguro para que sua empresa receba as cobranças de seus clientes.
+	// Ao gerar uma cobrança com as formas de pagamento PIX, BOLETO ou UNDEFINED o pagamento via Pix é habilitado.
+	// Uma das maiores vantagens dessa forma de pagamento é que ocorre de forma instantânea, ou seja, assim que o
+	// pagamento for realizado o saldo é disponibilizado em sua conta Asaas. Você pode ler mais sobre o Pix aqui.
+	//
+	// # Resposta: 200
+	//
+	// ChargePixQrCodeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargePixQrCodeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargePixQrCodeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargePixQrCodeResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// ChargePixQrCodeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargePixQrCodeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargePixQrCodeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargePixQrCodeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Obter QR Code para pagamentos via pix: https://docs.asaas.com/reference/obter-qr-code-para-pagamentos-via-pix
 	GetPixQrCodeById(ctx context.Context, chargeId string) (*ChargePixQrCodeResponse, Error)
+	// GetDocumentById (Recuperar um único documento da cobrança)
+	//
+	// Para recuperar um único documento e suas informações, é necessário que você tenha o ID que o Asaas retornou no
+	// momento do upload do documento.
+	//
+	// # Resposta: 200
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeDocumentResponse.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeDocumentResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar um único documento da cobrança: https://docs.asaas.com/reference/recuperar-um-unico-documento-da-cobranca
 	GetDocumentById(ctx context.Context, chargeId, docId string) (*ChargeDocumentResponse, Error)
+	// GetAllDocumentsById (Listar documentos de uma cobrança)
+	//
+	// Para listar os documentos de uma cobrança, é necessário que você tenha o ID da cobrança retornado pelo Asaas.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(ChargeDocumentResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(ChargeDocumentResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(ChargeDocumentResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar documentos de uma cobrança: https://docs.asaas.com/reference/listar-documentos-de-uma-cobranca
 	GetAllDocumentsById(ctx context.Context, chargeId string, filter PageableDefaultRequest) (
 		*Pageable[ChargeDocumentResponse], Error)
+	// GetAll (Listar documentos de uma cobrança)
+	//
+	// Para listar os documentos de uma cobrança, é necessário que você tenha o ID da cobrança retornado pelo Asaas.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(ChargeResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(ChargeResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(ChargeDocumentResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar cobranças: https://docs.asaas.com/reference/listar-cobrancas
 	GetAll(ctx context.Context, filter GetAllChargesRequest) (*Pageable[ChargeResponse], Error)
 }
 
