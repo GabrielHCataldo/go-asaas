@@ -54,9 +54,10 @@ type PaymentLinkResponse struct {
 }
 
 type PaymentLinkImageResponse struct {
-	Id    string               `json:"id,omitempty"`
-	Main  bool                 `json:"main,omitempty"`
-	Image PaymentImageDataLink `json:"image,omitempty"`
+	Id     string               `json:"id,omitempty"`
+	Main   bool                 `json:"main,omitempty"`
+	Image  PaymentImageDataLink `json:"image,omitempty"`
+	Errors []ErrorResponse      `json:"errors,omitempty"`
 }
 
 type PaymentImageDataLink struct {

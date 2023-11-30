@@ -87,6 +87,7 @@ type SubaccountDocumentSentResponse struct {
 type SubaccountDocumentsResponse struct {
 	RejectReasons string                       `json:"rejectReasons,omitempty"`
 	Data          []SubaccountDocumentResponse `json:"data,omitempty"`
+	Errors        []ErrorResponse              `json:"errors,omitempty"`
 }
 
 type SubaccountDocumentResponse struct {

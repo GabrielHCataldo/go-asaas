@@ -72,18 +72,21 @@ type GetPaymentStatisticRequest struct {
 }
 
 type AccountBalanceResponse struct {
-	Balance float64 `json:"balance"`
+	Balance float64         `json:"balance"`
+	Errors  []ErrorResponse `json:"errors,omitempty"`
 }
 
 type PaymentStatisticResponse struct {
-	Quantity int     `json:"quantity"`
-	Value    float64 `json:"value"`
-	NetValue float64 `json:"netValue"`
+	Quantity int             `json:"quantity"`
+	Value    float64         `json:"value"`
+	NetValue float64         `json:"netValue"`
+	Errors   []ErrorResponse `json:"errors,omitempty"`
 }
 
 type SplitStatisticResponse struct {
-	Income  float64 `json:"income"`
-	Outcome float64 `json:"outcome"`
+	Income  float64         `json:"income"`
+	Outcome float64         `json:"outcome"`
+	Errors  []ErrorResponse `json:"errors,omitempty"`
 }
 
 type AccountResponse struct {
@@ -129,9 +132,10 @@ type InvoiceCustomizationResponse struct {
 }
 
 type AccountBankInfoResponse struct {
-	Agency       string `json:"agency,omitempty"`
-	Account      string `json:"account,omitempty"`
-	AccountDigit string `json:"accountDigit,omitempty"`
+	Agency       string          `json:"agency,omitempty"`
+	Account      string          `json:"account,omitempty"`
+	AccountDigit string          `json:"accountDigit,omitempty"`
+	Errors       []ErrorResponse `json:"errors,omitempty"`
 }
 
 type AccountFeesResponse struct {
@@ -141,6 +145,7 @@ type AccountFeesResponse struct {
 	CreditBureauReport AccountCreditBureauFeesResponse `json:"creditBureauReport"`
 	Invoice            AccountInvoiceFeesResponse      `json:"invoice"`
 	Anticipation       AccountAnticipationFeesResponse `json:"anticipation"`
+	Errors             []ErrorResponse                 `json:"errors,omitempty"`
 }
 
 type AccountPaymentFeesResponse struct {
@@ -229,10 +234,11 @@ type AccountAnticipationBankSlipResponse struct {
 }
 
 type AccountRegistrationStatusResponse struct {
-	Id             string `json:"id,omitempty"`
-	CommercialInfo string `json:"commercialInfo,omitempty"`
-	Documentation  string `json:"documentation,omitempty"`
-	General        string `json:"general,omitempty"`
+	Id             string          `json:"id,omitempty"`
+	CommercialInfo string          `json:"commercialInfo,omitempty"`
+	Documentation  string          `json:"documentation,omitempty"`
+	General        string          `json:"general,omitempty"`
+	Errors         []ErrorResponse `json:"errors,omitempty"`
 }
 
 type AccountWalletResponse struct {

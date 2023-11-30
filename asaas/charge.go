@@ -8,25 +8,44 @@ import (
 )
 
 type CreateChargeRequest struct {
-	Customer             string                       `json:"customer,omitempty" validate:"required"`
-	BillingType          BillingType                  `json:"billingType,omitempty" validate:"required,enum"`
-	Value                float64                      `json:"value,omitempty" validate:"required"`
-	DueDate              *Date                        `json:"dueDate,omitempty" validate:"required,after_now"`
-	Description          string                       `json:"description,omitempty" validate:"omitempty,lte=500"`
-	ExternalReference    string                       `json:"externalReference,omitempty"`
-	Discount             *DiscountRequest             `json:"discount,omitempty"`
-	Interest             *InterestRequest             `json:"interest,omitempty"`
-	Fine                 *FineRequest                 `json:"fine,omitempty"`
-	PostalService        bool                         `json:"postalService,omitempty"`
-	Split                []SplitRequest               `json:"split,omitempty"`
-	Callback             *CallbackRequest             `json:"callback,omitempty"`
-	CreditCard           *CreditCardRequest           `json:"creditCard,omitempty"`
+	// Identificador único do cliente no Asaas (REQUIRED)
+	Customer string `json:"customer,omitempty" validate:"required"`
+	// Forma de pagamento (Default: BillingTypeUndefined)
+	BillingType BillingType `json:"billingType,omitempty" validate:"omitempty,enum"`
+	// Valor da cobrança (REQUIRED)
+	Value float64 `json:"value,omitempty" validate:"gte=0"`
+	// Data de vencimento da cobrança (REQUIRED)
+	DueDate *Date `json:"dueDate,omitempty" validate:"required,after_now"`
+	// Descrição da cobrança (máx. 500 caracteres)
+	Description string `json:"description,omitempty" validate:"omitempty,lte=500"`
+	// Campo livre para busca
+	ExternalReference string `json:"externalReference,omitempty"`
+	// Informações de desconto
+	Discount *DiscountRequest `json:"discount,omitempty"`
+	// Informações de juros para pagamento após o vencimento
+	Interest *InterestRequest `json:"interest,omitempty"`
+	// Informações de multa para pagamento após o vencimento
+	Fine *FineRequest `json:"fine,omitempty"`
+	// Define se a cobrança será enviada via Correios
+	PostalService bool `json:"postalService,omitempty"`
+	// Configurações do split
+	Split []SplitRequest `json:"split,omitempty"`
+	// Informações de redirecionamento automático após pagamento na tela de fatura
+	Callback *CallbackRequest `json:"callback,omitempty"`
+	// Informações do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
+	CreditCard *CreditCardRequest `json:"creditCard,omitempty"`
+	// Informações do titular do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
 	CreditCardHolderInfo *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
-	CreditCardToken      string                       `json:"creditCardToken,omitempty"`
-	InstallmentCount     int                          `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
-	InstallmentValue     float64                      `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
-	AuthorizeOnly        bool                         `json:"authorizeOnly,omitempty"`
-	RemoteIp             string                       `json:"remoteIp,omitempty"`
+	// Token do cartão de crédito para uso da funcionalidade de tokenização de cartão de crédito
+	CreditCardToken string `json:"creditCardToken,omitempty"`
+	// Número de parcelas (somente no caso de cobrança parcelada)
+	InstallmentCount int `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
+	// Valor de cada parcela (somente no caso de cobrança parcelada)
+	InstallmentValue float64 `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
+	// Realizar apenas a Pré-Autorização da cobrança
+	AuthorizeOnly bool `json:"authorizeOnly,omitempty"`
+	// IP de onde o cliente está fazendo a compra. Não deve ser informado o IP do seu servidor
+	RemoteIp string `json:"remoteIp,omitempty"`
 }
 
 type UpdateChargeRequest struct {
@@ -124,24 +143,27 @@ type ChargeResponse struct {
 	Anticipated           bool                `json:"anticipated,omitempty"`
 	Anticipable           bool                `json:"anticipable,omitempty"`
 	Refunds               []RefundResponse    `json:"refunds,omitempty"`
-	Errors                []ErrorResponse     `json:"errors,omitempty"`
 	DateCreated           *Date               `json:"dateCreated,omitempty"`
+	Errors                []ErrorResponse     `json:"errors,omitempty"`
 }
 
 type ChargeStatusResponse struct {
-	Status ChargeStatus `json:"status,omitempty"`
+	Status ChargeStatus    `json:"status,omitempty"`
+	Errors []ErrorResponse `json:"errors,omitempty"`
 }
 
 type IdentificationFieldResponse struct {
-	IdentificationField string `json:"identificationField,omitempty"`
-	NossoNumero         string `json:"nossoNumero,omitempty"`
-	BarCode             string `json:"barCode,omitempty"`
+	IdentificationField string          `json:"identificationField,omitempty"`
+	NossoNumero         string          `json:"nossoNumero,omitempty"`
+	BarCode             string          `json:"barCode,omitempty"`
+	Errors              []ErrorResponse `json:"errors,omitempty"`
 }
 
 type ChargePixQrCodeResponse struct {
-	EncodedImage   string `json:"encodedImage,omitempty"`
-	Payload        string `json:"payload,omitempty"`
-	ExpirationDate *Date  `json:"expirationDate,omitempty"`
+	EncodedImage   string          `json:"encodedImage,omitempty"`
+	Payload        string          `json:"payload,omitempty"`
+	ExpirationDate *Date           `json:"expirationDate,omitempty"`
+	Errors         []ErrorResponse `json:"errors,omitempty"`
 }
 
 type ChargeDocumentResponse struct {
@@ -165,6 +187,7 @@ type ChargeFileResponse struct {
 
 type ChargeCreationLimitResponse struct {
 	Creation ChargeCreationResponse `json:"creation,omitempty"`
+	Errors   []ErrorResponse        `json:"errors,omitempty"`
 }
 
 type ChargeCreationResponse struct {
@@ -183,21 +206,882 @@ type charge struct {
 }
 
 type Charge interface {
+	// Create (Cria uma nova cobrança)
+	//
+	// É possível escolher entre as formas de pagamento com boleto, cartão de crédito,
+	// pix ou permitir que o cliente escolha a forma que desejar.
+	//
+	// # Resposta: 200
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Criar uma cobrança: https://docs.asaas.com/reference/criar-nova-cobranca
+	//
+	// Criar uma cobrança parcelada: https://docs.asaas.com/reference/criar-uma-cobranca-parcelada
+	//
+	// Criar cobrança com cartão de crédito: https://docs.asaas.com/reference/criar-nova-cobranca-com-cartao-de-credito
 	Create(ctx context.Context, body CreateChargeRequest) (*ChargeResponse, Error)
+	// PayWithCreditCard (Pagar uma cobrança com cartão de crédito)
+	//
+	// Este endpoint paga uma cobrança com o cartão de crédito informado na hora que você chamá-lo.
+	// Não é possível agendar um pagamento
+	//
+	// # Resposta: 200
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Pagar uma cobrança com cartão de crédito: https://docs.asaas.com/reference/pagar-uma-cobranca-com-cartao-de-credito
 	PayWithCreditCard(ctx context.Context, chargeId string, body CreditCardRequest) (*ChargeResponse, Error)
+	// UpdateById (Atualizar cobrança existente)
+	//
+	// Somente é possível atualizar cobranças aguardando pagamento ou vencidas. Uma vez criada, não é possível alterar
+	// o cliente ao qual a cobrança pertence.
+	//
+	// # Resposta: 200
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Atualizar cobrança existente: https://docs.asaas.com/reference/atualizar-cobranca-existente
 	UpdateById(ctx context.Context, chargeId string, body UpdateChargeRequest) (*ChargeResponse, Error)
+	// DeleteById (Excluir cobrança)
+	//
+	// Somente cobranças aguardando pagamento ou vencidas podem ser removidas. Ao excluir uma cobrança,
+	// nenhuma nova notificação será enviada e seu cliente não poderá mais pagá-la.
+	//
+	// # Resposta: 200
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// Se DeleteResponse.IsSuccess() for true quer dizer que foi excluída.
+	//
+	// Se caso DeleteResponse.IsFailure() for true quer dizer que não foi excluída.
+	//
+	// # Resposta: 404
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// DeleteResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// DeleteResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo DeleteResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// DeleteResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Excluir cobrança: https://docs.asaas.com/reference/remover-cobranca
 	DeleteById(ctx context.Context, chargeId string) (*DeleteResponse, Error)
+	// RestoreById (Restaurar cobrança removida)
+	//
+	// # Resposta: 200
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Restaurar cobrança removida: https://docs.asaas.com/reference/restaurar-cobranca-removida
 	RestoreById(ctx context.Context, chargeId string) (*ChargeResponse, Error)
+	// RefundById (Estornar cobrança)
+	//
+	// É possível estornar cobranças via cartão de crédito recebidas ou confirmadas. Ao fazer isto o saldo correspondente
+	// é debitado de sua conta no Asaas e a cobrança cancelada no cartão do seu cliente. O cancelamento pode levar até 10
+	// dias úteis para aparecer na fatura de seu cliente. Cobranças recebidas via Pix, permitem o estorno integral ou
+	// vários estornos parciais. A soma desses estornos não poderão ultrapassar o valor total da cobrança recebida.
+	//
+	// # Resposta: 200
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Estornar cobrança: https://docs.asaas.com/reference/estornar-cobranca
 	RefundById(ctx context.Context, chargeId string, body RefundRequest) (*ChargeResponse, Error)
+	// ReceiveInCashById (Confirmar recebimento em dinheiro)
+	//
+	// Quando um cliente fizer o pagamento de uma cobrança diretamente para você, sem que esse pagamento seja processado
+	// pelo Asaas, utilize este método para definir a cobrança como recebida em dinheiro. Esta opção permite manter
+	// seu histórico consistente no sistema, mas não gera saldo ou faz qualquer alteração financeira em sua conta.
+	// Ao confirmar um recebimento em dinheiro de uma cobrança que possua uma negativação em andamento uma taxa de
+	// ativação de serviço de negativação poderá ser cobrada. Verifique essa taxa no campo receivedInCashFeeValue
+	// localizada no retorno do objeto de negativação.
+	//
+	// # Resposta: 200
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Confirmar recebimento em dinheiro: https://docs.asaas.com/reference/confirmar-recebimento-em-dinheiro
 	ReceiveInCashById(ctx context.Context, chargeId string, body ChargeReceiveInCashRequest) (*ChargeResponse, Error)
+	// UndoReceivedInCashById (Desfazer confirmação de recebimento em dinheiro)
+	//
+	// Permite desfazer uma cobrança marcada como recebida em dinheiro.
+	//
+	// # Resposta: 200
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Desfazer confirmação de recebimento em dinheiro: https://docs.asaas.com/reference/desfazer-confirmacao-de-recebimento-em-dinheiro
 	UndoReceivedInCashById(ctx context.Context, chargeId string) (*ChargeResponse, Error)
+	// UploadDocumentById (Fazer upload de documentos da cobrança)
+	//
+	// Permite anexar um documento dentro da cobrança, que será disponibilizado ao pagador diretamente na fatura Asaas
+	// para download.
+	//
+	// # Resposta: 200
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeDocumentResponse.Errors preenchido
+	// com as informações de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeDocumentResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Fazer upload de documentos da cobrança: https://docs.asaas.com/reference/fazer-upload-de-documentos-da-cobranca
 	UploadDocumentById(ctx context.Context, chargeId string, body UploadChargeDocumentRequest) (*ChargeDocumentResponse, Error)
+	// UpdateDocumentDefinitionsById (Atualizar definições de um documento da cobrança)
+	//
+	// Permite atualizar tipo de arquivo e definição de disponibilização do arquivo após o pagamento de um documento
+	// anexado em uma cobrança.
+	//
+	// # Resposta: 200
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeDocumentResponse.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeDocumentResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Atualizar definições de um documento da cobrança: https://docs.asaas.com/reference/atualizar-definicoes-de-um-documento-da-cobranca
 	UpdateDocumentDefinitionsById(ctx context.Context, chargeId, docId string, body UpdateChargeDocumentDefinitionsRequest) (
 		*ChargeDocumentResponse, Error)
+	// DeleteDocumentById (Excluir documento de uma cobrança)
+	//
+	// Para excluir o documento de uma cobrança, é necessário que você tenha o ID que o Asaas retornou no momento do
+	// upload do documento.
+	//
+	// # Resposta: 200
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// Se DeleteResponse.IsSuccess() for true quer dizer que foi excluída.
+	//
+	// Se caso DeleteResponse.IsFailure() for true quer dizer que não foi excluída.
+	//
+	// # Resposta: 404
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// DeleteResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// DeleteResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo DeleteResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// DeleteResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Excluir documento de uma cobrança: https://docs.asaas.com/reference/excluir-documento-de-uma-cobranca
 	DeleteDocumentById(ctx context.Context, chargeId, docId string) (*DeleteResponse, Error)
+	// GetById (Recuperar uma única cobrança)
+	//
+	// Para recuperar uma cobrança específica é necessário que você tenha o ID que o Asaas retornou no momento da
+	// criação dela.
+	//
+	// # Resposta: 200
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeDocumentResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeDocumentResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// ChargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar uma única cobrança: https://docs.asaas.com/reference/recuperar-uma-unica-cobranca
 	GetById(ctx context.Context, chargeId string) (*ChargeResponse, Error)
+	// GetCreationLimit (Recuperando limites de cobranças)
+	//
+	// Permite você recuperar o limite de criação de cobranças configurado na conta, quantidade de cobranças criadas no
+	// dia e se é possível criar mais cobranças.
+	//
+	// # Resposta: 200
+	//
+	// ChargeCreationLimitResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeCreationLimitResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 401/500
+	//
+	// ChargeCreationLimitResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeCreationLimitResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeCreationLimitResponse.Errors preenchido
+	// com as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeCreationLimitResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperando limites de cobranças: https://docs.asaas.com/reference/recuperando-limites-de-cobrancças
 	GetCreationLimit(ctx context.Context) (*ChargeCreationLimitResponse, Error)
-	GetStatusById(ctx context.Context, chargeId string) (*ChargeStatus, Error)
+	// GetStatusById (Recuperar status de uma cobrança)
+	//
+	// # Resposta: 200
+	//
+	// ChargeStatusResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeStatusResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// ChargeStatusResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeStatusResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// ChargeStatusResponse = not nil
+	//
+	// Error = nil
+	//
+	// ChargeStatusResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo ChargeStatusResponse.Errors preenchido com as
+	// informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// ChargeStatusResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar uma única cobrança: https://docs.asaas.com/reference/recuperar-uma-unica-cobranca
+	GetStatusById(ctx context.Context, chargeId string) (*ChargeStatusResponse, Error)
 	GetIdentificationFieldById(ctx context.Context, chargeId string) (*IdentificationFieldResponse, Error)
 	GetPixQrCodeById(ctx context.Context, chargeId string) (*ChargePixQrCodeResponse, Error)
 	GetDocumentById(ctx context.Context, chargeId, docId string) (*ChargeDocumentResponse, Error)
@@ -308,13 +1192,9 @@ func (c charge) GetById(ctx context.Context, chargeId string) (*ChargeResponse, 
 	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s`, chargeId), nil)
 }
 
-func (c charge) GetStatusById(ctx context.Context, chargeId string) (*ChargeStatus, Error) {
-	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
-	resp, err := req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/status`, chargeId), nil)
-	if err != nil {
-		return nil, err
-	}
-	return &resp.Status, nil
+func (c charge) GetStatusById(ctx context.Context, chargeId string) (*ChargeStatusResponse, Error) {
+	req := NewRequest[ChargeStatusResponse](ctx, c.env, c.accessToken)
+	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/status`, chargeId), nil)
 }
 
 func (c charge) GetIdentificationFieldById(ctx context.Context, chargeId string) (*IdentificationFieldResponse,
@@ -354,6 +1234,9 @@ func (c charge) validateCreateBodyRequest(body CreateChargeRequest) error {
 }
 
 func (c charge) prepareCreateBodyRequest(body *CreateChargeRequest) {
+	if !body.BillingType.IsEnumValid() {
+		body.BillingType = BillingTypeUndefined
+	}
 	switch body.BillingType {
 	case BillingTypeCreditCard:
 		if body.Fine != nil {

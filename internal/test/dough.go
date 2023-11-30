@@ -108,7 +108,7 @@ func GetCreateChargeCreditCardFailureRequestDefault() []byte {
 			"customer": "cus_000005791749",
 			"billingType": "CREDIT_CARD",
 			"value": 10.0,
-			"dueDate": "2023-11-28",
+			"dueDate": "2024-11-28",
 			"description": "Cobrança via teste unitário em Golang",
 			"creditCard": {
 				"holderName": "unit test go",

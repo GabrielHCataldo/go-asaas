@@ -59,6 +59,7 @@ type NegativitySimulateResponse struct {
 	Payment         string                             `json:"payment,omitempty"`
 	Value           float64                            `json:"value,omitempty"`
 	TypeSimulations []NegativityTypeSimulationResponse `json:"typeSimulations,omitempty"`
+	Errors          []ErrorResponse                    `json:"errors,omitempty"`
 }
 
 type NegativityTypeSimulationResponse struct {

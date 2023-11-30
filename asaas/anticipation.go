@@ -52,6 +52,7 @@ type AnticipationResponse struct {
 type AnticipationLimitsResponse struct {
 	CreditCard AnticipationLimitResponse `json:"creditCard,omitempty"`
 	BankSlip   AnticipationLimitResponse `json:"bankSlip,omitempty"`
+	Errors     []ErrorResponse           `json:"errors,omitempty"`
 }
 
 type AnticipationLimitResponse struct {
@@ -74,7 +75,8 @@ type AnticipationSimulateResponse struct {
 }
 
 type AgreementSignResponse struct {
-	Agreed bool `json:"agreed,omitempty"`
+	Agreed bool            `json:"agreed,omitempty"`
+	Errors []ErrorResponse `json:"errors,omitempty"`
 }
 
 type anticipation struct {

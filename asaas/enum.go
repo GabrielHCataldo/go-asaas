@@ -12,6 +12,7 @@ type ChargebackStatus string
 type DiscountType string
 type Env int
 type ErrorType string
+type ErrorCode string
 type FineType string
 type InterestType string
 type RefundStatus string
@@ -184,7 +185,7 @@ const (
 	FinanceTransTypeBacenJudicialUnlock                              FinanceTransType = "BACEN_JUDICIAL_UNLOCK"
 	FinanceTransTypeBacenJudicialTransfer                            FinanceTransType = "BACEN_JUDICIAL_TRANSFER"
 	FinanceTransTypeAsaasDebitCardRequestFee                         FinanceTransType = "ASAAS_DEBIT_CARD_REQUEST_FEE"
-	FinanceTransTypeAsaasPrepaidCardRequestFee                       FinanceTransType = "ASAAS_PREPAId_CARD_REQUEST_FEE"
+	FinanceTransTypeAsaasPrepaidCardRequestFee                       FinanceTransType = "ASAAS_PREPAID_CARD_REQUEST_FEE"
 	FinanceTransTypeExternalSettlementContractualEffectBatchCredit   FinanceTransType = "EXTERNAL_SETTLEMENT_CONTRACTUAL_EFFECT_BATCH_CREDIT"
 	FinanceTransTypeExternalSettlementContractualEffectBatchReversal FinanceTransType = "EXTERNAL_SETTLEMENT_CONTRACTUAL_EFFECT_BATCH_REVERSAL"
 	FinanceTransTypeAsaasCardBillPayment                             FinanceTransType = "ASAAS_CARD_BILL_PAYMENT"
@@ -412,8 +413,8 @@ const (
 	ChargebackReason9  ChargebackReason = "DIFFERENT_PAY_METHOD"
 	ChargebackReason10 ChargebackReason = "FRAUD"
 	ChargebackReason11 ChargebackReason = "INCORRECT_TRANSACTION_VALUE"
-	ChargebackReason12 ChargebackReason = "INVALId_CURRENCY"
-	ChargebackReason13 ChargebackReason = "INVALId_DATA"
+	ChargebackReason12 ChargebackReason = "INVALID_CURRENCY"
+	ChargebackReason13 ChargebackReason = "INVALID_DATA"
 	ChargebackReason14 ChargebackReason = "LATE_PRESENTATION"
 	ChargebackReason15 ChargebackReason = "LOCAL_REGULATORY_OR_LEGAL_DISPUTE"
 	ChargebackReason16 ChargebackReason = "MULTIPLE_ROCS"
@@ -450,7 +451,7 @@ const (
 	EnvProduction Env = iota
 )
 const (
-	ErrorTypeValidation ErrorType = "VALIdATION"
+	ErrorTypeValidation ErrorType = "VALIDATION"
 	ErrorTypeUnexpected ErrorType = "UNEXPECTED"
 )
 const (

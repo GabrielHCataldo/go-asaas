@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"reflect"
 	"strconv"
 	"strings"
 )
@@ -46,17 +47,17 @@ func (r request[T]) make(method string, path string, payload any) (*T, Error) {
 		return nil, NewByError(err)
 	}
 	defer r.closeBody(res.Body)
-	var result T
-	err = r.readResponse(res, &result)
+	var respBody T
+	err = r.readResponse(res, &respBody)
 	if err != nil {
 		return nil, NewByError(err)
 	}
 	if res.StatusCode == http.StatusOK ||
 		res.StatusCode == http.StatusBadRequest ||
 		(res.StatusCode == http.StatusNotFound && (method == http.MethodGet || method == http.MethodPut)) {
-		return &result, nil
+		return &respBody, nil
 	}
-	return nil, NewError(ErrorTypeUnexpected, "response status code not expected:", res.StatusCode)
+	return r.prepareResponseUnexpected(res)
 }
 
 func (r request[T]) makeMultipartForm(method string, path string, payload any) (*T, Error) {
@@ -82,7 +83,7 @@ func (r request[T]) makeMultipartForm(method string, path string, payload any) (
 		}
 		return &result, nil
 	}
-	return nil, NewError(ErrorTypeUnexpected, "response status code not expected:", res.StatusCode)
+	return r.prepareResponseUnexpected(res)
 }
 
 func (r request[T]) createHttpRequest(ctx context.Context, method string, path string, payload any) (
@@ -218,7 +219,7 @@ func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader
 		} else if f, ok = vf.(*os.File); ok {
 			multipartPayload[k] = []io.Reader{f}
 		} else if fs, ok = vf.([]*os.File); ok {
-			files := []io.Reader{}
+			var files []io.Reader
 			for _, file := range fs {
 				files = append(files, file)
 			}
@@ -246,4 +247,20 @@ func (r request[T]) prepareMultipartWriter(form *multipart.Writer, k string, rea
 		return err
 	}
 	return
+}
+
+func (r request[T]) prepareResponseUnexpected(res *http.Response) (*T, Error) {
+	var respBody T
+	rv := reflect.ValueOf(&respBody)
+	fv := rv.Elem().FieldByName("Errors")
+	if rv.Kind() == reflect.Struct && fv.Kind() != reflect.Slice {
+		return nil, NewError(ErrorTypeUnexpected, "poorly formatted response structure, does not contain the errors field")
+	} else {
+		fv.Set(reflect.MakeSlice(fv.Type(), 1, 1))
+		fv.Index(0).Set(reflect.ValueOf(ErrorResponse{
+			Code:        res.Status,
+			Description: "response status code not expected",
+		}))
+	}
+	return &respBody, nil
 }
