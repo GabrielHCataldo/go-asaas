@@ -106,23 +106,751 @@ type subscription struct {
 }
 
 type Subscription interface {
+	// Create (Criar nova assinatura)
+	//
+	// Ao criar a assinatura a primeira mensalidade será gerada vencendo na data enviada no parâmetro nextDueDate.
+	//
+	// # Resposta: 200
+	//
+	// SubscriptionResponse = not nil
+	//
+	// Error = nil
+	//
+	// SubscriptionResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// SubscriptionResponse = not nil
+	//
+	// Error = nil
+	//
+	// SubscriptionResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo SubscriptionResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// SubscriptionResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Criar nova assinatura: https://docs.asaas.com/reference/criar-nova-assinatura
+	//
+	// Criar assinatura com cartão de crédito: https://docs.asaas.com/reference/criar-assinatura-com-cartao-de-credito
 	Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, Error)
-	SaveInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
+	// CreateInvoiceSettingById (Criar configuração para emissão de Notas Fiscais)
+	//
+	// # Resposta: 200
+	//
+	// InvoiceSettingResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceSettingResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// InvoiceSettingResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceSettingResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// InvoiceSettingResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceSettingResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo InvoiceSettingResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// InvoiceSettingResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Criar configuração para emissão de Notas Fiscais: https://docs.asaas.com/reference/criar-configuracao-para-emissao-de-notas-fiscais
+	CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
 		*InvoiceSettingResponse, Error)
+	// UpdateById (Atualizar assinatura existente)
+	//
+	// Ao atualizar uma assinatura, o parâmetro nextDueDate permite indicar o vencimento da próxima mensalidade a
+	// ser gerada, ou seja, não atualiza o vencimento da mensalidade já gerada.
+	//
+	// Além disso, ao atualizar o valor da assinatura ou forma de pagamento serão somente afetadas
+	// mensalidades futuras. Para atualizar as mensalidades já existentes com a nova forma de pagamento e/ou novo valor,
+	// é necessário passar o parâmetro updatePendingPayments: true.
+	//
+	// # Resposta: 200
+	//
+	// SubscriptionResponse = not nil
+	//
+	// Error = nil
+	//
+	// SubscriptionResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// SubscriptionResponse = not nil
+	//
+	// Error = nil
+	//
+	// SubscriptionResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// SubscriptionResponse = not nil
+	//
+	// Error = nil
+	//
+	// SubscriptionResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo SubscriptionResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// SubscriptionResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Atualizar assinatura existente: https://docs.asaas.com/reference/atualizar-assinatura-existente
 	UpdateById(ctx context.Context, subscriptionId string, body UpdateSubscriptionRequest) (*SubscriptionResponse, Error)
+	// UpdateInvoiceSettingsById (Atualizar configuração para emissão de Notas Fiscais)
+	//
+	// A nova configuração apenas será aplicada nas notas fiscais das próximas cobranças da assinatura,
+	// ou as que ainda não possuem uma nota fiscal criada.
+	//
+	// # Resposta: 200
+	//
+	// InvoiceSettingResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceSettingResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// InvoiceSettingResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceSettingResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// InvoiceSettingResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceSettingResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo InvoiceSettingResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// InvoiceSettingResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Atualizar configuração para emissão de Notas Fiscais: https://docs.asaas.com/reference/atualizar-configuracao-para-emissao-de-notas-fiscais
 	UpdateInvoiceSettingsById(ctx context.Context, subscriptionId string, body UpdateInvoiceSettingRequest) (
 		*InvoiceSettingResponse, Error)
+	// DeleteById (Remover assinatura)
+	//
+	// Ao remover uma assinatura, as mensalidades aguardando pagamento ou vencidas também são removidas.
+	//
+	// # Resposta: 200
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// Se DeleteResponse.IsSuccess() for true quer dizer que foi excluída.
+	//
+	// Se caso DeleteResponse.IsFailure() for true quer dizer que não foi excluída.
+	//
+	// # Resposta: 404
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// DeleteResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// DeleteResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo InstallmentResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// DeleteResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Remover assinatura: https://docs.asaas.com/reference/remover-assinatura
 	DeleteById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error)
+	// DeleteInvoiceSettingById (Remover configuração para emissão de Notas Fiscais)
+	//
+	// Ao remover a configuração, todas as notas fiscais agendadas para as cobranças desta assinatura serão canceladas
+	// e sua geração automática será interrompida.
+	//
+	// # Resposta: 200
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// Se DeleteResponse.IsSuccess() for true quer dizer que foi excluída.
+	//
+	// Se caso DeleteResponse.IsFailure() for true quer dizer que não foi excluída.
+	//
+	// # Resposta: 404
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// DeleteResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// DeleteResponse = not nil
+	//
+	// Error = nil
+	//
+	// DeleteResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo InstallmentResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// DeleteResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Remover configuração para emissão de Notas Fiscais: https://docs.asaas.com/reference/remover-configuracao-para-emissao-de-notas-fiscais
 	DeleteInvoiceSettingById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error)
+	// GetById (Recuperar uma única assinatura)
+	//
+	// Para recuperar uma assinatura específica é necessário que você tenha o ID que o Asaas retornou no momento da criação dela.
+	//
+	// Para recuperar as cobranças de uma assinatura utilize GetAllChargesBySubscription
+	//
+	// # Resposta: 200
+	//
+	// SubscriptionResponse = not nil
+	//
+	// Error = nil
+	//
+	// SubscriptionResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// SubscriptionResponse = not nil
+	//
+	// Error = nil
+	//
+	// SubscriptionResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// SubscriptionResponse = not nil
+	//
+	// Error = nil
+	//
+	// SubscriptionResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo SubscriptionResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// SubscriptionResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar uma única assinatura: https://docs.asaas.com/reference/recuperar-uma-unica-assinatura
 	GetById(ctx context.Context, subscriptionId string) (*SubscriptionResponse, Error)
+	// GetInvoiceSettingById (Recuperar configuração para emissão de Notas Fiscais)
+	//
+	// Para recuperar a configuração de emissão de notas fiscais de uma assinatura é necessário que você tenha criada
+	// ela anteriormente e possua o ID da assinatura que o Asaas retornou no momento da criação dela.
+	//
+	// # Resposta: 200
+	//
+	// InvoiceSettingResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceSettingResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// InvoiceSettingResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceSettingResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// InvoiceSettingResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceSettingResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo InvoiceSettingResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// InvoiceSettingResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar configuração para emissão de Notas Fiscais: https://docs.asaas.com/reference/recuperar-configuracao-para-emissao-de-notas-fiscais
 	GetInvoiceSettingById(ctx context.Context, subscriptionId string) (*InvoiceSettingResponse, Error)
-	GetAllChargesBySubscription(ctx context.Context, subscriptionId string, filter GetAllChargesBySubscriptionRequest) (
-		*Pageable[ChargeResponse], Error)
-	GetAllInvoicesBySubscription(ctx context.Context, subscriptionId string, filter GetAllSubscriptionInvoicesRequest) (
-		*Pageable[InvoiceResponse], Error)
+	// GetPaymentBookById (Gerar carnê de assinatura)
+	//
+	// Para gerar os carnês gerados a partir de uma assinatura em formato PDF, é necessário que você tenha o
+	// ID da assinatura retornado pelo Asaas.
+	//
+	// # Resposta: 200
+	//
+	// FileTextPlainResponse = not nil
+	//
+	// Error = nil
+	//
+	// FileTextPlainResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// FileTextPlainResponse = not nil
+	//
+	// Error = nil
+	//
+	// FileTextPlainResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// FileTextPlainResponse = not nil
+	//
+	// Error = nil
+	//
+	// FileTextPlainResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo FileTextPlainResponse.Errors preenchido
+	// com as informações de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// FileTextPlainResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Gerar carnê de assinatura: https://docs.asaas.com/reference/gerar-carne-de-assinatura
 	GetPaymentBookById(ctx context.Context, subscriptionId string, filter SubscriptionPaymentBookRequest) (
 		*FileTextPlainResponse, Error)
+	// GetAll (Listar assinaturas)
+	//
+	// Diferente da recuperação de uma assinatura específica, este método retorna uma lista paginada com todas
+	// as assinaturas para os filtros informados.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(SubscriptionResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(SubscriptionResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(SubscriptionResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar assinaturas: https://docs.asaas.com/reference/listar-assinaturas
 	GetAll(ctx context.Context, filter GetAllSubscriptionsRequest) (*Pageable[SubscriptionResponse], Error)
+	// GetAllChargesBySubscription (Listar cobranças)
+	//
+	// Para listar as cobranças geradas a partir de uma assinatura utilize esse endpoint.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(ChargeResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(ChargeResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(ChargeResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar cobranças de uma assinatura: https://docs.asaas.com/reference/listar-cobrancas-de-uma-assinatura
+	GetAllChargesBySubscription(ctx context.Context, subscriptionId string, filter GetAllChargesBySubscriptionRequest) (
+		*Pageable[ChargeResponse], Error)
+	// GetAllInvoicesBySubscription (Listar cobranças)
+	//
+	// Este método retorna uma lista paginada com todas as notas fiscais geradas a partir de cobranças da assinatura informada.
+	//
+	// É possível também filtrar o status e período de emissão das notas fiscais, como já apresentado na listagem notas fiscais
+	//
+	// # Resposta: 200
+	//
+	// Pageable(InvoiceResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(InvoiceResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(InvoiceResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar notas fiscais das cobranças de uma assinatura: https://docs.asaas.com/reference/listar-notas-fiscais-das-cobrancas-de-uma-assinatura
+	GetAllInvoicesBySubscription(ctx context.Context, subscriptionId string, filter GetAllSubscriptionInvoicesRequest) (
+		*Pageable[InvoiceResponse], Error)
 }
 
 func NewSubscription(env Env, accessToken string) Subscription {
@@ -142,7 +870,7 @@ func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest
 	return req.make(http.MethodPost, "/v3/subscriptions", body)
 }
 
-func (s subscription) SaveInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
+func (s subscription) CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
 	*InvoiceSettingResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
