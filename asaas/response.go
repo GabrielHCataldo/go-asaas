@@ -448,7 +448,7 @@ func (u UpdateManyNotificationsResponse) IsFailure() bool {
 }
 
 func (u UpdateManyNotificationsResponse) IsNoContent() bool {
-	return false
+	return len(u.Errors) == 0 && len(u.Notifications) == 0
 }
 
 func (p Pageable[T]) IsSuccess() bool {
