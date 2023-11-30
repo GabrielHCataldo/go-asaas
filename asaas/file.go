@@ -14,10 +14,9 @@ type FileRequest struct {
 	Data []byte       `json:"data" validate:"required"`
 }
 
-type FileTextPlainResponse string
-
-func (f FileTextPlainResponse) String() string {
-	return string(f)
+type FileTextPlainResponse struct {
+	Data   string          `json:"data,omitempty"`
+	Errors []ErrorResponse `json:"errors,omitempty"`
 }
 
 func (f *FileRequest) UnmarshalJSON(b []byte) error {

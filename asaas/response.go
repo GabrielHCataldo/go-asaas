@@ -14,6 +14,30 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (i InstallmentResponse) IsSuccess() bool {
+	return util.IsNotBlank(&i.Id)
+}
+
+func (i InstallmentResponse) IsFailure() bool {
+	return !i.IsSuccess()
+}
+
+func (i InstallmentResponse) IsNoContent() bool {
+	return util.IsBlank(&i.Id)
+}
+
+func (u UpdateInstallmentSplitsResponse) IsSuccess() bool {
+	return len(u.Errors) == 0 && len(u.Splits) > 0
+}
+
+func (u UpdateInstallmentSplitsResponse) IsFailure() bool {
+	return !u.IsSuccess()
+}
+
+func (u UpdateInstallmentSplitsResponse) IsNoContent() bool {
+	return len(u.Errors) == 0 && len(u.Splits) == 0
+}
+
 func (p PaymentLinkImageResponse) IsSuccess() bool {
 	return len(p.Errors) == 0 && util.IsNotBlank(&p.Id)
 }
@@ -327,8 +351,7 @@ func (p PixTransactionResponse) IsNoContent() bool {
 }
 
 func (f FileTextPlainResponse) IsSuccess() bool {
-	s := f.String()
-	return util.IsNotBlank(&s)
+	return len(f.Errors) == 0 && util.IsNotBlank(&f.Data)
 }
 
 func (f FileTextPlainResponse) IsFailure() bool {
@@ -336,8 +359,7 @@ func (f FileTextPlainResponse) IsFailure() bool {
 }
 
 func (f FileTextPlainResponse) IsNoContent() bool {
-	s := f.String()
-	return util.IsBlank(&s)
+	return len(f.Errors) == 0 && util.IsBlank(&f.Data)
 }
 
 func (p PixCancelTransactionResponse) IsSuccess() bool {

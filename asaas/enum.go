@@ -270,7 +270,7 @@ const (
 )
 const (
 	HttpContentTypeJSON = "application/json"
-	HttpContentTypeText = "text/plain; charset=utf-8"
+	HttpContentTypeText = "text/plain"
 )
 const (
 	SortPaymentBookDueDate = "dueDate"

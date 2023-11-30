@@ -10,6 +10,8 @@ type Pageable[T any] struct {
 }
 
 type PageableDefaultRequest struct {
+	// Elemento inicial da lista
 	Offset int `json:"offset,omitempty"`
-	Limit  int `json:"limit,omitempty"`
+	// Número de elementos da lista (max: 100)
+	Limit int `json:"limit,omitempty"`
 }
