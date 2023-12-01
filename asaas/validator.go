@@ -48,6 +48,10 @@ func Validate() *validator.Validate {
 	if err != nil {
 		log.Fatal(err)
 	}
+	err = vld.RegisterValidation("color", validateColor)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return vld
 }
 
@@ -122,6 +126,10 @@ func validateState(fl validator.FieldLevel) bool {
 func validateEnum(fl validator.FieldLevel) bool {
 	value := fl.Field().Interface().(BaseEnum)
 	return value.IsEnumValid()
+}
+
+func validateColor(fl validator.FieldLevel) bool {
+	return util.ValidateColorHex(fl.Field().String())
 }
 
 func validateBillingBody(

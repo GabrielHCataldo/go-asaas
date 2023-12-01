@@ -70,6 +70,11 @@ func ValidateState(v string) bool {
 	return false
 }
 
+func ValidateColorHex(v string) bool {
+	r := regexp.MustCompile(`^#(?:[0-9a-fA-F]{3}){1,2}$`)
+	return r.MatchString(v)
+}
+
 func IsBlank(value *string) bool {
 	return value == nil || len(strings.TrimSpace(*value)) == 0
 }
