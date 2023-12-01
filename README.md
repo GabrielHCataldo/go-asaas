@@ -15,11 +15,11 @@ Instalação
 
 Use go get.
 
-	go get github/GabrielHCataldo/go-asaas
+	go get github.com/GabrielHCataldo/go-asaas
 
 Em seguida, importe o pacote go-asaas para seu próprio código.
 
-	import "github/GabrielHCataldo/go-asaas/asaas"
+	import "github.com/GabrielHCataldo/go-asaas/asaas"
 
 Usabilidade e Documentação
 ------------
