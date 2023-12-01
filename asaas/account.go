@@ -875,7 +875,7 @@ type Account interface {
 	//
 	// # DOCS
 	//
-	// Estatísticas de cobranças: https://docs.asaas.com/reference/estatisticas-de-cobranças
+	// Estatísticas de cobranças: https://docs.asaas.com/reference/estatisticas-de-cobran%C3%A7as
 	GetPaymentStatistic(ctx context.Context, filter GetPaymentStatisticRequest) (*PaymentStatisticResponse, Error)
 	// GetSplitStatistic (Recuperar valores de split)
 	//

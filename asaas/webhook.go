@@ -6,12 +6,18 @@ import (
 )
 
 type SaveWebhookSettingRequest struct {
-	Url         string `json:"url,omitempty" validate:"required,url"`
-	Email       string `json:"email,omitempty" validate:"required,email"`
-	ApiVersion  string `json:"apiVersion,omitempty" validate:"required,numeric,max=4"`
-	Enabled     bool   `json:"enabled"`
-	Interrupted bool   `json:"interrupted"`
-	AuthToken   string `json:"authToken,omitempty"`
+	// URL que receberá as informações de sincronização (REQUIRED)
+	Url string `json:"url,omitempty" validate:"required,url"`
+	// Email para receber as notificações em caso de erros na fila (REQUIRED)
+	Email string `json:"email,omitempty" validate:"required,email"`
+	// Versão utilizada da API. Utilize "3" para a versão v3 (REQUIRED)
+	ApiVersion string `json:"apiVersion,omitempty" validate:"required,numeric,max=4"`
+	// Habilitar ou não o webhook
+	Enabled bool `json:"enabled"`
+	// Situação da fila de sincronização
+	Interrupted bool `json:"interrupted"`
+	// Token de autenticação
+	AuthToken string `json:"authToken,omitempty"`
 }
 
 type WebhookResponse struct {
@@ -31,7 +37,116 @@ type webhook struct {
 }
 
 type Webhook interface {
+	// SaveSetting (Criar ou atualizar configurações de webhook)
+	//
+	// # Resposta: 200
+	//
+	// WebhookResponse = not nil
+	//
+	// Error = nil
+	//
+	// WebhookResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// WebhookResponse = not nil
+	//
+	// Error = nil
+	//
+	// WebhookResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo WebhookResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// WebhookResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// https://docs.asaas.com/reference/webhook-para-cobrancas-criar-ou-atualizar-configuracoes
 	SaveSetting(ctx context.Context, typeWebhook TypeOfWebhook, body SaveWebhookSettingRequest) (*WebhookResponse, Error)
+	// GetSetting (Recuperar configurações)
+	//
+	// # Resposta: 200
+	//
+	// WebhookResponse = not nil
+	//
+	// Error = nil
+	//
+	// WebhookResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// WebhookResponse = not nil
+	//
+	// Error = nil
+	//
+	// WebhookResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// WebhookResponse = not nil
+	//
+	// Error = nil
+	//
+	// WebhookResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo WebhookResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// WebhookResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// https://docs.asaas.com/reference/webhook-para-cobran%C3%A7as-recuperar-configuracoes
 	GetSetting(ctx context.Context, typeWebhook TypeOfWebhook) (*WebhookResponse, Error)
 }
 
