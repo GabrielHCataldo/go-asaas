@@ -38,7 +38,7 @@ type CreateNegativityRequest struct {
 }
 
 type GetAllNegativitiesRequest struct {
-	// "Status" da negativação
+	// Status da negativação
 	Status NegativityStatus `json:"status,omitempty"`
 	// Tipo de negativação
 	Type NegativityType `json:"type,omitempty"`

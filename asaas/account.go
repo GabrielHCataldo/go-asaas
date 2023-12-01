@@ -28,7 +28,7 @@ type UpdateAccountRequest struct {
 	BirthDate Date `json:"birthDate,omitempty" validate:"omitempty,before_now"`
 	// Tipo da empresa (somente quando Pessoa Jurídica)
 	CompanyType CompanyType `json:"companyType,omitempty" validate:"omitempty,enum"`
-	// "Email" da conta
+	// Email da conta
 	Email string `json:"email,omitempty" validate:"omitempty,email"`
 	// Telefone
 	Phone string `json:"phone,omitempty" validate:"omitempty,phone"`
@@ -290,696 +290,694 @@ type account struct {
 	accessToken string
 }
 
-type (
-	Account interface {
-		// SaveInvoiceCustomization (Salvar personalização da fatura)
-		//
-		// Possibilita personalizar a fatura apresentada ao seu cliente com o logo e cores da sua empresa.
-		// Após salva, a personalização é analisada e aprovada pela nossa equipe dentro de algumas horas.
-		//
-		// # Resposta: 200
-		//
-		// InvoiceCustomizationResponse = not nil
-		//
-		// Error = nil
-		//
-		// InvoiceCustomizationResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 400/401/500
-		//
-		// InvoiceCustomizationResponse = not nil
-		//
-		// Error = nil
-		//
-		// InvoiceCustomizationResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo InvoiceCustomizationResponse.Errors preenchido com as informações
-		// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
-		// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
-		// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// InvoiceCustomizationResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Salvar personalização da fatura: https://docs.asaas.com/reference/salvar-personalizacao-da-fatura
-		SaveInvoiceCustomization(ctx context.Context, body CreateInvoiceCustomizationRequest) (
-			*InvoiceCustomizationResponse, Error)
-		// Update (Atualizar dados comerciais)
-		//
-		// Dependendo das informações alteradas é possível que sua conta passe por uma nova análise, o que ocasionará
-		// em um bloqueio temporário de algumas funcionalidades do sistema.
-		//
-		// # Resposta: 200
-		//
-		// AccountResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 400/401/500
-		//
-		// AccountResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo AccountResponse.Errors preenchido com as informações
-		// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
-		// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
-		// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// AccountResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Atualizar dados comerciais: https://docs.asaas.com/reference/atualizar-dados-comerciais
-		Update(ctx context.Context, body UpdateAccountRequest) (*AccountResponse, Error)
-		// DeleteWhiteLabelSubaccount (Excluir subconta White Label)
-		//
-		// Ao excluir uma subconta no Asaas, ela perderá o acesso a todas as funcionalidades e todos os seus dados serão
-		// removidos, incluindo cobranças, clientes e documentos.
-		//
-		// Não será possível recuperar a conta após o cancelamento.
-		//
-		// # Resposta: 200
-		//
-		// DeleteWhiteLabelSubaccountResponse = not nil
-		//
-		// Error = nil
-		//
-		// Se DeleteWhiteLabelSubaccountResponse.IsSuccess() for true quer dizer que foi excluída.
-		//
-		// Se caso DeleteWhiteLabelSubaccountResponse.IsFailure() for true quer dizer que não foi excluída.
-		//
-		// # Resposta: 400/401/500
-		//
-		// DeleteWhiteLabelSubaccountResponse = not nil
-		//
-		// Error = nil
-		//
-		// DeleteWhiteLabelSubaccountResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo DeleteWhiteLabelSubaccountResponse.Errors preenchido com as informações
-		// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
-		// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
-		// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// DeleteWhiteLabelSubaccountResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Excluir subconta White Label: https://docs.asaas.com/reference/excluir-subconta-white-label
-		DeleteWhiteLabelSubaccount(ctx context.Context, body DeleteWhiteLabelSubaccountRequest) (
-			*DeleteWhiteLabelSubaccountResponse, Error)
-		// Get (Recuperar dados comerciais)
-		//
-		// # Resposta: 200
-		//
-		// AccountResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 401/500
-		//
-		// AccountResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo AccountResponse.Errors preenchido com as informações
-		// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// AccountResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Recuperar dados comerciais: https://docs.asaas.com/reference/recuperar-dados-comerciais
-		Get(ctx context.Context) (*AccountResponse, Error)
-		// GetRegistrationStatus (Recuperar taxas da conta)
-		//
-		// Com este endpoint é possível verificar os status de aprovação da conta.
-		//
-		// # Resposta: 200
-		//
-		// AccountRegistrationStatusResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountRegistrationStatusResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 401/500
-		//
-		// AccountRegistrationStatusResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountRegistrationStatusResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo AccountRegistrationStatusResponse.Errors preenchido com as informações
-		// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// AccountRegistrationStatusResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Consultar situação cadastral da conta: https://docs.asaas.com/reference/consultar-situacao-cadastral-da-conta
-		GetRegistrationStatus(ctx context.Context) (*AccountRegistrationStatusResponse, Error)
-		// GetBankInfo (Recuperar número de conta no Asaas)
-		//
-		// # Resposta: 200
-		//
-		// AccountBankInfoResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountBankInfoResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 401/500
-		//
-		// AccountBankInfoResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountBankInfoResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo AccountBankInfoResponse.Errors preenchido com as informações
-		// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// AccountBankInfoResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Recuperar número de conta no Asaas: https://docs.asaas.com/reference/recuperar-numero-de-conta-no-asaas
-		GetBankInfo(ctx context.Context) (*AccountBankInfoResponse, Error)
-		// GetFees (Recuperar taxas da conta)
-		//
-		// Através deste endpoint é possível verificar as taxas aplicadas na conta.
-		//
-		// # Resposta: 200
-		//
-		// AccountFeesResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountFeesResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 401/500
-		//
-		// AccountFeesResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountFeesResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo AccountFeesResponse.Errors preenchido com as informações
-		// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// AccountFeesResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Recuperar taxas da conta: https://docs.asaas.com/reference/recuperar-taxas-da-conta
-		GetFees(ctx context.Context) (*AccountFeesResponse, Error)
-		// GetWallets (Recuperar uma lista de Wallets)
-		//
-		// Através deste endpoint é possível recuperar uma lista de WalletId de uma conta caso você já tenha uma conta
-		// criada, mas não armazenou o WalletId.
-		//
-		// # Resposta: 200
-		//
-		// Pageable(AccountWalletResponse) = not nil
-		//
-		// Error = nil
-		//
-		// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
-		// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
-		//
-		// Error = nil
-		//
-		// Pageable.IsNoContent() = true
-		//
-		// Pageable.Data retornou vazio.
-		//
-		// # Resposta: 401/500
-		//
-		// Pageable(AccountWalletResponse) = not nil
-		//
-		// Error = nil
-		//
-		// Pageable.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
-		// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// Pageable(AccountWalletResponse) = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Recuperar WalletId: https://docs.asaas.com/reference/recuperar-walletid
-		GetWallets(ctx context.Context) (*Pageable[AccountWalletResponse], Error)
-		// GetBalance (Recuperar saldo da conta)
-		//
-		// # Resposta: 200
-		//
-		// AccountBalanceResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountBalanceResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 401/500
-		//
-		// AccountBalanceResponse = not nil
-		//
-		// Error = nil
-		//
-		// AccountBalanceResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo AccountBalanceResponse.Errors preenchido com as informações
-		// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// AccountBalanceResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Recuperar saldo da conta: https://docs.asaas.com/reference/recuperar-saldo-da-conta
-		GetBalance(ctx context.Context) (*AccountBalanceResponse, Error)
-		// GetAccountStatement (Recuperar extrato)
-		//
-		// Retorna uma lista de movimentações financeiras no período informado nos parâmetros.
-		//
-		// # Resposta: 200
-		//
-		// Pageable(AccountStatementResponse) = not nil
-		//
-		// Error = nil
-		//
-		// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
-		// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
-		//
-		// Error = nil
-		//
-		// Pageable.IsNoContent() = true
-		//
-		// Pageable.Data retornou vazio.
-		//
-		// # Resposta: 401/500
-		//
-		// Pageable(AccountStatementResponse) = not nil
-		//
-		// Error = nil
-		//
-		// Pageable.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
-		// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// Pageable(AccountStatementResponse) = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Recuperar extrato: https://docs.asaas.com/reference/recuperar-extrato
-		GetAccountStatement(ctx context.Context, filter GetAccountStatementRequest) (
-			*Pageable[AccountStatementResponse], Error)
-		// GetPaymentStatistic (Estatísticas de cobranças)
-		//
-		// # Resposta: 200
-		//
-		// PaymentStatisticResponse = not nil
-		//
-		// Error = nil
-		//
-		// PaymentStatisticResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 401/500
-		//
-		// PaymentStatisticResponse = not nil
-		//
-		// Error = nil
-		//
-		// PaymentStatisticResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo PaymentStatisticResponse.Errors preenchido com as informações
-		// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// PaymentStatisticResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Estatísticas de cobranças: https://docs.asaas.com/reference/estatisticas-de-cobranças
-		GetPaymentStatistic(ctx context.Context, filter GetPaymentStatisticRequest) (*PaymentStatisticResponse, Error)
-		// GetSplitStatistic (Recuperar valores de split)
-		//
-		// # Resposta: 200
-		//
-		// SplitStatisticResponse = not nil
-		//
-		// Error = nil
-		//
-		// SplitStatisticResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 401/500
-		//
-		// SplitStatisticResponse = not nil
-		//
-		// Error = nil
-		//
-		// SplitStatisticResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo SplitStatisticResponse.Errors preenchido com as informações
-		// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// SplitStatisticResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Recuperar valores de split: https://docs.asaas.com/reference/recuperar-valores-de-split
-		GetSplitStatistic(ctx context.Context) (*SplitStatisticResponse, Error)
-		// GetInvoiceCustomization (Recuperar configurações de personalização)
-		//
-		// # Resposta: 200
-		//
-		// InvoiceCustomizationResponse = not nil
-		//
-		// Error = nil
-		//
-		// InvoiceCustomizationResponse.IsSuccess() = true
-		//
-		// Possui os valores de resposta de sucesso segunda a documentação.
-		//
-		// # Resposta: 401/500
-		//
-		// InvoiceCustomizationResponse = not nil
-		//
-		// Error = nil
-		//
-		// InvoiceCustomizationResponse.IsFailure() = true
-		//
-		// Para qualquer outra resposta inesperada da API, possuímos o campo InvoiceCustomizationResponse.Errors preenchido com as informações
-		// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
-		// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
-		// "response status code not expected".
-		//
-		// # Error
-		//
-		// InvoiceCustomizationResponse = nil
-		//
-		// Error = not nil
-		//
-		// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-		// parâmetros informados segundo a documentação.
-		// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
-		// na lib go-asaas.
-		//
-		// Para obter mais detalhes confira as colunas:
-		//
-		// ErrorAsaas.Msg (mensagem do erro),
-		//
-		// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-		//
-		// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-		//
-		// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
-		//
-		// # DOCS
-		//
-		// Recuperar configurações de personalização: https://docs.asaas.com/reference/recuperar-configuracoes-de-personalizacao
-		GetInvoiceCustomization(ctx context.Context) (*InvoiceCustomizationResponse, Error)
-	}
-)
+type Account interface {
+	// SaveInvoiceCustomization (Salvar personalização da fatura)
+	//
+	// Possibilita personalizar a fatura apresentada ao seu cliente com o logo e cores da sua empresa.
+	// Após salva, a personalização é analisada e aprovada pela nossa equipe dentro de algumas horas.
+	//
+	// # Resposta: 200
+	//
+	// InvoiceCustomizationResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceCustomizationResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// InvoiceCustomizationResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceCustomizationResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo InvoiceCustomizationResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// InvoiceCustomizationResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Salvar personalização da fatura: https://docs.asaas.com/reference/salvar-personalizacao-da-fatura
+	SaveInvoiceCustomization(ctx context.Context, body CreateInvoiceCustomizationRequest) (
+		*InvoiceCustomizationResponse, Error)
+	// Update (Atualizar dados comerciais)
+	//
+	// Dependendo das informações alteradas é possível que sua conta passe por uma nova análise, o que ocasionará
+	// em um bloqueio temporário de algumas funcionalidades do sistema.
+	//
+	// # Resposta: 200
+	//
+	// AccountResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// AccountResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo AccountResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// AccountResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Atualizar dados comerciais: https://docs.asaas.com/reference/atualizar-dados-comerciais
+	Update(ctx context.Context, body UpdateAccountRequest) (*AccountResponse, Error)
+	// DeleteWhiteLabelSubaccount (Excluir subconta White Label)
+	//
+	// Ao excluir uma subconta no Asaas, ela perderá o acesso a todas as funcionalidades e todos os seus dados serão
+	// removidos, incluindo cobranças, clientes e documentos.
+	//
+	// Não será possível recuperar a conta após o cancelamento.
+	//
+	// # Resposta: 200
+	//
+	// DeleteWhiteLabelSubaccountResponse = not nil
+	//
+	// Error = nil
+	//
+	// Se DeleteWhiteLabelSubaccountResponse.IsSuccess() for true quer dizer que foi excluída.
+	//
+	// Se caso DeleteWhiteLabelSubaccountResponse.IsFailure() for true quer dizer que não foi excluída.
+	//
+	// # Resposta: 400/401/500
+	//
+	// DeleteWhiteLabelSubaccountResponse = not nil
+	//
+	// Error = nil
+	//
+	// DeleteWhiteLabelSubaccountResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo DeleteWhiteLabelSubaccountResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// DeleteWhiteLabelSubaccountResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Excluir subconta White Label: https://docs.asaas.com/reference/excluir-subconta-white-label
+	DeleteWhiteLabelSubaccount(ctx context.Context, body DeleteWhiteLabelSubaccountRequest) (
+		*DeleteWhiteLabelSubaccountResponse, Error)
+	// Get (Recuperar dados comerciais)
+	//
+	// # Resposta: 200
+	//
+	// AccountResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 401/500
+	//
+	// AccountResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo AccountResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// AccountResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar dados comerciais: https://docs.asaas.com/reference/recuperar-dados-comerciais
+	Get(ctx context.Context) (*AccountResponse, Error)
+	// GetRegistrationStatus (Recuperar taxas da conta)
+	//
+	// Com este endpoint é possível verificar os status de aprovação da conta.
+	//
+	// # Resposta: 200
+	//
+	// AccountRegistrationStatusResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountRegistrationStatusResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 401/500
+	//
+	// AccountRegistrationStatusResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountRegistrationStatusResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo AccountRegistrationStatusResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// AccountRegistrationStatusResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Consultar situação cadastral da conta: https://docs.asaas.com/reference/consultar-situacao-cadastral-da-conta
+	GetRegistrationStatus(ctx context.Context) (*AccountRegistrationStatusResponse, Error)
+	// GetBankInfo (Recuperar número de conta no Asaas)
+	//
+	// # Resposta: 200
+	//
+	// AccountBankInfoResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountBankInfoResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 401/500
+	//
+	// AccountBankInfoResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountBankInfoResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo AccountBankInfoResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// AccountBankInfoResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar número de conta no Asaas: https://docs.asaas.com/reference/recuperar-numero-de-conta-no-asaas
+	GetBankInfo(ctx context.Context) (*AccountBankInfoResponse, Error)
+	// GetFees (Recuperar taxas da conta)
+	//
+	// Através deste endpoint é possível verificar as taxas aplicadas na conta.
+	//
+	// # Resposta: 200
+	//
+	// AccountFeesResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountFeesResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 401/500
+	//
+	// AccountFeesResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountFeesResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo AccountFeesResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// AccountFeesResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar taxas da conta: https://docs.asaas.com/reference/recuperar-taxas-da-conta
+	GetFees(ctx context.Context) (*AccountFeesResponse, Error)
+	// GetWallets (Recuperar uma lista de Wallets)
+	//
+	// Através deste endpoint é possível recuperar uma lista de WalletId de uma conta caso você já tenha uma conta
+	// criada, mas não armazenou o WalletId.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(AccountWalletResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(AccountWalletResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(AccountWalletResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar WalletId: https://docs.asaas.com/reference/recuperar-walletid
+	GetWallets(ctx context.Context) (*Pageable[AccountWalletResponse], Error)
+	// GetBalance (Recuperar saldo da conta)
+	//
+	// # Resposta: 200
+	//
+	// AccountBalanceResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountBalanceResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 401/500
+	//
+	// AccountBalanceResponse = not nil
+	//
+	// Error = nil
+	//
+	// AccountBalanceResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo AccountBalanceResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// AccountBalanceResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar saldo da conta: https://docs.asaas.com/reference/recuperar-saldo-da-conta
+	GetBalance(ctx context.Context) (*AccountBalanceResponse, Error)
+	// GetAccountStatement (Recuperar extrato)
+	//
+	// Retorna uma lista de movimentações financeiras no período informado nos parâmetros.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(AccountStatementResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(AccountStatementResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(AccountStatementResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar extrato: https://docs.asaas.com/reference/recuperar-extrato
+	GetAccountStatement(ctx context.Context, filter GetAccountStatementRequest) (
+		*Pageable[AccountStatementResponse], Error)
+	// GetPaymentStatistic (Estatísticas de cobranças)
+	//
+	// # Resposta: 200
+	//
+	// PaymentStatisticResponse = not nil
+	//
+	// Error = nil
+	//
+	// PaymentStatisticResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 401/500
+	//
+	// PaymentStatisticResponse = not nil
+	//
+	// Error = nil
+	//
+	// PaymentStatisticResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo PaymentStatisticResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// PaymentStatisticResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Estatísticas de cobranças: https://docs.asaas.com/reference/estatisticas-de-cobranças
+	GetPaymentStatistic(ctx context.Context, filter GetPaymentStatisticRequest) (*PaymentStatisticResponse, Error)
+	// GetSplitStatistic (Recuperar valores de split)
+	//
+	// # Resposta: 200
+	//
+	// SplitStatisticResponse = not nil
+	//
+	// Error = nil
+	//
+	// SplitStatisticResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 401/500
+	//
+	// SplitStatisticResponse = not nil
+	//
+	// Error = nil
+	//
+	// SplitStatisticResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo SplitStatisticResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// SplitStatisticResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar valores de split: https://docs.asaas.com/reference/recuperar-valores-de-split
+	GetSplitStatistic(ctx context.Context) (*SplitStatisticResponse, Error)
+	// GetInvoiceCustomization (Recuperar configurações de personalização)
+	//
+	// # Resposta: 200
+	//
+	// InvoiceCustomizationResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceCustomizationResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 401/500
+	//
+	// InvoiceCustomizationResponse = not nil
+	//
+	// Error = nil
+	//
+	// InvoiceCustomizationResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo InvoiceCustomizationResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// InvoiceCustomizationResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar configurações de personalização: https://docs.asaas.com/reference/recuperar-configuracoes-de-personalizacao
+	GetInvoiceCustomization(ctx context.Context) (*InvoiceCustomizationResponse, Error)
+}
 
 func NewAccount(env Env, accessToken string) Account {
 	logWarning("Account service running on", env.String())

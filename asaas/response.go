@@ -14,8 +14,32 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (f MunicipalSettingsResponse) IsSuccess() bool {
+	return len(f.Errors) == 0
+}
+
+func (f MunicipalSettingsResponse) IsFailure() bool {
+	return !f.IsSuccess()
+}
+
+func (f MunicipalSettingsResponse) IsNoContent() bool {
+	return false
+}
+
+func (f FiscalInfoResponse) IsSuccess() bool {
+	return len(f.Errors) == 0 && util.IsNotBlank(&f.Email)
+}
+
+func (f FiscalInfoResponse) IsFailure() bool {
+	return !f.IsSuccess()
+}
+
+func (f FiscalInfoResponse) IsNoContent() bool {
+	return len(f.Errors) == 0 && util.IsBlank(&f.Email)
+}
+
 func (i InstallmentResponse) IsSuccess() bool {
-	return util.IsNotBlank(&i.Id)
+	return len(i.Errors) == 0 && util.IsNotBlank(&i.Id)
 }
 
 func (i InstallmentResponse) IsFailure() bool {
@@ -23,7 +47,7 @@ func (i InstallmentResponse) IsFailure() bool {
 }
 
 func (i InstallmentResponse) IsNoContent() bool {
-	return util.IsBlank(&i.Id)
+	return len(i.Errors) == 0 && util.IsBlank(&i.Id)
 }
 
 func (u UpdateInstallmentSplitsResponse) IsSuccess() bool {
