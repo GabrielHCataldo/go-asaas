@@ -12,32 +12,49 @@ type createPixKeyRequest struct {
 }
 
 type CreatePixKeyStaticRequest struct {
-	AddressKey             string       `json:"addressKey,omitempty"`
-	Description            string       `json:"description,omitempty"`
-	Value                  float64      `json:"value,omitempty" validate:"omitempty,gt=0"`
-	Format                 QrCodeFormat `json:"format,omitempty" validate:"omitempty,enum"`
-	ExpirationDate         *Datetime    `json:"expirationDate,omitempty"`
-	ExpirationSeconds      int          `json:"expirationSeconds,omitempty" validate:"omitempty,gt=0"`
-	AllowsMultiplePayments bool         `json:"allowsMultiplePayments"`
+	// Chave que receberá os pagamentos do QrCode
+	AddressKey string `json:"addressKey,omitempty"`
+	// Descrição do QrCode
+	Description string `json:"description,omitempty"`
+	// Valor do QrCode, caso não informado o pagador poderá escolher o valor
+	Value float64 `json:"value,omitempty" validate:"omitempty,gt=0"`
+	// Formato do QrCode
+	Format QrCodeFormat `json:"format,omitempty" validate:"omitempty,enum"`
+	// Data/Hora de expiração do QrCode, após desta data todos os pagamentos serão recusados.
+	ExpirationDate *Datetime `json:"expirationDate,omitempty"`
+	// Determina a data de expiração em segundos.
+	ExpirationSeconds int `json:"expirationSeconds,omitempty" validate:"omitempty,gt=0"`
+	// Define se o QrCode pode ser pago múltiplas vezes, caso não informado o valor padrão é true.
+	AllowsMultiplePayments bool `json:"allowsMultiplePayments"`
 }
 
 type PayPixQrCodeRequest struct {
-	QrCode       PixQrCodeRequest `json:"qrCode,omitempty" validate:"required"`
-	Value        float64          `json:"value,omitempty" validate:"required,gt=0"`
-	Description  string           `json:"description,omitempty"`
-	ScheduleDate *Date            `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
+	// Payload do QRCode para pagamento (REQUIRED)
+	QrCode PixQrCodeRequest `json:"qrCode,omitempty" validate:"required"`
+	// Valor a ser pago (REQUIRED)
+	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	// Descrição do pagamento
+	Description string `json:"description,omitempty"`
+	// Utilizada para realizar agendamento do pagamento
+	ScheduleDate *Date `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
 }
 
 type PixQrCodeRequest struct {
-	Payload     string  `json:"payload,omitempty" validate:"required"`
+	// Payload do QRCode (REQUIRED)
+	Payload string `json:"payload,omitempty" validate:"required"`
+	// Valor do troco (para QRCode Troco)
 	ChangeValue float64 `json:"changeValue,omitempty" validate:"omitempty,gt=0"`
 }
 
 type GetAllPixKeysRequest struct {
-	Status     PixKeyStatus `json:"status,omitempty"`
-	StatusList string       `json:"statusList,omitempty"`
-	Offset     int          `json:"offset,omitempty"`
-	Limit      int          `json:"limit,omitempty"`
+	// Filtrar pelo status atual da chave
+	Status PixKeyStatus `json:"status,omitempty"`
+	// Filtrar por um ou mais status das chaves
+	StatusList string `json:"statusList,omitempty"`
+	// Elemento inicial da lista
+	Offset int `json:"offset,omitempty"`
+	// Número de elementos da lista (max: 100)
+	Limit int `json:"limit,omitempty"`
 }
 
 type PixKeyResponse struct {
@@ -181,15 +198,565 @@ type pix struct {
 }
 
 type Pix interface {
+	// PayQrCode (Pagar um QRCode)
+	//
+	// # Resposta: 200
+	//
+	// PixTransactionResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixTransactionResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// PixTransactionResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixTransactionResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo PixTransactionResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// PixTransactionResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Pagar um QRCode: https://docs.asaas.com/reference/pagar-um-qrcode
 	PayQrCode(ctx context.Context, body PayPixQrCodeRequest) (*PixTransactionResponse, Error)
+	// DecodeQrCode (Decodificar um QRCode para pagamento)
+	//
+	//  Permite decodificar um QRCode através de seu payload.
+	//
+	// # Resposta: 200
+	//
+	// DecodePixQrCodeResponse = not nil
+	//
+	// Error = nil
+	//
+	// DecodePixQrCodeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// DecodePixQrCodeResponse = not nil
+	//
+	// Error = nil
+	//
+	// DecodePixQrCodeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo DecodePixQrCodeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// DecodePixQrCodeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Decodificar um QRCode para pagamento: https://docs.asaas.com/reference/decodificar-um-qrcode-para-pagamento
 	DecodeQrCode(ctx context.Context, body PixQrCodeRequest) (*DecodePixQrCodeResponse, Error)
+	// CancelTransactionById (Cancelar uma transação agendada)
+	//
+	//  Permite decodificar um QRCode através de seu payload.
+	//
+	// # Resposta: 200
+	//
+	// PixCancelTransactionResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixCancelTransactionResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// PixCancelTransactionResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixCancelTransactionResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo PixCancelTransactionResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// PixCancelTransactionResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Cancelar uma transação agendada: https://docs.asaas.com/reference/cancelar-uma-transacao-agendada
 	CancelTransactionById(ctx context.Context, pixTransactionId string) (*PixCancelTransactionResponse, Error)
+	// CreateKey (Criar uma chave)
+	//
+	// Permite a manipulação de chaves aleatórias da sua conta Asaas.
+	//
+	// # Resposta: 200
+	//
+	// PixKeyResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixKeyResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// PixKeyResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixKeyResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo PixKeyResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// PixKeyResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Criar uma chave: https://docs.asaas.com/reference/criar-uma-chave
 	CreateKey(ctx context.Context) (*PixKeyResponse, Error)
+	// CreateStaticKey (Criar QRCode estático)
+	//
+	// Permite criar um QrCode estático para uma determinada chave. Caso não informado o campo valor, o pagador poderá
+	// escolher o valor a ser pago.
+	//
+	// # Resposta: 200
+	//
+	// QrCodeResponse = not nil
+	//
+	// Error = nil
+	//
+	// QrCodeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// QrCodeResponse = not nil
+	//
+	// Error = nil
+	//
+	// QrCodeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo QrCodeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// QrCodeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Criar QRCode estático: https://docs.asaas.com/reference/criar-qrcode-estaticoe
 	CreateStaticKey(ctx context.Context, body CreatePixKeyStaticRequest) (*QrCodeResponse, Error)
-	DeleteKeyById(ctx context.Context, pixKeyId string) (*DeleteResponse, Error)
+	// DeleteKeyById (Remover chave)
+	//
+	// # Resposta: 200
+	//
+	// PixKeyResponse = not nil
+	//
+	// Error = nil
+	//
+	// Se PixKeyResponse.IsSuccess() for true quer dizer que foi excluída.
+	//
+	// Se caso PixKeyResponse.IsFailure() for true quer dizer que não foi excluída.
+	//
+	// # Resposta: 404
+	//
+	// PixKeyResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixKeyResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// PixKeyResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixKeyResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo PixKeyResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// PixKeyResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Remover chave: https://docs.asaas.com/reference/remover-chave
+	DeleteKeyById(ctx context.Context, pixKeyId string) (*PixKeyResponse, Error)
+	// GetKeyById (Recuperar uma única chave)
+	//
+	// # Resposta: 200
+	//
+	// PixKeyResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixKeyResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// PixKeyResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixKeyResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// PixKeyResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixKeyResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo PixKeyResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// PixKeyResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar uma única chave: https://docs.asaas.com/reference/recuperar-uma-unica-chave
 	GetKeyById(ctx context.Context, pixKeyId string) (*PixKeyResponse, Error)
+	// GetTransactionById (Recuperar uma única transação)
+	//
+	// Para recuperar uma transação específica é necessário que você tenha o ID que o Asaas retornou no momento da
+	// criação dela.
+	//
+	// # Resposta: 200
+	//
+	// PixTransactionResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixTransactionResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// PixTransactionResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixTransactionResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// PixTransactionResponse = not nil
+	//
+	// Error = nil
+	//
+	// PixTransactionResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo PixTransactionResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// PixTransactionResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar uma única transação: https://docs.asaas.com/reference/recuperar-uma-unica-transacao
 	GetTransactionById(ctx context.Context, pixTransactionId string) (*PixTransactionResponse, Error)
+	// GetAllTransactions (Listar transações)
+	//
+	// # Resposta: 200
+	//
+	// Pageable(PixTransactionResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(PixTransactionResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(PixTransactionResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar transações: https://docs.asaas.com/reference/listar-transacoes
 	GetAllTransactions(ctx context.Context) (*Pageable[PixTransactionResponse], Error)
+	// GetAllKeys (Listar chaves)
+	//
+	// Podemos listar todas as chaves cadastradas na nossa conta ou somente as que estão em um determinado status.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(PixKeyResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(PixKeyResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(PixKeyResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar chaves: https://docs.asaas.com/reference/listar-chaves
 	GetAllKeys(ctx context.Context, filter GetAllPixKeysRequest) (*Pageable[PixKeyResponse], Error)
 }
 
@@ -237,8 +804,8 @@ func (p pix) CreateStaticKey(ctx context.Context, body CreatePixKeyStaticRequest
 	return req.make(http.MethodPost, "/v3/pix/qrCodes/static", body)
 }
 
-func (p pix) DeleteKeyById(ctx context.Context, pixKeyId string) (*DeleteResponse, Error) {
-	req := NewRequest[DeleteResponse](ctx, p.env, p.accessToken)
+func (p pix) DeleteKeyById(ctx context.Context, pixKeyId string) (*PixKeyResponse, Error) {
+	req := NewRequest[PixKeyResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/pix/addressKeys/%s", pixKeyId), nil)
 }
 

@@ -209,7 +209,7 @@ type Installment interface {
 	//
 	// DeleteResponse.IsFailure() = true
 	//
-	// Para qualquer outra resposta inesperada da API, possuímos o campo InstallmentResponse.Errors preenchido com as informações
+	// Para qualquer outra resposta inesperada da API, possuímos o campo DeleteResponse.Errors preenchido com as informações
 	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
 	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
 	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
