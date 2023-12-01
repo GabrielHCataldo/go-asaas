@@ -44,7 +44,7 @@ type CreateChargeRequest struct {
 	InstallmentValue float64 `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
 	// Realizar apenas a Pré-Autorização da cobrança
 	AuthorizeOnly bool `json:"authorizeOnly,omitempty"`
-	// IP de onde o cliente está fazendo a compra. Não deve ser informado o IP do seu servidor
+	// IP de onde o cliente está fazendo a compra. Não deve ser informado o IP do seu servidor (REQUIRED se BillingType = BillingTypeCreditCard)
 	RemoteIp string `json:"remoteIp,omitempty"`
 }
 
@@ -827,7 +827,8 @@ type Charge interface {
 	// # DOCS
 	//
 	// Fazer upload de documentos da cobrança: https://docs.asaas.com/reference/fazer-upload-de-documentos-da-cobranca
-	UploadDocumentById(ctx context.Context, chargeId string, body UploadChargeDocumentRequest) (*ChargeDocumentResponse, Error)
+	UploadDocumentById(ctx context.Context, chargeId string, body UploadChargeDocumentRequest) (*ChargeDocumentResponse,
+		Error)
 	// UpdateDocumentDefinitionsById (Atualizar definições de um documento da cobrança)
 	//
 	// Permite atualizar tipo de arquivo e definição de disponibilização do arquivo após o pagamento de um documento

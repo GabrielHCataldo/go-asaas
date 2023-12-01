@@ -7,76 +7,131 @@ import (
 )
 
 type CreateSubscriptionRequest struct {
-	Customer             string                       `json:"customer,omitempty" validate:"required"`
-	BillingType          BillingType                  `json:"billingType,omitempty" validate:"required,enum"`
-	Value                float64                      `json:"value,omitempty" validate:"required,gt=0"`
-	NextDueDate          Date                         `json:"nextDueDate,omitempty" validate:"required,after_now"`
-	Discount             *DiscountRequest             `json:"discount,omitempty"`
-	Interest             *InterestRequest             `json:"interest,omitempty"`
-	Fine                 *FineRequest                 `json:"fine,omitempty"`
-	Cycle                SubscriptionCycle            `json:"cycle,omitempty" validate:"required,enum"`
-	Description          string                       `json:"description,omitempty" validate:"omitempty,lte=500"`
-	CreditCard           *CreditCardRequest           `json:"creditCard,omitempty"`
+	// Identificador único do cliente no Asaas (REQUIRED)
+	Customer string `json:"customer,omitempty" validate:"required"`
+	// Forma de pagamento (Default: BillingTypeUndefined)
+	BillingType BillingType `json:"billingType,omitempty" validate:"required,enum"`
+	// Valor da assinatura
+	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	// Vencimento da primeira mensalidade
+	NextDueDate Date `json:"nextDueDate,omitempty" validate:"required,after_now"`
+	// Informações de desconto
+	Discount *DiscountRequest `json:"discount,omitempty"`
+	// Informações de juros para pagamento após o vencimento
+	Interest *InterestRequest `json:"interest,omitempty"`
+	// Informações de multa para pagamento após o vencimento
+	Fine *FineRequest `json:"fine,omitempty"`
+	// Periodicidade da cobrança (REQUIRED)
+	Cycle SubscriptionCycle `json:"cycle,omitempty" validate:"required,enum"`
+	// Descrição da assinatura (máx. 500 caracteres)
+	Description string `json:"description,omitempty" validate:"omitempty,lte=500"`
+	// Informações do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
+	CreditCard *CreditCardRequest `json:"creditCard,omitempty"`
+	// Informações do titular do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
 	CreditCardHolderInfo *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
-	CreditCardToken      string                       `json:"creditCardToken,omitempty"`
-	EndDate              *Date                        `json:"endDate,omitempty" validate:"omitempty,after_now"`
-	MaxPayments          int                          `json:"maxPayments,omitempty" validate:"omitempty,gt=0"`
-	ExternalReference    string                       `json:"externalReference,omitempty"`
-	Split                []SplitRequest               `json:"split,omitempty"`
-	RemoteIp             string                       `json:"remoteIp,omitempty"`
+	// Token do cartão de crédito para uso da funcionalidade de tokenização de cartão de crédito
+	CreditCardToken string `json:"creditCardToken,omitempty"`
+	// Data limite para vencimento das mensalidades
+	EndDate *Date `json:"endDate,omitempty" validate:"omitempty,after_now"`
+	// Número máximo de mensalidades a serem geradas para esta assinatura
+	MaxPayments int `json:"maxPayments,omitempty" validate:"omitempty,gt=0"`
+	// Identificador da assinatura no seu sistema
+	ExternalReference string `json:"externalReference,omitempty"`
+	// Informações de split
+	Split []SplitRequest `json:"split,omitempty"`
+	// IP de onde o cliente está fazendo a compra. Não deve ser informado o IP do seu servidor (REQUIRED se BillingType = BillingTypeCreditCard)
+	RemoteIp string `json:"remoteIp,omitempty"`
 }
 
 type UpdateSubscriptionRequest struct {
-	BillingType           BillingType                  `json:"billingType,omitempty" validate:"omitempty,enum"`
-	Value                 float64                      `json:"value,omitempty" validate:"omitempty,gt=0"`
-	Status                SubscriptionStatus           `json:"status,omitempty" validate:"omitempty,enum"`
-	NextDueDate           *Date                        `json:"nextDueDate,omitempty"`
-	Discount              *DiscountRequest             `json:"discount,omitempty"`
-	Interest              *InterestRequest             `json:"interest,omitempty"`
-	Fine                  *FineRequest                 `json:"fine,omitempty"`
-	Cycle                 SubscriptionCycle            `json:"cycle,omitempty" validate:"omitempty,enum"`
-	Description           string                       `json:"description,omitempty" validate:"omitempty,lte=500"`
-	CreditCard            *CreditCardRequest           `json:"creditCard,omitempty"`
-	CreditCardHolderInfo  *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
-	CreditCardToken       string                       `json:"creditCardToken,omitempty"`
-	EndDate               *Date                        `json:"endDate,omitempty"`
-	UpdatePendingPayments bool                         `json:"updatePendingPayments,omitempty"`
-	ExternalReference     string                       `json:"externalReference,omitempty"`
+	// Forma de pagamento
+	BillingType BillingType `json:"billingType,omitempty" validate:"omitempty,enum"`
+	// Valor da assinatura
+	Value float64 `json:"value,omitempty" validate:"omitempty,gt=0"`
+	// Status da assinatura
+	Status SubscriptionStatus `json:"status,omitempty" validate:"omitempty,enum"`
+	// Vencimento da próxima mensalidade
+	NextDueDate *Date `json:"nextDueDate,omitempty"`
+	// Informações de desconto
+	Discount *DiscountRequest `json:"discount,omitempty"`
+	// Informações de juros para pagamento após o vencimento
+	Interest *InterestRequest `json:"interest,omitempty"`
+	// Informações de multa para pagamento após o vencimento
+	Fine *FineRequest `json:"fine,omitempty"`
+	// Periodicidade da cobrança
+	Cycle SubscriptionCycle `json:"cycle,omitempty" validate:"omitempty,enum"`
+	// Descrição da assinatura (máx. 500 caracteres)
+	Description string `json:"description,omitempty" validate:"omitempty,lte=500"`
+	// Informações do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
+	CreditCard *CreditCardRequest `json:"creditCard,omitempty"`
+	// Informações do titular do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
+	CreditCardHolderInfo *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
+	// Token do cartão de crédito para uso da funcionalidade de tokenização de cartão de crédito
+	CreditCardToken string `json:"creditCardToken,omitempty"`
+	// Data de validade da assinatura
+	EndDate *Date `json:"endDate,omitempty"`
+	// True para atualizar mensalidades já existentes com o novo valor ou forma de pagamento
+	UpdatePendingPayments bool `json:"updatePendingPayments,omitempty"`
+	// Identificador da assinatura no seu sistema
+	ExternalReference string `json:"externalReference,omitempty"`
 }
 
 type GetAllSubscriptionsRequest struct {
-	Customer          string                `json:"customer,omitempty"`
-	CustomerGroupName string                `json:"customerGroupName,omitempty"`
-	BillingType       BillingType           `json:"billingType,omitempty"`
-	Status            SubscriptionStatus    `json:"status,omitempty"`
-	DeletedOnly       bool                  `json:"deletedOnly,omitempty"`
-	IncludeDeleted    bool                  `json:"includeDeleted,omitempty"`
-	ExternalReference string                `json:"externalReference,omitempty"`
-	Order             Order                 `json:"order,omitempty"`
-	Sort              SortSubscriptionField `json:"sort,omitempty"`
-	Offset            int                   `json:"offset,omitempty"`
-	Limit             int                   `json:"limit,omitempty"`
+	// Filtrar pelo Identificador único do cliente
+	Customer string `json:"customer,omitempty"`
+	// Filtrar pelo nome do grupo de cliente
+	CustomerGroupName string `json:"customerGroupName,omitempty"`
+	// Filtrar por forma de pagamento
+	BillingType BillingType `json:"billingType,omitempty"`
+	// Filtrar pelo status
+	Status SubscriptionStatus `json:"status,omitempty"`
+	// Envie true para retornar somente as assinaturas removidas
+	DeletedOnly bool `json:"deletedOnly,omitempty"`
+	// Envie true para recuperar também as assinaturas removidas
+	IncludeDeleted bool `json:"includeDeleted,omitempty"`
+	// Filtrar pelo Identificador do seu sistema
+	ExternalReference string `json:"externalReference,omitempty"`
+	// Ordem crescente ou decrescente
+	Order Order `json:"order,omitempty"`
+	// Por qual campo será ordenado
+	Sort SortSubscriptionField `json:"sort,omitempty"`
+	// Elemento inicial da lista
+	Offset int `json:"offset,omitempty"`
+	// Número de elementos da lista (max: 100)
+	Limit int `json:"limit,omitempty"`
 }
 
 type GetAllSubscriptionInvoicesRequest struct {
-	EffectiveDateGE   *Date         `json:"effectiveDate[ge],omitempty"`
-	EffectiveDateLE   *Date         `json:"effectiveDate[le],omitempty"`
-	ExternalReference string        `json:"externalReference,omitempty"`
-	Status            InvoiceStatus `json:"status,omitempty"`
-	Customer          string        `json:"customer,omitempty"`
-	Offset            int           `json:"offset,omitempty"`
-	Limit             int           `json:"limit,omitempty"`
+	// Filtrar a partir de uma data de emissão
+	EffectiveDateGE *Date `json:"effectiveDate[ge],omitempty"`
+	// Filtrar até uma data de emissão
+	EffectiveDateLE *Date `json:"effectiveDate[le],omitempty"`
+	// Identificador da nota fiscal no seu sistema
+	ExternalReference string `json:"externalReference,omitempty"`
+	// Status da nota fiscal
+	Status InvoiceStatus `json:"status,omitempty"`
+	// Filtrar pelo identificador único do cliente
+	Customer string `json:"customer,omitempty"`
+	// Elemento inicial da lista
+	Offset int `json:"offset,omitempty"`
+	// Número de elementos da lista (max: 100)
+	Limit int `json:"limit,omitempty"`
 }
 
 type GetAllChargesBySubscriptionRequest struct {
+	// Filtrar por status das cobranças
 	Status ChargeStatus `json:"status,omitempty"`
 }
 
 type SubscriptionPaymentBookRequest struct {
-	Month int                  `json:"month,omitempty" validate:"required,gte=1,lte=12"`
-	Year  int                  `json:"year,omitempty" validate:"required,gt=0"`
-	Sort  SortPaymentBookField `json:"sort,omitempty" validate:"omitempty,enum"`
-	Order Order                `json:"order,omitempty" validate:"omitempty,enum"`
+	// Mês final para geração do carnê (REQUIRED)
+	Month int `json:"month,omitempty" validate:"required,gte=1,lte=12"`
+	// Ano final para geração do carnê (REQUIRED)
+	Year int `json:"year,omitempty" validate:"required,gt=0"`
+	// Filtrar pelo nome da coluna
+	Sort SortPaymentBookField `json:"sort,omitempty" validate:"omitempty,enum"`
+	// Ordenação da coluna
+	Order Order `json:"order,omitempty" validate:"omitempty,enum"`
 }
 
 type SubscriptionResponse struct {
