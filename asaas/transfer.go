@@ -228,6 +228,16 @@ type Transfer interface {
 	//
 	// Possui os valores de resposta de sucesso segunda a documentação.
 	//
+	// # Resposta: 404
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
 	// # Resposta: 400/401/500
 	//
 	// TransferResponse = not nil
