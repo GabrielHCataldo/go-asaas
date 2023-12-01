@@ -26,7 +26,7 @@ Usabilidade e Documentação
 Consulte a documentação Asaas https://docs.asaas.com/reference/comece-por-aqui
 para obter documentos de uso detalhados.
 
-##### Examples:
+##### Exemplos:
 
 - [Cliente](https://github/GabrielHCataldo/go-asaas/blob/main/_example/customer/main.go)
 - [Cobrança](https://github.com/GabrielHCataldo/go-asaas/blob/main/_example/charge/main.go)
