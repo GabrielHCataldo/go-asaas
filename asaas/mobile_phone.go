@@ -7,8 +7,10 @@ import (
 )
 
 type MobilePhoneRechargeRequest struct {
-	PhoneNumber string  `json:"phoneNumber,omitempty" validate:"required,phone"`
-	Value       float64 `json:"value,omitempty" validate:"required,gt=0"`
+	// Número do celular (REQUIRED)
+	PhoneNumber string `json:"phoneNumber,omitempty" validate:"required,phone"`
+	// Valor da recarga (REQUIRED)
+	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
 }
 
 type MobilePhoneRechargeResponse struct {
@@ -41,10 +43,294 @@ type mobilePhone struct {
 }
 
 type MobilePhone interface {
+	// Recharge (Solicitar recarga)
+	//
+	// # Resposta: 200
+	//
+	// MobilePhoneRechargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneRechargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// MobilePhoneRechargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneRechargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo MobilePhoneRechargeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// MobilePhoneRechargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Solicitar recarga: https://docs.asaas.com/reference/solicitar-recarga
 	Recharge(ctx context.Context, body MobilePhoneRechargeRequest) (*MobilePhoneRechargeResponse, Error)
+	// CancelRechargeById (Cancelar uma recarga de celular)
+	//
+	// Permite o cancelamento da recarga de celular. Utilize a propriedade MobilePhoneRechargeResponse.CanBeCancelled
+	// para verificar se a recarga pode ser cancelada.
+	//
+	// Ao ser cancelado a recarga não será realizada.
+	//
+	// # Resposta: 200
+	//
+	// MobilePhoneRechargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneRechargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// MobilePhoneRechargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneRechargeResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 400/401/500
+	//
+	// MobilePhoneRechargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneRechargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo MobilePhoneRechargeResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// MobilePhoneRechargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Cancelar uma recarga de celular: https://docs.asaas.com/reference/cancelar-uma-recarga-de-celular
 	CancelRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error)
+	// GetRechargeById (Recuperar uma única recarga de celular)
+	//
+	// Para recuperar uma recarga de celular em específico é necessário que você tenha o ID que o Asaas retornou no
+	// momento da sua criação.
+	//
+	// # Resposta: 200
+	//
+	// MobilePhoneRechargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneRechargeResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// MobilePhoneRechargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneRechargeResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// MobilePhoneRechargeResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneRechargeResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo MobilePhoneRechargeResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// MobilePhoneRechargeResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar uma única recarga de celular: https://docs.asaas.com/reference/recuperar-uma-unica-recarga-de-celular
 	GetRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error)
+	// GetProviderByPhoneNumber (Buscar qual provedor o número pertence e os valores disponíveis para recarga)
+	//
+	// # Resposta: 200
+	//
+	// MobilePhoneProviderResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneProviderResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// MobilePhoneProviderResponse = not nil
+	//
+	// Error = nil
+	//
+	// MobilePhoneProviderResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo MobilePhoneProviderResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// MobilePhoneProviderResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// https://docs.asaas.com/reference/buscar-qual-provedor-o-numero-pertence-e-os-valores-disponiveis-para-recarga
 	GetProviderByPhoneNumber(ctx context.Context, phoneNumber string) (*MobilePhoneProviderResponse, Error)
+	// GetAllRecharges (Listar recargas de celular)
+	//
+	// Diferente da recuperação de uma recarga de celular em específico, este método retorna uma lista paginada
+	// com todas as recargas.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(MobilePhoneRechargeResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(MobilePhoneRechargeResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(MobilePhoneRechargeResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar recargas de celular: https://docs.asaas.com/reference/listar-recargas-de-celular
 	GetAllRecharges(ctx context.Context, filter PageableDefaultRequest) (*Pageable[MobilePhoneRechargeResponse], Error)
 }
 
