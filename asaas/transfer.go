@@ -7,7 +7,9 @@ import (
 )
 
 type TransferToBankRequest struct {
-	Value             float64               `json:"value,omitempty" validate:"required,gt=0"`
+	// Valor a ser transferido (REQUIRED)
+	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	// Informe os dados da conta caso seja uma transferência para conta bancária (REQUIRED)
 	BankAccount       BackAccountRequest    `json:"bankAccount,omitempty" validate:"required"`
 	OperationType     TransferOperationType `json:"operationType,omitempty" validate:"omitempty,enum"`
 	PixAddressKey     string                `json:"pixAddressKey,omitempty"`
@@ -22,28 +24,44 @@ type TransferToAssasRequest struct {
 }
 
 type BackAccountRequest struct {
-	Bank            BankRequest     `json:"bank,omitempty" validate:"required"`
-	AccountName     string          `json:"accountName,omitempty"`
-	OwnerName       string          `json:"ownerName,omitempty" validate:"required"`
-	OwnerBirthDate  *Date           `json:"ownerBirthDate,omitempty" validate:"omitempty,before_now"`
-	CpfCnpj         string          `json:"cpfCnpj,omitempty" validate:"required,document"`
-	Agency          string          `json:"agency,omitempty" validate:"required,numeric,max=5"`
-	Account         string          `json:"account,omitempty" validate:"required,numeric,max=12"`
-	AccountDigit    string          `json:"accountDigit,omitempty" validate:"required,numeric,max=2"`
+	// Informações da instituição bancária
+	Bank BankRequest `json:"bank,omitempty" validate:"required"`
+	// Nome da conta bancária
+	AccountName string `json:"accountName,omitempty"`
+	// Nome do proprietário da conta bancária (REQUIRED)
+	OwnerName string `json:"ownerName,omitempty" validate:"required"`
+	// Data de nascimento do proprietário da conta. Somente quando a conta bancária não pertencer ao mesmo CPF ou CNPJ da conta Asaas.
+	OwnerBirthDate *Date `json:"ownerBirthDate,omitempty" validate:"omitempty,before_now"`
+	// CPF ou CNPJ do proprietário da conta bancária (REQUIRED)
+	CpfCnpj string `json:"cpfCnpj,omitempty" validate:"required,document"`
+	// Número da agência sem dígito (REQUIRED)
+	Agency string `json:"agency,omitempty" validate:"required,numeric,max=5"`
+	// Número da conta bancária sem dígito (REQUIRED
+	Account string `json:"account,omitempty" validate:"required,numeric,max=12"`
+	// Dígito da conta bancária (REQUIRED
+	AccountDigit string `json:"accountDigit,omitempty" validate:"required,numeric,max=2"`
+	// Tipo da conta (REQUIRED)
 	BankAccountType BankAccountType `json:"bankAccountType,omitempty" validate:"required,enum"`
-	Ispb            string          `json:"ispb,omitempty"`
+	// Identificador no Sistema de Pagamentos Brasileiro
+	Ispb string `json:"ispb,omitempty"`
 }
 
 type BankRequest struct {
+	// Código de compensação do banco no sistema bancário (REQUIRED)
 	Code string `json:"code,omitempty" validate:"required"`
 }
 
 type GetAllTransfersRequest struct {
-	DateCreatedGe  *Date        `json:"dateCreated[ge],omitempty"`
-	DateCreatedLe  *Date        `json:"dateCreated[le],omitempty"`
-	TransferDateGe *Date        `json:"transferDate[ge],omitempty"`
-	TransferDateLe *Date        `json:"transferDate[le],omitempty"`
-	Type           TransferType `json:"type,omitempty"`
+	// Filtrar pela data de criação inicial
+	DateCreatedGe *Date `json:"dateCreated[ge],omitempty"`
+	// Filtrar pela data de criação final
+	DateCreatedLe *Date `json:"dateCreated[le],omitempty"`
+	// Filtrar pela data inicial de efetivação de transferência
+	TransferDateGe *Date `json:"transferDate[ge],omitempty"`
+	// Filtrar pela data final de efetivação de transferência
+	TransferDateLe *Date `json:"transferDate[le],omitempty"`
+	// Filtrar por tipo da transferência
+	Type TransferType `json:"type,omitempty"`
 }
 
 type TransferResponse struct {
@@ -91,10 +109,283 @@ type transfer struct {
 }
 
 type Transfer interface {
+	// TransferToBank (Transferir para conta de outra Instituição ou chave pix)
+	//
+	// Com este endpoint você pode fazer uma transferência para conta bancária ou chave pix.
+	//
+	// # Resposta: 200
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo TransferResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// TransferResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Transferir para conta de outra Instituição ou chave pix: https://docs.asaas.com/reference/transferir-para-conta-de-outra-instituicao-ou-chave-pix
 	TransferToBank(ctx context.Context, body TransferToBankRequest) (*TransferResponse, Error)
+	// TransferToAsaas (Transferir para conta Asaas)
+	//
+	// Só é possível fazer transferência entre contas Asaas para contas que possuam vínculo entre si,
+	// como conta-pai e conta-filha, ou duas contas-filhas de mesma conta-pai.
+	//
+	// # Resposta: 200
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo TransferResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// TransferResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Transferir para conta Asaas: https://docs.asaas.com/reference/transferir-para-conta-asaas
 	TransferToAsaas(ctx context.Context, body TransferToAssasRequest) (*TransferResponse, Error)
+	// CancelById (Cancelar uma transferência)
+	//
+	// # Resposta: 200
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 400/401/500
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo TransferResponse.Errors preenchido com as informações
+	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
+	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
+	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// TransferResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Cancelar uma transferência: https://docs.asaas.com/reference/cancelar-uma-transferencia
 	CancelById(ctx context.Context, transferId string) (*TransferResponse, Error)
+	// GetById (Recuperar uma única cobrança)
+	//
+	// Para recuperar uma transferência específica é necessário que você tenha o ID que o Asaas retornou no
+	// momento da sua criação.
+	//
+	// # Resposta: 200
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsSuccess() = true
+	//
+	// Possui os valores de resposta de sucesso segunda a documentação.
+	//
+	// # Resposta: 404
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsNoContent() = true
+	//
+	// ID(s) informado no parâmetro não foi encontrado.
+	//
+	// # Resposta: 401/500
+	//
+	// TransferResponse = not nil
+	//
+	// Error = nil
+	//
+	// TransferResponse.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo TransferResponse.Errors preenchido com as informações
+	// de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// TransferResponse = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Recuperar uma única transferência: https://docs.asaas.com/reference/recuperar-uma-unica-transferencia
 	GetById(ctx context.Context, transferId string) (*TransferResponse, Error)
+	// GetAll (Listar transferências)
+	//
+	// Este método retorna uma lista paginada com todas as transferências para o filtro informado.
+	//
+	// # Resposta: 200
+	//
+	// Pageable(TransferResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Se Pageable.IsSuccess() for true quer dizer que retornaram os dados conforme a documentação.
+	// Se Pageable.IsNoContent() for true quer dizer que retornou os dados vazio.
+	//
+	// Error = nil
+	//
+	// Pageable.IsNoContent() = true
+	//
+	// Pageable.Data retornou vazio.
+	//
+	// # Resposta: 401/500
+	//
+	// Pageable(TransferResponse) = not nil
+	//
+	// Error = nil
+	//
+	// Pageable.IsFailure() = true
+	//
+	// Para qualquer outra resposta inesperada da API, possuímos o campo Pageable.Errors preenchido com
+	// as informações de erro, o index 0 do slice com campo ErrorResponse.Code retornando a descrição
+	// status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
+	// "response status code not expected".
+	//
+	// # Error
+	//
+	// Pageable(TransferResponse) = nil
+	//
+	// Error = not nil
+	//
+	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
+	// parâmetros informados segundo a documentação.
+	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// na lib go-asaas.
+	//
+	// Para obter mais detalhes confira as colunas:
+	//
+	// ErrorAsaas.Msg (mensagem do erro),
+	//
+	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
+	//
+	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
+	//
+	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	//
+	// # DOCS
+	//
+	// Listar transferências: https://docs.asaas.com/reference/listar-transferencias
 	GetAll(ctx context.Context, filter GetAllTransfersRequest) (*Pageable[TransferResponse], Error)
 }
 
