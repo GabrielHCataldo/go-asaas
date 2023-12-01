@@ -31,11 +31,16 @@ type AgreementSignRequest struct {
 }
 
 type GetAllAnticipationsRequest struct {
-	Payment     string             `json:"payment,omitempty"`
-	Installment string             `json:"installment,omitempty"`
-	Status      AnticipationStatus `json:"status,omitempty"`
-	Offset      int                `json:"offset,omitempty"`
-	Limit       int                `json:"limit,omitempty"`
+	// Filtrar antecipações de uma cobrança
+	Payment string `json:"payment,omitempty"`
+	// Filtrar antecipações de um parcelamento
+	Installment string `json:"installment,omitempty"`
+	// Filtrar por status
+	Status AnticipationStatus `json:"status,omitempty"`
+	// Elemento inicial da lista
+	Offset int `json:"offset,omitempty"`
+	// Número de elementos da lista (max: 100)
+	Limit int `json:"limit,omitempty"`
 }
 
 type AnticipationResponse struct {
