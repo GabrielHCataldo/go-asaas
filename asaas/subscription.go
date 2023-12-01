@@ -1010,6 +1010,9 @@ func (s subscription) validateCreateBodyRequest(body CreateSubscriptionRequest) 
 }
 
 func (s subscription) prepareCreateBodyRequest(body *CreateSubscriptionRequest) {
+	if !body.BillingType.IsEnumValid() {
+		body.BillingType = BillingTypeUndefined
+	}
 	switch body.BillingType {
 	case BillingTypeCreditCard:
 		if body.Fine != nil {

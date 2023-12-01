@@ -15,7 +15,7 @@ type CreateChargeRequest struct {
 	// Valor da cobrança (REQUIRED)
 	Value float64 `json:"value,omitempty" validate:"gte=0"`
 	// Data de vencimento da cobrança (REQUIRED)
-	DueDate *Date `json:"dueDate,omitempty" validate:"required,after_now"`
+	DueDate Date `json:"dueDate,omitempty" validate:"required,after_now"`
 	// Descrição da cobrança (máx. 500 caracteres)
 	Description string `json:"description,omitempty" validate:"omitempty,lte=500"`
 	// Campo livre para busca
@@ -50,13 +50,13 @@ type CreateChargeRequest struct {
 
 type UpdateChargeRequest struct {
 	// Identificador único do cliente no Asaas
-	Customer string `json:"customer,omitempty" validate:"required"`
-	// Forma de pagamento (Default: BillingTypeUndefined)
-	BillingType BillingType `json:"billingType,omitempty" validate:"required,enum"`
+	Customer string `json:"customer,omitempty"`
+	// Forma de pagamento
+	BillingType BillingType `json:"billingType,omitempty" validate:"omitempty,enum"`
 	// Valor da cobrança
-	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	Value float64 `json:"value,omitempty" validate:"omitempty,gt=0"`
 	// Data de vencimento da cobrança
-	DueDate Date `json:"dueDate,omitempty" validate:"required"`
+	DueDate *Date `json:"dueDate,omitempty"`
 	// Descrição da cobrança (máx. 500 caracteres)
 	Description string `json:"description,omitempty"`
 	// Campo livre para busca
@@ -974,11 +974,11 @@ type Charge interface {
 	//
 	// # Resposta: 404
 	//
-	// CustomerResponse = not nil
+	// ChargeResponse = not nil
 	//
 	// Error = nil
 	//
-	// CustomerResponse.IsNoContent() = true
+	// ChargeResponse.IsNoContent() = true
 	//
 	// ID(s) informado no parâmetro não foi encontrado.
 	//
