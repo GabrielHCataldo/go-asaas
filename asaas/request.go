@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	berrors "errors"
 	"fmt"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"github.com/fatih/structs"
@@ -199,18 +198,12 @@ func (r request[T]) readResponse(res *http.Response, result *T) error {
 	logInfoSkipCaller(6, r.env, "response status:", res.StatusCode, "body:", string(respBody))
 	if len(respBody) == 0 {
 		return nil
-	} else if strings.Contains(res.Header.Get("Content-Type"), HttpContentTypeText) {
-		plainResponse, ok := any(*result).(FileTextPlainResponse)
-		if !ok {
-			return berrors.New("response text plain struct not found, use FileTextPlainResponse")
-		}
-		plainResponse.Data = string(respBody)
-		*result = any(plainResponse)
+	} else if x, ok := any(*result).(FileTextPlainResponse); ok {
+		x.Data = string(respBody)
+		*result = any(x).(T)
 		return nil
-	} else if strings.Contains(res.Header.Get("Content-Type"), HttpContentTypeJSON) {
-		return json.Unmarshal(respBody, result)
 	}
-	return nil
+	return json.Unmarshal(respBody, result)
 }
 
 func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader, error) {
