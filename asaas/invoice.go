@@ -7,16 +7,26 @@ import (
 )
 
 type SaveInvoiceSettingRequest struct {
-	MunicipalServiceId   string                   `json:"municipalServiceId,omitempty"`
-	MunicipalServiceCode string                   `json:"municipalServiceCode,omitempty"`
-	MunicipalServiceName string                   `json:"municipalServiceName,omitempty"`
-	UpdatePayment        bool                     `json:"updatePayment,omitempty"`
-	Deductions           float64                  `json:"deductions,omitempty"`
-	EffectiveDatePeriod  InvoiceDatePeriod        `json:"effectiveDatePeriod,omitempty" validate:"omitempty,enum"`
-	ReceivedOnly         bool                     `json:"receivedOnly,omitempty"`
-	DaysBeforeDueDate    InvoiceDaysBeforeDueDate `json:"daysBeforeDueDate,omitempty" validate:"omitempty,enum"`
-	Observations         string                   `json:"observations,omitempty"`
-	Taxes                *InvoiceTaxesRequest     `json:"taxes,omitempty"`
+	// Identificador único do serviço municipal.
+	MunicipalServiceId string `json:"municipalServiceId,omitempty"`
+	// Código de serviço municipal.
+	MunicipalServiceCode string `json:"municipalServiceCode,omitempty"`
+	// Nome do serviço municipal. Se não for informado, será utilizado o código do serviço municipal como nome para identificação.
+	MunicipalServiceName string `json:"municipalServiceName,omitempty"`
+	// Atualizar o valor da cobrança com os impostos da nota já descontados.
+	UpdatePayment bool `json:"updatePayment,omitempty"`
+	// Deduções. As deduções não alteram o valor total da nota fiscal, mas alteram a base de cálculo do ISS.
+	Deductions float64 `json:"deductions,omitempty"`
+	// Quando a nota fiscal será emitida.
+	EffectiveDatePeriod InvoiceDatePeriod `json:"effectiveDatePeriod,omitempty" validate:"omitempty,enum"`
+	// Emitir apenas para cobranças pagas.
+	ReceivedOnly bool `json:"receivedOnly,omitempty"`
+	// Quantidade de dias antes do vencimento da cobrança.
+	DaysBeforeDueDate InvoiceDaysBeforeDueDate `json:"daysBeforeDueDate,omitempty" validate:"omitempty,enum"`
+	// Observações adicionais da nota fiscal.
+	Observations string `json:"observations,omitempty"`
+	// Impostos da nota fiscal.
+	Taxes *InvoiceTaxesRequest `json:"taxes,omitempty"`
 }
 
 type ScheduleInvoiceRequest struct {
@@ -54,34 +64,54 @@ type UpdateInvoiceRequest struct {
 }
 
 type UpdateInvoiceSettingRequest struct {
-	Deductions          float64                  `json:"deductions,omitempty"`
-	EffectiveDatePeriod InvoiceDatePeriod        `json:"effectiveDatePeriod,omitempty" validate:"omitempty,enum"`
-	ReceivedOnly        bool                     `json:"receivedOnly,omitempty"`
-	DaysBeforeDueDate   InvoiceDaysBeforeDueDate `json:"daysBeforeDueDate,omitempty" validate:"omitempty,enum"`
-	Observations        string                   `json:"observations,omitempty"`
-	Taxes               *InvoiceTaxesRequest     `json:"taxes,omitempty"`
+	// Deduções. As deduções não alteram o valor total da nota fiscal, mas alteram a base de cálculo do ISS.
+	Deductions float64 `json:"deductions,omitempty"`
+	// Quando a nota fiscal será emitida.
+	EffectiveDatePeriod InvoiceDatePeriod `json:"effectiveDatePeriod,omitempty" validate:"omitempty,enum"`
+	// Emitir apenas para cobranças pagas.
+	ReceivedOnly bool `json:"receivedOnly,omitempty"`
+	// Quantidade de dias antes do vencimento da cobrança.
+	DaysBeforeDueDate InvoiceDaysBeforeDueDate `json:"daysBeforeDueDate,omitempty" validate:"omitempty,enum"`
+	// Observações adicionais da nota fiscal.
+	Observations string `json:"observations,omitempty"`
+	// Impostos da nota fiscal.
+	Taxes *InvoiceTaxesRequest `json:"taxes,omitempty"`
 }
 
 type InvoiceTaxesRequest struct {
-	RetainIss bool    `json:"retainIss,omitempty"`
-	Iss       float64 `json:"iss,omitempty" validate:"required,gt=0"`
-	Confins   float64 `json:"cofins,omitempty" validate:"required,gt=0"`
-	Csll      float64 `json:"csll,omitempty" validate:"required,gt=0"`
-	Inss      float64 `json:"inss,omitempty" validate:"required,gt=0"`
-	Ir        float64 `json:"ir,omitempty" validate:"required,gt=0"`
-	Pis       float64 `json:"pis,omitempty" validate:"required,gt=0"`
+	// Tomador da nota fiscal deve reter ISS ou não
+	RetainIss bool `json:"retainIss,omitempty"`
+	// Alíquota ISS (REQUIRED)
+	Iss float64 `json:"iss,omitempty" validate:"required,gt=0"`
+	// Alíquota COFINS (REQUIRED)
+	Confins float64 `json:"cofins,omitempty" validate:"required,gt=0"`
+	// Alíquota CSLL (REQUIRED)
+	Csll float64 `json:"csll,omitempty" validate:"required,gt=0"`
+	// Alíquota INSS (REQUIRED)
+	Inss float64 `json:"inss,omitempty" validate:"required,gt=0"`
+	// Alíquota IR (REQUIRED)
+	Ir float64 `json:"ir,omitempty" validate:"required,gt=0"`
+	// Alíquota PIS (REQUIRED)
+	Pis float64 `json:"pis,omitempty" validate:"required,gt=0"`
 }
 
 type GetAllInvoicesRequest struct {
-	EffectiveDateGE   *Date         `json:"effectiveDate[ge],omitempty"`
-	EffectiveDateLE   *Date         `json:"effectiveDate[le],omitempty"`
-	Payment           string        `json:"payment,omitempty"`
-	Installment       string        `json:"installment,omitempty"`
-	Customer          string        `json:"customer,omitempty"`
-	ExternalReference string        `json:"externalReference,omitempty"`
-	Status            InvoiceStatus `json:"status,omitempty"`
-	Offset            int           `json:"offset,omitempty"`
-	Limit             int           `json:"limit,omitempty"`
+	// Filtrar a partir de uma data de emissão
+	EffectiveDateGE *Date `json:"effectiveDate[ge],omitempty"`
+	// Filtrar até uma data de emissão
+	EffectiveDateLE *Date  `json:"effectiveDate[le],omitempty"`
+	Payment         string `json:"payment,omitempty"`
+	Installment     string `json:"installment,omitempty"`
+	// Filtrar pelo identificador único do cliente
+	Customer string `json:"customer,omitempty"`
+	// Identificador da nota fiscal no seu sistema
+	ExternalReference string `json:"externalReference,omitempty"`
+	// Status da nota fiscal
+	Status InvoiceStatus `json:"status,omitempty"`
+	// Elemento inicial da lista
+	Offset int `json:"offset,omitempty"`
+	// Número de elementos da lista (max: 100)
+	Limit int `json:"limit,omitempty"`
 }
 
 type InvoiceSettingResponse struct {
