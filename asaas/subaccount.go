@@ -36,7 +36,7 @@ type CreateSubaccountRequest struct {
 	Province string `json:"province,omitempty"`
 	// CEP do endereço (REQUIRED)
 	PostalCode string `json:"postalCode,omitempty" validate:"required,postal_code"`
-	// Array com as configurações de Webhooks desejadas
+	// Array com as configurações de webhooks desejadas
 	Webhooks []CreateSubaccountWebhookRequest `json:"webhooks,omitempty"`
 }
 
