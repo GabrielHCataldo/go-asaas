@@ -37,7 +37,7 @@ para obter documentos de uso detalhados.
 - [Notas Fiscais](https://github.com/GabrielHCataldo/go-asaas/blob/main/_example/invoice/main.go)
 - [Recarga de celular](https://github.com/GabrielHCataldo/go-asaas/blob/main/_example/mobile_phone/main.go)
 - [Negativação](https://github.com/GabrielHCataldo/go-asaas/blob/main/_example/negativity/main.go)
-- [Link de pagamento](github.com://github/GabrielHCataldo/go-asaas/blob/main/_example/payment_link/main.go)
+- [Link de pagamento](https://github.com/GabrielHCataldo/go-asaas/blob/main/_example/payment_link/main.go)
 - [Conta](https://github.com/GabrielHCataldo/go-asaas/blob/main/_example/account/main.go)
 - [Subcontas](https://github.com/GabrielHCataldo/go-asaas/blob/main/_example/subaccount/main.go)
 - [Informações fiscais](https://github.com/GabrielHCataldo/go-asaas/blob/main/_example/anticipation/main.go)
