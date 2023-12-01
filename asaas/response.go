@@ -14,6 +14,30 @@ type response interface {
 	IsNoContent() bool
 }
 
+func (s SubaccountDocumentSentResponse) IsSuccess() bool {
+	return len(s.Errors) == 0 && util.IsNotBlank(&s.Id)
+}
+
+func (s SubaccountDocumentSentResponse) IsFailure() bool {
+	return !s.IsSuccess()
+}
+
+func (s SubaccountDocumentSentResponse) IsNoContent() bool {
+	return false
+}
+
+func (s SubaccountResponse) IsSuccess() bool {
+	return len(s.Errors) == 0 && util.IsNotBlank(&s.Id)
+}
+
+func (s SubaccountResponse) IsFailure() bool {
+	return !s.IsSuccess()
+}
+
+func (s SubaccountResponse) IsNoContent() bool {
+	return false
+}
+
 func (f MunicipalSettingsResponse) IsSuccess() bool {
 	return len(f.Errors) == 0
 }
