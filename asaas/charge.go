@@ -261,6 +261,18 @@ type Charge interface {
 	// É possível escolher entre as formas de pagamento com boleto, cartão de crédito,
 	// pix ou permitir que o cliente escolha a forma que desejar.
 	//
+	// O CreateChargeRequest.BillingType BillingTypeBill habilita o pagamento em PIX e Boleto. Em BillingTypePix,
+	// apenas o pagamento em PIX, e em BillingTypeCreditCard, em cartão de crédito e débito (na fatura).
+	//
+	// Não é possível gerar uma cobrança com dois BillingType diferentes (BillingTypePix e BillingTypeCreditCard,
+	// por exemplo, para não gerar o boleto, apenas esses dois tipos de cobrança).
+	//
+	// Caso não queira receber pagamento em PIX ou em Cartão de débito, é possível desabilitar dentro de sua interface
+	// em Minha Conta > Configuração > Configurações do Sistema.
+	//
+	// Caso queira desabilitar em subcontas white label, entre em contato com o nosso time de
+	// integração em suporte-tecnico@asaas.com.br
+	//
 	// # Resposta: 200
 	//
 	// ChargeResponse = not nil
@@ -640,7 +652,7 @@ type Charge interface {
 	// seu histórico consistente no sistema, mas não gera saldo ou faz qualquer alteração financeira em sua conta.
 	// Ao confirmar um recebimento em dinheiro de uma cobrança que possua uma negativação em andamento uma taxa de
 	// ativação de serviço de negativação poderá ser cobrada. Verifique essa taxa no campo receivedInCashFeeValue
-	// localizada no retorno do objeto de negativação.
+	// localizada no retorno do objeto NegativityResponse.
 	//
 	// # Resposta: 200
 	//
