@@ -23,46 +23,77 @@ func main() {
 }
 
 func createChargePix() {
-	chargeResponse, err := chargeAsaas.Create(context.TODO(), asaas.CreateChargeRequest{
-		Customer:    "cus_000005799255",
-		BillingType: asaas.BillingTypePix,
-		Value:       10,
-		DueDate:     asaas.NewDate(2023, 12, 2, time.Local),
-		Description: "Example pix charge",
+	resp, err := chargeAsaas.Create(context.TODO(), asaas.CreateChargeRequest{
+		Customer:             "cus_000005799255",
+		BillingType:          asaas.BillingTypePix,
+		Value:                10,
+		DueDate:              asaas.NewDate(2023, 12, 2, time.Local),
+		Description:          "Example pix charge",
+		ExternalReference:    "",
+		Discount:             nil,
+		Interest:             nil,
+		Fine:                 nil,
+		PostalService:        false,
+		Split:                nil,
+		Callback:             nil,
+		CreditCard:           nil,
+		CreditCardHolderInfo: nil,
+		CreditCardToken:      "",
+		InstallmentCount:     0,
+		InstallmentValue:     0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if chargeResponse.IsSuccess() {
-		fmt.Println("success:", chargeResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
 	} else {
-		fmt.Println("failure:", chargeResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }
 
 func createChargeBill() {
-	chargeResponse, err := chargeAsaas.Create(context.TODO(), asaas.CreateChargeRequest{
-		Customer:    "cus_000005799255",
-		BillingType: asaas.BillingTypeBill,
-		Value:       10,
-		DueDate:     asaas.NewDate(2023, 12, 2, time.Local),
-		Description: "Example bill charge",
+	resp, err := chargeAsaas.Create(context.TODO(), asaas.CreateChargeRequest{
+		Customer:             "cus_000005799255",
+		BillingType:          asaas.BillingTypeBill,
+		Value:                10,
+		DueDate:              asaas.NewDate(2023, 12, 2, time.Local),
+		Description:          "Example bill charge",
+		ExternalReference:    "",
+		Discount:             nil,
+		Interest:             nil,
+		Fine:                 nil,
+		PostalService:        false,
+		Split:                nil,
+		Callback:             nil,
+		CreditCard:           nil,
+		CreditCardHolderInfo: nil,
+		CreditCardToken:      "",
+		InstallmentCount:     0,
+		InstallmentValue:     0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if chargeResponse.IsSuccess() {
-		fmt.Println("success:", chargeResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
 	} else {
-		fmt.Println("failure:", chargeResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }
 
 func createChargeCreditCard() {
-	chargeResponse, err := chargeAsaas.Create(context.TODO(), asaas.CreateChargeRequest{
-		Customer:    "cus_000005799255",
-		BillingType: asaas.BillingTypeCreditCard,
-		Value:       10,
-		DueDate:     asaas.NewDate(2023, 12, 1, time.Local),
-		Description: "Example bill charge",
+	resp, err := chargeAsaas.Create(context.TODO(), asaas.CreateChargeRequest{
+		Customer:          "cus_000005799255",
+		BillingType:       asaas.BillingTypeCreditCard,
+		Value:             10,
+		DueDate:           asaas.NewDate(2023, 12, 1, time.Local),
+		Description:       "Example bill charge",
+		ExternalReference: "",
+		Discount:          nil,
+		Interest:          nil,
+		Fine:              nil,
+		PostalService:     false,
+		Split:             nil,
+		Callback:          nil,
 		CreditCard: &asaas.CreditCardRequest{
 			HolderName:  "unit test go",
 			Number:      "4000000000000010",
@@ -70,48 +101,83 @@ func createChargeCreditCard() {
 			ExpiryYear:  "2035",
 			Ccv:         "123",
 		},
+		CreditCardHolderInfo: &asaas.CreditCardHolderInfoRequest{
+			Name:              "Example go",
+			CpfCnpj:           "29376892000101",
+			Email:             "example@gmail.com",
+			Phone:             "4738010919",
+			MobilePhone:       "47998781877",
+			PostalCode:        "89223-005",
+			AddressNumber:     "10",
+			AddressComplement: "",
+		},
+		CreditCardToken:  "",
+		InstallmentCount: 2,
+		InstallmentValue: 5,
+		AuthorizeOnly:    false,
+		RemoteIp:         "",
 	})
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if chargeResponse.IsSuccess() {
-		fmt.Println("success:", chargeResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
 	} else {
-		fmt.Println("failure:", chargeResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }
 
 func createChargeUndefined() {
-	chargeResponse, err := chargeAsaas.Create(context.TODO(), asaas.CreateChargeRequest{
-		Customer:    "cus_000005799255",
-		BillingType: asaas.BillingTypeUndefined,
-		Value:       10,
-		DueDate:     asaas.NewDate(2023, 12, 2, time.Local),
-		Description: "Example bill charge",
+	resp, err := chargeAsaas.Create(context.TODO(), asaas.CreateChargeRequest{
+		Customer:             "cus_000005799255",
+		BillingType:          asaas.BillingTypeUndefined,
+		Value:                10,
+		DueDate:              asaas.NewDate(2023, 12, 2, time.Local),
+		Description:          "Example bill charge",
+		ExternalReference:    "",
+		Discount:             nil,
+		Interest:             nil,
+		Fine:                 nil,
+		PostalService:        false,
+		Split:                nil,
+		Callback:             nil,
+		CreditCard:           nil,
+		CreditCardHolderInfo: nil,
+		CreditCardToken:      "",
+		InstallmentCount:     0,
+		InstallmentValue:     0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if chargeResponse.IsSuccess() {
-		fmt.Println("success:", chargeResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
 	} else {
-		fmt.Println("failure:", chargeResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }
 
 func updateChargeById() {
-	chargeResponse, err := chargeAsaas.UpdateById(context.TODO(), "pay_jxqnfvp1qt8qpf5s", asaas.UpdateChargeRequest{
+	resp, err := chargeAsaas.UpdateById(context.TODO(), "pay_jxqnfvp1qt8qpf5s", asaas.UpdateChargeRequest{
+		Customer:          "",
 		BillingType:       asaas.BillingTypeBill,
 		Value:             5,
+		DueDate:           nil,
 		Description:       "updated",
 		ExternalReference: "test",
+		Discount:          nil,
+		Interest:          nil,
+		Fine:              nil,
+		PostalService:     false,
+		Split:             nil,
+		Callback:          nil,
 		InstallmentCount:  2,
 		InstallmentValue:  2.5,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if chargeResponse.IsSuccess() {
-		fmt.Println("success:", chargeResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
 	} else {
-		fmt.Println("failure:", chargeResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }
 
@@ -127,25 +193,51 @@ func deleteChargeById() {
 }
 
 func getChargeById() {
-	chargeResponse, err := chargeAsaas.GetById(context.TODO(), "pay_jxqnfvp1qt8qpf5s")
+	resp, err := chargeAsaas.GetById(context.TODO(), "pay_jxqnfvp1qt8qpf5s")
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if chargeResponse.IsSuccess() {
-		fmt.Println("success:", chargeResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
+	} else if resp.IsNoContent() {
+		fmt.Println("no content:", resp)
 	} else {
-		fmt.Println("failure:", chargeResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }
 
 func getAllCustomers() {
-	pageableResponse, err := chargeAsaas.GetAll(context.TODO(), asaas.GetAllChargesRequest{})
+	resp, err := chargeAsaas.GetAll(context.TODO(), asaas.GetAllChargesRequest{
+		Customer:              "",
+		Subscription:          "",
+		Installment:           "",
+		CustomerGroupName:     "",
+		BillingType:           "",
+		Status:                "",
+		ExternalReference:     "",
+		InvoiceStatus:         "",
+		EstimatedCreditDate:   nil,
+		PixQrCodeId:           "",
+		Anticipated:           false,
+		PaymentDate:           nil,
+		DateCreatedGe:         nil,
+		DateCreatedLe:         nil,
+		PaymentDateGe:         nil,
+		PaymentDateLe:         nil,
+		EstimatedCreditDateGE: nil,
+		EstimatedCreditDateLE: nil,
+		DueDateGe:             nil,
+		DueDateLe:             nil,
+		User:                  "",
+		Offset:                0,
+		Limit:                 10,
+	})
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if pageableResponse.IsSuccess() {
-		fmt.Println("success:", pageableResponse)
-	} else if pageableResponse.IsNoContent() {
-		fmt.Println("no content:", pageableResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
+	} else if resp.IsNoContent() {
+		fmt.Println("no content:", resp)
 	} else {
-		fmt.Println("failure:", pageableResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }

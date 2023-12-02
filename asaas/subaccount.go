@@ -69,7 +69,7 @@ type CreateSubaccountWebhookRequest struct {
 	// Token de autenticação
 	AuthToken string `json:"authToken,omitempty"`
 	// Tipo de webhook
-	Type TypeOfWebhook `json:"type,omitempty" validate:"omitempty,enum"`
+	Type WebhookType `json:"type,omitempty" validate:"omitempty,enum"`
 }
 
 type SendWhiteLabelDocumentRequest struct {

@@ -244,7 +244,7 @@ type Invoice interface {
 	//
 	// Agendar nota fiscal: https://docs.asaas.com/reference/agendar-nota-fiscal
 	Schedule(ctx context.Context, body ScheduleInvoiceRequest) (*InvoiceResponse, Error)
-	// Authorize (Emitir uma nota fiscal)
+	// AuthorizeById (Emitir uma nota fiscal)
 	//
 	// Para emitir uma nota fiscal específica é necessário que você tenha o ID que o Asaas retornou no momento
 	// da criação dela.
@@ -307,7 +307,7 @@ type Invoice interface {
 	// # DOCS
 	//
 	// Cancelar uma nota fiscal: https://docs.asaas.com/reference/emitir-uma-nota-fiscal
-	Authorize(ctx context.Context, invoiceId string) (*InvoiceResponse, Error)
+	AuthorizeById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error)
 	// CancelById (Cancelar uma nota fiscal)
 	//
 	// Para cancelar uma nota fiscal específica é necessário que você tenha o ID que o Asaas retornou no momento
@@ -572,7 +572,7 @@ func (i invoice) Schedule(ctx context.Context, body ScheduleInvoiceRequest) (*In
 	return req.make(http.MethodPost, "/v3/invoices", body)
 }
 
-func (i invoice) Authorize(ctx context.Context, invoiceId string) (*InvoiceResponse, Error) {
+func (i invoice) AuthorizeById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error) {
 	req := NewRequest[InvoiceResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/invoices/%s/authorize", invoiceId), nil)
 }

@@ -19,30 +19,62 @@ func main() {
 }
 
 func createCustomer() {
-	customerResponse, err := customerAsaas.Create(context.TODO(), asaas.CustomerRequest{
-		Name:    "Go Asaas Test",
-		CpfCnpj: "85185238003",
+	resp, err := customerAsaas.Create(context.TODO(), asaas.CustomerRequest{
+		Name:                 "Go Asaas Test",
+		CpfCnpj:              "85185238003",
+		Email:                "",
+		Phone:                "",
+		MobilePhone:          "",
+		Address:              "",
+		AddressNumber:        "",
+		Complement:           "",
+		Province:             "",
+		PostalCode:           "",
+		ExternalReference:    "",
+		NotificationDisabled: false,
+		AdditionalEmails:     "",
+		MunicipalInscription: "",
+		StateInscription:     "",
+		Observations:         "",
+		GroupName:            "",
+		Company:              "",
 	})
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if customerResponse.IsSuccess() {
-		fmt.Println("success:", customerResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
 	} else {
-		fmt.Println("failure:", customerResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }
 
 func updateCustomerById() {
-	customerResponse, err := customerAsaas.UpdateById(context.TODO(), "cus_000005799255", asaas.CustomerRequest{
-		Email:       "test@test.com",
-		MobilePhone: "48997576131",
+	resp, err := customerAsaas.UpdateById(context.TODO(), "cus_000005799255", asaas.CustomerRequest{
+		Name:                 "",
+		CpfCnpj:              "",
+		Email:                "test@test.com",
+		Phone:                "",
+		MobilePhone:          "48997576131",
+		Address:              "",
+		AddressNumber:        "",
+		Complement:           "",
+		Province:             "",
+		PostalCode:           "",
+		ExternalReference:    "",
+		NotificationDisabled: false,
+		AdditionalEmails:     "",
+		MunicipalInscription: "",
+		StateInscription:     "",
+		Observations:         "",
+		GroupName:            "",
+		Company:              "",
 	})
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if customerResponse.IsSuccess() {
-		fmt.Println("success:", customerResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
 	} else {
-		fmt.Println("failure:", customerResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }
 
@@ -58,25 +90,35 @@ func deleteCustomerById() {
 }
 
 func getCustomerById() {
-	customerResponse, err := customerAsaas.GetById(context.TODO(), "cus_000005799255")
+	resp, err := customerAsaas.GetById(context.TODO(), "cus_000005799255")
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if customerResponse.IsSuccess() {
-		fmt.Println("success:", customerResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
+	} else if resp.IsNoContent() {
+		fmt.Println("no content:", resp)
 	} else {
-		fmt.Println("failure:", customerResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }
 
 func getAllCustomers() {
-	pageableResponse, err := customerAsaas.GetAll(context.TODO(), asaas.GetAllCustomersRequest{})
+	resp, err := customerAsaas.GetAll(context.TODO(), asaas.GetAllCustomersRequest{
+		Name:              "",
+		Email:             "",
+		CpfCnpj:           "",
+		GroupName:         "",
+		ExternalReference: "",
+		Offset:            0,
+		Limit:             10,
+	})
 	if err != nil {
 		fmt.Println("error:", err)
-	} else if pageableResponse.IsSuccess() {
-		fmt.Println("success:", pageableResponse)
-	} else if pageableResponse.IsNoContent() {
-		fmt.Println("no content:", pageableResponse)
+	} else if resp.IsSuccess() {
+		fmt.Println("success:", resp)
+	} else if resp.IsNoContent() {
+		fmt.Println("no content:", resp)
 	} else {
-		fmt.Println("failure:", pageableResponse.Errors)
+		fmt.Println("failure:", resp.Errors)
 	}
 }

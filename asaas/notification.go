@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type NotificationRequest struct {
+type UpdateNotificationRequest struct {
 	// Habilita/desabilita a notificação
 	Enabled bool `json:"enabled,omitempty"`
 	// Habilita/desabilita o email enviado para você
@@ -140,7 +140,7 @@ type Notification interface {
 	// # DOCS
 	//
 	// Atualizar notificação existente: https://docs.asaas.com/reference/atualizar-notificacao-existente
-	UpdateById(ctx context.Context, notificationId string, body NotificationRequest) (*NotificationResponse, Error)
+	UpdateById(ctx context.Context, notificationId string, body UpdateNotificationRequest) (*NotificationResponse, Error)
 	// UpdateManyByCustomer (Atualizar notificações existentes em lote)
 	//
 	// É possível personalizar várias notificações, independente do canal de comunicação que utilizar (email, SMS e voz)
@@ -262,7 +262,7 @@ func NewNotification(env Env, accessToken string) Notification {
 	}
 }
 
-func (n notification) UpdateById(ctx context.Context, notificationId string, body NotificationRequest) (
+func (n notification) UpdateById(ctx context.Context, notificationId string, body UpdateNotificationRequest) (
 	*NotificationResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)

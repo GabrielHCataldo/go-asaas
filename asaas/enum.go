@@ -52,7 +52,7 @@ type MobilePhoneRechargeStatus string
 type FinanceTransType string
 type AccountStatus string
 type CompanyType string
-type TypeOfWebhook string
+type WebhookType string
 type SubaccountDocumentStatus string
 type SubaccountDocumentType string
 
@@ -75,13 +75,13 @@ const (
 	SubaccountDocumentStatusRejected SubaccountDocumentStatus = "REJECTED"
 )
 const (
-	TypeOfWebhookPayment                TypeOfWebhook = "PAYMENT"
-	TypeOfWebhookInvoice                TypeOfWebhook = "INVOICE"
-	TypeOfWebhookTransfer               TypeOfWebhook = "TRANSFER"
-	TypeOfWebhookBill                   TypeOfWebhook = "BILL"
-	TypeOfWebhookReceivableAnticipation TypeOfWebhook = "RECEIVABLE_ANTICIPATION"
-	TypeOfWebhookMobilePhoneRecharge    TypeOfWebhook = "MOBILE_PHONE_RECHARGE"
-	TypeOfWebhookMobileAccountStatus    TypeOfWebhook = "ACCOUNT_STATUS"
+	WebhookTypePayment                WebhookType = "PAYMENT"
+	WebhookTypeInvoice                WebhookType = "INVOICE"
+	WebhookTypeTransfer               WebhookType = "TRANSFER"
+	WebhookTypeBill                   WebhookType = "BILL"
+	WebhookTypeReceivableAnticipation WebhookType = "RECEIVABLE_ANTICIPATION"
+	WebhookTypeMobilePhoneRecharge    WebhookType = "MOBILE_PHONE_RECHARGE"
+	WebhookTypeMobileAccountStatus    WebhookType = "ACCOUNT_STATUS"
 )
 const (
 	CompanyTypeMei         CompanyType = "MEI"
@@ -520,10 +520,10 @@ func (s SubaccountDocumentStatus) IsEnumValid() bool {
 	return false
 }
 
-func (t TypeOfWebhook) IsEnumValid() bool {
+func (t WebhookType) IsEnumValid() bool {
 	switch t {
-	case TypeOfWebhookPayment, TypeOfWebhookInvoice, TypeOfWebhookTransfer, TypeOfWebhookReceivableAnticipation,
-		TypeOfWebhookMobilePhoneRecharge, TypeOfWebhookBill, TypeOfWebhookMobileAccountStatus:
+	case WebhookTypePayment, WebhookTypeInvoice, WebhookTypeTransfer, WebhookTypeReceivableAnticipation,
+		WebhookTypeMobilePhoneRecharge, WebhookTypeBill, WebhookTypeMobileAccountStatus:
 		return true
 	}
 	return false
@@ -1024,19 +1024,19 @@ func (f FileMimeType) Extension() string {
 	}
 }
 
-func (t TypeOfWebhook) PathUrl() string {
+func (t WebhookType) PathUrl() string {
 	switch t {
-	case TypeOfWebhookInvoice:
+	case WebhookTypeInvoice:
 		return "/invoice"
-	case TypeOfWebhookReceivableAnticipation:
+	case WebhookTypeReceivableAnticipation:
 		return "/anticipation"
-	case TypeOfWebhookTransfer:
+	case WebhookTypeTransfer:
 		return "/transfer"
-	case TypeOfWebhookBill:
+	case WebhookTypeBill:
 		return "/bill"
-	case TypeOfWebhookMobilePhoneRecharge:
+	case WebhookTypeMobilePhoneRecharge:
 		return "/mobilePhoneRecharge"
-	case TypeOfWebhookMobileAccountStatus:
+	case WebhookTypeMobileAccountStatus:
 		return "/accountStatus"
 	}
 	return ""

@@ -21,7 +21,7 @@ type SaveWebhookSettingRequest struct {
 }
 
 type WebhookResponse struct {
-	Type        TypeOfWebhook   `json:"type,omitempty"`
+	Type        WebhookType     `json:"type,omitempty"`
 	Url         string          `json:"url,omitempty"`
 	Email       string          `json:"email,omitempty"`
 	ApiVersion  string          `json:"apiVersion,omitempty"`
@@ -87,7 +87,7 @@ type Webhook interface {
 	// # DOCS
 	//
 	// https://docs.asaas.com/reference/webhook-para-cobrancas-criar-ou-atualizar-configuracoes
-	SaveSetting(ctx context.Context, typeWebhook TypeOfWebhook, body SaveWebhookSettingRequest) (*WebhookResponse, Error)
+	SaveSetting(ctx context.Context, typeWebhook WebhookType, body SaveWebhookSettingRequest) (*WebhookResponse, Error)
 	// GetSetting (Recuperar configurações)
 	//
 	// # Resposta: 200
@@ -147,7 +147,7 @@ type Webhook interface {
 	// # DOCS
 	//
 	// https://docs.asaas.com/reference/webhook-para-cobran%C3%A7as-recuperar-configuracoes
-	GetSetting(ctx context.Context, typeWebhook TypeOfWebhook) (*WebhookResponse, Error)
+	GetSetting(ctx context.Context, typeWebhook WebhookType) (*WebhookResponse, Error)
 }
 
 func NewWebhook(env Env, accessToken string) Webhook {
@@ -158,7 +158,7 @@ func NewWebhook(env Env, accessToken string) Webhook {
 	}
 }
 
-func (w webhook) SaveSetting(ctx context.Context, typeWebhook TypeOfWebhook, body SaveWebhookSettingRequest) (
+func (w webhook) SaveSetting(ctx context.Context, typeWebhook WebhookType, body SaveWebhookSettingRequest) (
 	*WebhookResponse, Error) {
 	if !typeWebhook.IsEnumValid() {
 		return nil, NewError(ErrorTypeValidation, "invalid typeWebhook")
@@ -169,7 +169,7 @@ func (w webhook) SaveSetting(ctx context.Context, typeWebhook TypeOfWebhook, bod
 	return req.make(http.MethodPost, "/v3/webhook"+typeWebhook.PathUrl(), body)
 }
 
-func (w webhook) GetSetting(ctx context.Context, typeWebhook TypeOfWebhook) (*WebhookResponse, Error) {
+func (w webhook) GetSetting(ctx context.Context, typeWebhook WebhookType) (*WebhookResponse, Error) {
 	if !typeWebhook.IsEnumValid() {
 		return nil, NewError(ErrorTypeValidation, "invalid typeWebhook")
 	}

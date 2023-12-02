@@ -2,7 +2,7 @@ go-asaas
 =================
 <img align="right" src="gopher-asaas.png">[](https://gitter.im/go-playground/validator?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![Project status](https://img.shields.io/badge/version-v1.0.0%20ALPHA-yellow.svg)
-[![Coverage Status](https://coveralls.io/repos/GabrielHCataldo/go-asaas/badge.svg?branch=main&service=github)](https://coveralls.io/github.com/GabrielHCataldo/go-asaas?branch=main)
+[![Coverage Status](https://coveralls.io/repos/GabrielHCataldo/go-asaas/badge.svg?branch=main&service=github)](https://coveralls.io/github/GabrielHCataldo/go-asaas?branch=main)
 [![Go Report Card](https://goreportcard.com/badge/github.com/GabrielHCataldo/go-asaas)](https://goreportcard.com/report/github.com/GabrielHCataldo/go-asaas)
 [![GoDoc](https://godoc.org/github/GabrielHCataldo/go-asaas?status.svg)](https://pkg.go.dev/github.com/GabrielHCataldo/go-asaas/asaas)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
