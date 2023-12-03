@@ -141,27 +141,17 @@ type Transfer interface {
 	//
 	// TransferResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Transferir para conta de outra Instituição ou chave pix: https://docs.asaas.com/reference/transferir-para-conta-de-outra-instituicao-ou-chave-pix
-	TransferToBank(ctx context.Context, body TransferToBankRequest) (*TransferResponse, Error)
+	TransferToBank(ctx context.Context, body TransferToBankRequest) (*TransferResponse, error)
 	// TransferToAsaas (Transferir para conta Asaas)
 	//
 	// Só é possível fazer transferência entre contas Asaas para contas que possuam vínculo entre si,
@@ -195,27 +185,17 @@ type Transfer interface {
 	//
 	// TransferResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Transferir para conta Asaas: https://docs.asaas.com/reference/transferir-para-conta-asaas
-	TransferToAsaas(ctx context.Context, body TransferToAssasRequest) (*TransferResponse, Error)
+	TransferToAsaas(ctx context.Context, body TransferToAssasRequest) (*TransferResponse, error)
 	// CancelById (Cancelar uma transferência)
 	//
 	// # Resposta: 200
@@ -256,27 +236,17 @@ type Transfer interface {
 	//
 	// TransferResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Cancelar uma transferência: https://docs.asaas.com/reference/cancelar-uma-transferencia
-	CancelById(ctx context.Context, transferId string) (*TransferResponse, Error)
+	CancelById(ctx context.Context, transferId string) (*TransferResponse, error)
 	// GetById (Recuperar uma única cobrança)
 	//
 	// Para recuperar uma transferência específica é necessário que você tenha o ID que o Asaas retornou no
@@ -319,27 +289,17 @@ type Transfer interface {
 	//
 	// TransferResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar uma única transferência: https://docs.asaas.com/reference/recuperar-uma-unica-transferencia
-	GetById(ctx context.Context, transferId string) (*TransferResponse, Error)
+	GetById(ctx context.Context, transferId string) (*TransferResponse, error)
 	// GetAll (Listar transferências)
 	//
 	// Este método retorna uma lista paginada com todas as transferências para o filtro informado.
@@ -376,27 +336,17 @@ type Transfer interface {
 	//
 	// Pageable(TransferResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar transferências: https://docs.asaas.com/reference/listar-transferencias
-	GetAll(ctx context.Context, filter GetAllTransfersRequest) (*Pageable[TransferResponse], Error)
+	GetAll(ctx context.Context, filter GetAllTransfersRequest) (*Pageable[TransferResponse], error)
 }
 
 func NewTransfer(env Env, accessToken string) Transfer {
@@ -407,28 +357,28 @@ func NewTransfer(env Env, accessToken string) Transfer {
 	}
 }
 
-func (t transfer) TransferToBank(ctx context.Context, body TransferToBankRequest) (*TransferResponse, Error) {
+func (t transfer) TransferToBank(ctx context.Context, body TransferToBankRequest) (*TransferResponse, error) {
 	req := NewRequest[TransferResponse](ctx, t.env, t.accessToken)
 	return req.make(http.MethodPost, "/v3/transfers", body)
 }
 
 func (t transfer) TransferToAsaas(ctx context.Context, body TransferToAssasRequest) (*TransferResponse,
-	Error) {
+	error) {
 	req := NewRequest[TransferResponse](ctx, t.env, t.accessToken)
 	return req.make(http.MethodPost, "/v3/transfers", body)
 }
 
-func (t transfer) CancelById(ctx context.Context, transferId string) (*TransferResponse, Error) {
+func (t transfer) CancelById(ctx context.Context, transferId string) (*TransferResponse, error) {
 	req := NewRequest[TransferResponse](ctx, t.env, t.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/transfers/%s/cancel", transferId), nil)
 }
 
-func (t transfer) GetById(ctx context.Context, transferId string) (*TransferResponse, Error) {
+func (t transfer) GetById(ctx context.Context, transferId string) (*TransferResponse, error) {
 	req := NewRequest[TransferResponse](ctx, t.env, t.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/transfers/%s", transferId), nil)
 }
 
-func (t transfer) GetAll(ctx context.Context, filter GetAllTransfersRequest) (*Pageable[TransferResponse], Error) {
+func (t transfer) GetAll(ctx context.Context, filter GetAllTransfersRequest) (*Pageable[TransferResponse], error) {
 	req := NewRequest[Pageable[TransferResponse]](ctx, t.env, t.accessToken)
 	return req.make(http.MethodGet, "/v3/transfers", filter)
 }

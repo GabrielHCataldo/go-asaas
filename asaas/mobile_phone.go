@@ -73,27 +73,17 @@ type MobilePhone interface {
 	//
 	// MobilePhoneRechargeResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Solicitar recarga: https://docs.asaas.com/reference/solicitar-recarga
-	Recharge(ctx context.Context, body MobilePhoneRechargeRequest) (*MobilePhoneRechargeResponse, Error)
+	Recharge(ctx context.Context, body MobilePhoneRechargeRequest) (*MobilePhoneRechargeResponse, error)
 	// CancelRechargeById (Cancelar uma recarga de celular)
 	//
 	// Permite o cancelamento da recarga de celular. Utilize a propriedade MobilePhoneRechargeResponse.CanBeCancelled
@@ -139,27 +129,17 @@ type MobilePhone interface {
 	//
 	// MobilePhoneRechargeResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Cancelar uma recarga de celular: https://docs.asaas.com/reference/cancelar-uma-recarga-de-celular
-	CancelRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error)
+	CancelRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, error)
 	// GetRechargeById (Recuperar uma única recarga de celular)
 	//
 	// Para recuperar uma recarga de celular em específico é necessário que você tenha o ID que o Asaas retornou no
@@ -202,27 +182,17 @@ type MobilePhone interface {
 	//
 	// MobilePhoneRechargeResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar uma única recarga de celular: https://docs.asaas.com/reference/recuperar-uma-unica-recarga-de-celular
-	GetRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error)
+	GetRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, error)
 	// GetProviderByPhoneNumber (Buscar qual provedor o número pertence e os valores disponíveis para recarga)
 	//
 	// # Resposta: 200
@@ -253,27 +223,17 @@ type MobilePhone interface {
 	//
 	// MobilePhoneProviderResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// https://docs.asaas.com/reference/buscar-qual-provedor-o-numero-pertence-e-os-valores-disponiveis-para-recarga
-	GetProviderByPhoneNumber(ctx context.Context, phoneNumber string) (*MobilePhoneProviderResponse, Error)
+	GetProviderByPhoneNumber(ctx context.Context, phoneNumber string) (*MobilePhoneProviderResponse, error)
 	// GetAllRecharges (Listar recargas de celular)
 	//
 	// Diferente da recuperação de uma recarga de celular em específico, este método retorna uma lista paginada
@@ -311,27 +271,17 @@ type MobilePhone interface {
 	//
 	// Pageable(MobilePhoneRechargeResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar recargas de celular: https://docs.asaas.com/reference/listar-recargas-de-celular
-	GetAllRecharges(ctx context.Context, filter PageableDefaultRequest) (*Pageable[MobilePhoneRechargeResponse], Error)
+	GetAllRecharges(ctx context.Context, filter PageableDefaultRequest) (*Pageable[MobilePhoneRechargeResponse], error)
 }
 
 func NewMobilePhone(env Env, accessToken string) MobilePhone {
@@ -342,29 +292,29 @@ func NewMobilePhone(env Env, accessToken string) MobilePhone {
 	}
 }
 
-func (m mobilePhone) Recharge(ctx context.Context, body MobilePhoneRechargeRequest) (*MobilePhoneRechargeResponse, Error) {
+func (m mobilePhone) Recharge(ctx context.Context, body MobilePhoneRechargeRequest) (*MobilePhoneRechargeResponse, error) {
 	req := NewRequest[MobilePhoneRechargeResponse](ctx, m.env, m.accessToken)
 	return req.make(http.MethodPost, "/v3/mobilePhoneRecharges", body)
 }
 
-func (m mobilePhone) CancelRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error) {
+func (m mobilePhone) CancelRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, error) {
 	req := NewRequest[MobilePhoneRechargeResponse](ctx, m.env, m.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/mobilePhoneRecharges/%s/cancel", rechargeId), nil)
 }
 
-func (m mobilePhone) GetRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, Error) {
+func (m mobilePhone) GetRechargeById(ctx context.Context, rechargeId string) (*MobilePhoneRechargeResponse, error) {
 	req := NewRequest[MobilePhoneRechargeResponse](ctx, m.env, m.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/mobilePhoneRecharges/%s", rechargeId), nil)
 }
 
 func (m mobilePhone) GetProviderByPhoneNumber(ctx context.Context, phoneNumber string) (*MobilePhoneProviderResponse,
-	Error) {
+	error) {
 	req := NewRequest[MobilePhoneProviderResponse](ctx, m.env, m.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/mobilePhoneRecharges/%s/provider", phoneNumber), nil)
 }
 
 func (m mobilePhone) GetAllRecharges(ctx context.Context, filter PageableDefaultRequest) (
-	*Pageable[MobilePhoneRechargeResponse], Error) {
+	*Pageable[MobilePhoneRechargeResponse], error) {
 	req := NewRequest[Pageable[MobilePhoneRechargeResponse]](ctx, m.env, m.accessToken)
 	return req.make(http.MethodGet, "/v3/mobilePhoneRecharges", filter)
 }

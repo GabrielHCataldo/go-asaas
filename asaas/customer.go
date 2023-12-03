@@ -133,27 +133,17 @@ type Customer interface {
 	//
 	// CustomerResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Criar novo cliente: https://docs.asaas.com/reference/criar-novo-cliente
-	Create(ctx context.Context, body CustomerRequest) (*CustomerResponse, Error)
+	Create(ctx context.Context, body CustomerRequest) (*CustomerResponse, error)
 	// UpdateById (Atualizar cliente existente)
 	//
 	// Permite atualizar as informações de um cliente já existente.
@@ -196,27 +186,17 @@ type Customer interface {
 	//
 	// CustomerResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar cliente existente: https://docs.asaas.com/reference/atualizar-cliente-existente
-	UpdateById(ctx context.Context, customerId string, body CustomerRequest) (*CustomerResponse, Error)
+	UpdateById(ctx context.Context, customerId string, body CustomerRequest) (*CustomerResponse, error)
 	// DeleteById (Remover cliente)
 	//
 	// Ao remover um cliente, as assinaturas e cobranças aguardando pagamento ou vencidas pertencentes a ela também
@@ -260,27 +240,17 @@ type Customer interface {
 	//
 	// DeleteResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Remover cliente: https://docs.asaas.com/reference/remover-cliente
-	DeleteById(ctx context.Context, customerId string) (*DeleteResponse, Error)
+	DeleteById(ctx context.Context, customerId string) (*DeleteResponse, error)
 	// RestoreById (Restaurar cliente removido)
 	//
 	// # Resposta: 200
@@ -321,27 +291,17 @@ type Customer interface {
 	//
 	// CustomerResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Restaurar cliente removido: https://docs.asaas.com/reference/restaurar-cliente-removido
-	RestoreById(ctx context.Context, customerId string) (*CustomerResponse, Error)
+	RestoreById(ctx context.Context, customerId string) (*CustomerResponse, error)
 	// GetById (Recuperar um único cliente)
 	//
 	// Para recuperar um cliente específico é necessário que você tenha o ID que o Asaas retornou no momento da criação dele.
@@ -383,27 +343,17 @@ type Customer interface {
 	//
 	// CustomerResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar um único cliente: https://docs.asaas.com/reference/recuperar-um-unico-cliente
-	GetById(ctx context.Context, customerId string) (*CustomerResponse, Error)
+	GetById(ctx context.Context, customerId string) (*CustomerResponse, error)
 	// GetAll (Listar clientes)
 	//
 	// Diferente da recuperação de um cliente específico, este método retorna uma lista paginada com todos os
@@ -441,27 +391,17 @@ type Customer interface {
 	//
 	// Pageable(CustomerResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar clientes: https://docs.asaas.com/reference/listar-clientes
-	GetAll(ctx context.Context, filter GetAllCustomersRequest) (*Pageable[CustomerResponse], Error)
+	GetAll(ctx context.Context, filter GetAllCustomersRequest) (*Pageable[CustomerResponse], error)
 }
 
 func NewCustomer(env Env, accessToken string) Customer {
@@ -472,32 +412,32 @@ func NewCustomer(env Env, accessToken string) Customer {
 	}
 }
 
-func (c customer) Create(ctx context.Context, body CustomerRequest) (*CustomerResponse, Error) {
+func (c customer) Create(ctx context.Context, body CustomerRequest) (*CustomerResponse, error) {
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/customers", body)
 }
 
-func (c customer) UpdateById(ctx context.Context, customerId string, body CustomerRequest) (*CustomerResponse, Error) {
+func (c customer) UpdateById(ctx context.Context, customerId string, body CustomerRequest) (*CustomerResponse, error) {
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerId), body)
 }
 
-func (c customer) DeleteById(ctx context.Context, customerId string) (*DeleteResponse, Error) {
+func (c customer) DeleteById(ctx context.Context, customerId string) (*DeleteResponse, error) {
 	req := NewRequest[DeleteResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/customers/%s", customerId), nil)
 }
 
-func (c customer) RestoreById(ctx context.Context, customerId string) (*CustomerResponse, Error) {
+func (c customer) RestoreById(ctx context.Context, customerId string) (*CustomerResponse, error) {
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerId), nil)
 }
 
-func (c customer) GetById(ctx context.Context, customerId string) (*CustomerResponse, Error) {
+func (c customer) GetById(ctx context.Context, customerId string) (*CustomerResponse, error) {
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/customers/%s", customerId), nil)
 }
 
-func (c customer) GetAll(ctx context.Context, filter GetAllCustomersRequest) (*Pageable[CustomerResponse], Error) {
+func (c customer) GetAll(ctx context.Context, filter GetAllCustomersRequest) (*Pageable[CustomerResponse], error) {
 	req := NewRequest[Pageable[CustomerResponse]](ctx, c.env, c.accessToken)
 	return req.make(http.MethodGet, "/v3/customers", filter)
 }

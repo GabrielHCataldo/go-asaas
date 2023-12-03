@@ -324,28 +324,18 @@ type Account interface {
 	//
 	// InvoiceCustomizationResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Salvar personalização da fatura: https://docs.asaas.com/reference/salvar-personalizacao-da-fatura
 	SaveInvoiceCustomization(ctx context.Context, body CreateInvoiceCustomizationRequest) (
-		*InvoiceCustomizationResponse, Error)
+		*InvoiceCustomizationResponse, error)
 	// Update (Atualizar dados comerciais)
 	//
 	// Dependendo das informações alteradas é possível que sua conta passe por uma nova análise, o que ocasionará
@@ -379,27 +369,17 @@ type Account interface {
 	//
 	// AccountResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar dados comerciais: https://docs.asaas.com/reference/atualizar-dados-comerciais
-	Update(ctx context.Context, body UpdateAccountRequest) (*AccountResponse, Error)
+	Update(ctx context.Context, body UpdateAccountRequest) (*AccountResponse, error)
 	// DeleteWhiteLabelSubaccount (Excluir subconta White Label)
 	//
 	// Ao excluir uma subconta no Asaas, ela perderá o acesso a todas as funcionalidades e todos os seus dados serão
@@ -435,28 +415,18 @@ type Account interface {
 	//
 	// DeleteWhiteLabelSubaccountResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Excluir subconta White Label: https://docs.asaas.com/reference/excluir-subconta-white-label
 	DeleteWhiteLabelSubaccount(ctx context.Context, body DeleteWhiteLabelSubaccountRequest) (
-		*DeleteWhiteLabelSubaccountResponse, Error)
+		*DeleteWhiteLabelSubaccountResponse, error)
 	// Get (Recuperar dados comerciais)
 	//
 	// # Resposta: 200
@@ -486,27 +456,17 @@ type Account interface {
 	//
 	// AccountResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar dados comerciais: https://docs.asaas.com/reference/recuperar-dados-comerciais
-	Get(ctx context.Context) (*AccountResponse, Error)
+	Get(ctx context.Context) (*AccountResponse, error)
 	// GetRegistrationStatus (Recuperar taxas da conta)
 	//
 	// Com este endpoint é possível verificar os status de aprovação da conta.
@@ -538,27 +498,17 @@ type Account interface {
 	//
 	// AccountRegistrationStatusResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Consultar situação cadastral da conta: https://docs.asaas.com/reference/consultar-situacao-cadastral-da-conta
-	GetRegistrationStatus(ctx context.Context) (*AccountRegistrationStatusResponse, Error)
+	GetRegistrationStatus(ctx context.Context) (*AccountRegistrationStatusResponse, error)
 	// GetBankInfo (Recuperar número de conta no Asaas)
 	//
 	// # Resposta: 200
@@ -588,27 +538,17 @@ type Account interface {
 	//
 	// AccountBankInfoResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar número de conta no Asaas: https://docs.asaas.com/reference/recuperar-numero-de-conta-no-asaas
-	GetBankInfo(ctx context.Context) (*AccountBankInfoResponse, Error)
+	GetBankInfo(ctx context.Context) (*AccountBankInfoResponse, error)
 	// GetFees (Recuperar taxas da conta)
 	//
 	// Através deste endpoint é possível verificar as taxas aplicadas na conta.
@@ -640,27 +580,17 @@ type Account interface {
 	//
 	// AccountFeesResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar taxas da conta: https://docs.asaas.com/reference/recuperar-taxas-da-conta
-	GetFees(ctx context.Context) (*AccountFeesResponse, Error)
+	GetFees(ctx context.Context) (*AccountFeesResponse, error)
 	// GetWallets (Recuperar uma lista de Wallets)
 	//
 	// Através deste endpoint é possível recuperar uma lista de WalletId de uma conta caso você já tenha uma conta
@@ -698,27 +628,17 @@ type Account interface {
 	//
 	// Pageable(AccountWalletResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar WalletId: https://docs.asaas.com/reference/recuperar-walletid
-	GetWallets(ctx context.Context) (*Pageable[AccountWalletResponse], Error)
+	GetWallets(ctx context.Context) (*Pageable[AccountWalletResponse], error)
 	// GetBalance (Recuperar saldo da conta)
 	//
 	// # Resposta: 200
@@ -748,27 +668,17 @@ type Account interface {
 	//
 	// AccountBalanceResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar saldo da conta: https://docs.asaas.com/reference/recuperar-saldo-da-conta
-	GetBalance(ctx context.Context) (*AccountBalanceResponse, Error)
+	GetBalance(ctx context.Context) (*AccountBalanceResponse, error)
 	// GetAccountStatement (Recuperar extrato)
 	//
 	// Retorna uma lista de movimentações financeiras no período informado nos parâmetros.
@@ -805,28 +715,18 @@ type Account interface {
 	//
 	// Pageable(AccountStatementResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar extrato: https://docs.asaas.com/reference/recuperar-extrato
 	GetAccountStatement(ctx context.Context, filter GetAccountStatementRequest) (
-		*Pageable[AccountStatementResponse], Error)
+		*Pageable[AccountStatementResponse], error)
 	// GetPaymentStatistic (Estatísticas de cobranças)
 	//
 	// # Resposta: 200
@@ -856,27 +756,17 @@ type Account interface {
 	//
 	// PaymentStatisticResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Estatísticas de cobranças: https://docs.asaas.com/reference/estatisticas-de-cobran%C3%A7as
-	GetPaymentStatistic(ctx context.Context, filter GetPaymentStatisticRequest) (*PaymentStatisticResponse, Error)
+	GetPaymentStatistic(ctx context.Context, filter GetPaymentStatisticRequest) (*PaymentStatisticResponse, error)
 	// GetSplitStatistic (Recuperar valores de split)
 	//
 	// # Resposta: 200
@@ -906,27 +796,17 @@ type Account interface {
 	//
 	// SplitStatisticResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar valores de split: https://docs.asaas.com/reference/recuperar-valores-de-split
-	GetSplitStatistic(ctx context.Context) (*SplitStatisticResponse, Error)
+	GetSplitStatistic(ctx context.Context) (*SplitStatisticResponse, error)
 	// GetInvoiceCustomization (Recuperar configurações de personalização)
 	//
 	// # Resposta: 200
@@ -956,27 +836,17 @@ type Account interface {
 	//
 	// InvoiceCustomizationResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar configurações de personalização: https://docs.asaas.com/reference/recuperar-configuracoes-de-personalizacao
-	GetInvoiceCustomization(ctx context.Context) (*InvoiceCustomizationResponse, Error)
+	GetInvoiceCustomization(ctx context.Context) (*InvoiceCustomizationResponse, error)
 }
 
 func NewAccount(env Env, accessToken string) Account {
@@ -988,70 +858,70 @@ func NewAccount(env Env, accessToken string) Account {
 }
 
 func (a account) SaveInvoiceCustomization(ctx context.Context, body CreateInvoiceCustomizationRequest) (
-	*InvoiceCustomizationResponse, Error) {
+	*InvoiceCustomizationResponse, error) {
 	req := NewRequest[InvoiceCustomizationResponse](ctx, a.env, a.accessToken)
 	return req.makeMultipartForm(http.MethodPost, "/v3/myAccount/paymentCheckoutConfig", body)
 }
 
-func (a account) Update(ctx context.Context, body UpdateAccountRequest) (*AccountResponse, Error) {
+func (a account) Update(ctx context.Context, body UpdateAccountRequest) (*AccountResponse, error) {
 	req := NewRequest[AccountResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodPut, "/v3/myAccount/commercialInfo", body)
 }
 
 func (a account) DeleteWhiteLabelSubaccount(ctx context.Context, body DeleteWhiteLabelSubaccountRequest) (
-	*DeleteWhiteLabelSubaccountResponse, Error) {
+	*DeleteWhiteLabelSubaccountResponse, error) {
 	req := NewRequest[DeleteWhiteLabelSubaccountResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodDelete, "/v3/myAccount", body)
 }
 
-func (a account) Get(ctx context.Context) (*AccountResponse, Error) {
+func (a account) Get(ctx context.Context) (*AccountResponse, error) {
 	req := NewRequest[AccountResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/myAccount/commercialInfo", nil)
 }
 
-func (a account) GetRegistrationStatus(ctx context.Context) (*AccountRegistrationStatusResponse, Error) {
+func (a account) GetRegistrationStatus(ctx context.Context) (*AccountRegistrationStatusResponse, error) {
 	req := NewRequest[AccountRegistrationStatusResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/myAccount/status", nil)
 }
 
-func (a account) GetBankInfo(ctx context.Context) (*AccountBankInfoResponse, Error) {
+func (a account) GetBankInfo(ctx context.Context) (*AccountBankInfoResponse, error) {
 	req := NewRequest[AccountBankInfoResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/myAccount/accountNumber", nil)
 }
 
-func (a account) GetFees(ctx context.Context) (*AccountFeesResponse, Error) {
+func (a account) GetFees(ctx context.Context) (*AccountFeesResponse, error) {
 	req := NewRequest[AccountFeesResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/myAccount/fees", nil)
 }
 
-func (a account) GetWallets(ctx context.Context) (*Pageable[AccountWalletResponse], Error) {
+func (a account) GetWallets(ctx context.Context) (*Pageable[AccountWalletResponse], error) {
 	req := NewRequest[Pageable[AccountWalletResponse]](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/wallets", nil)
 }
 
-func (a account) GetBalance(ctx context.Context) (*AccountBalanceResponse, Error) {
+func (a account) GetBalance(ctx context.Context) (*AccountBalanceResponse, error) {
 	req := NewRequest[AccountBalanceResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/finance/balance", nil)
 }
 
-func (a account) GetSplitStatistic(ctx context.Context) (*SplitStatisticResponse, Error) {
+func (a account) GetSplitStatistic(ctx context.Context) (*SplitStatisticResponse, error) {
 	req := NewRequest[SplitStatisticResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/finance/split/statistics", nil)
 }
 
 func (a account) GetAccountStatement(ctx context.Context, filter GetAccountStatementRequest) (
-	*Pageable[AccountStatementResponse], Error) {
+	*Pageable[AccountStatementResponse], error) {
 	req := NewRequest[Pageable[AccountStatementResponse]](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/financialTransactions", filter)
 }
 
 func (a account) GetPaymentStatistic(ctx context.Context, filter GetPaymentStatisticRequest) (
-	*PaymentStatisticResponse, Error) {
+	*PaymentStatisticResponse, error) {
 	req := NewRequest[PaymentStatisticResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/payment/statistics", filter)
 }
 
-func (a account) GetInvoiceCustomization(ctx context.Context) (*InvoiceCustomizationResponse, Error) {
+func (a account) GetInvoiceCustomization(ctx context.Context) (*InvoiceCustomizationResponse, error) {
 	req := NewRequest[InvoiceCustomizationResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/myAccount/paymentCheckoutConfig", nil)
 }

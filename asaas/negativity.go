@@ -3,7 +3,6 @@ package asaas
 import (
 	"context"
 	"fmt"
-	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"net/http"
 	"os"
 )
@@ -156,27 +155,17 @@ type Negativity interface {
 	//
 	// NegativityResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Criar uma negativação: https://docs.asaas.com/reference/criar-uma-negativacao
-	Create(ctx context.Context, body CreateNegativityRequest) (*NegativityResponse, Error)
+	Create(ctx context.Context, body CreateNegativityRequest) (*NegativityResponse, error)
 	// Simulate (Simular uma negativação)
 	//
 	// Possibilita a simulação da taxa cobrada, valor a ser recuperado e data prevista de início da negativação.
@@ -218,27 +207,17 @@ type Negativity interface {
 	//
 	// NegativitySimulateResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Simular uma negativação: https://docs.asaas.com/reference/simular-uma-negativacao
-	Simulate(ctx context.Context, chargeId string) (*NegativitySimulateResponse, Error)
+	Simulate(ctx context.Context, chargeId string) (*NegativitySimulateResponse, error)
 	// ResendDocumentsById (Reenviar documentos)
 	//
 	// Permite o reenvio dos documentos de uma negativação em caso de negação. Utilize a propriedade
@@ -285,28 +264,18 @@ type Negativity interface {
 	//
 	// NegativityResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Reenviar documentos: https://docs.asaas.com/reference/reenviar-documentos
 	ResendDocumentsById(ctx context.Context, negativityId string, body NegativityResendDocumentsRequest) (
-		*NegativityResponse, Error)
+		*NegativityResponse, error)
 	// CancelById (Cancelar negativação)
 	//
 	// Permite o cancelamento de uma negativação. Utilize a propriedade NegativityResponse.CanBeCancelled retornado
@@ -353,27 +322,17 @@ type Negativity interface {
 	//
 	// NegativityResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	//Cancelar negativação: https://docs.asaas.com/reference/cancelar-negativacao
-	CancelById(ctx context.Context, negativityId string) (*NegativityResponse, Error)
+	CancelById(ctx context.Context, negativityId string) (*NegativityResponse, error)
 	// GetById (Recuperar uma única cobrança)
 	//
 	// Para recuperar uma cobrança específica é necessário que você tenha o ID que o Asaas retornou no momento da
@@ -416,27 +375,17 @@ type Negativity interface {
 	//
 	// ChargeResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar uma única cobrança: https://docs.asaas.com/reference/recuperar-uma-unica-cobranca
-	GetById(ctx context.Context, negativityId string) (*NegativityResponse, Error)
+	GetById(ctx context.Context, negativityId string) (*NegativityResponse, error)
 	// GetAll (Listar negativações)
 	//
 	// Diferente da recuperação de uma negativação específica, este método retorna uma lista paginada
@@ -474,27 +423,17 @@ type Negativity interface {
 	//
 	// Pageable(NegativityResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar cobranças: https://docs.asaas.com/reference/listar-cobrancas
-	GetAll(ctx context.Context, filter GetAllNegativitiesRequest) (*Pageable[NegativityResponse], Error)
+	GetAll(ctx context.Context, filter GetAllNegativitiesRequest) (*Pageable[NegativityResponse], error)
 	// GetHistoryById (Listar histórico de eventos)
 	//
 	// Retorna uma lista paginada com os eventos que ocorreram desde do início da negativação da cobrança.
@@ -531,28 +470,18 @@ type Negativity interface {
 	//
 	// Pageable(NegativityHistoryResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listas histórico de eventos: https://docs.asaas.com/reference/listas-historico-de-eventos
 	GetHistoryById(ctx context.Context, negativityId string, filter PageableDefaultRequest) (
-		*Pageable[NegativityHistoryResponse], Error)
+		*Pageable[NegativityHistoryResponse], error)
 	// GetPaymentsById (Listar pagamentos recebidos)
 	//
 	// Retorna uma lista paginada com os pagamentos recebidos por meio da renegociação da dívida.
@@ -589,28 +518,18 @@ type Negativity interface {
 	//
 	// Pageable(NegativityPaymentsResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar pagamentos recebidos: https://docs.asaas.com/reference/listar-pagamentos-recebidos
 	GetPaymentsById(ctx context.Context, negativityId string, filter PageableDefaultRequest) (
-		*Pageable[NegativityPaymentsResponse], Error)
+		*Pageable[NegativityPaymentsResponse], error)
 	// GetChargesAvailableForDunning (Listar cobranças disponíveis para negativação)
 	//
 	// Retorna uma lista paginada de cobranças possíveis de negativação em conjunto com uma simulação
@@ -648,28 +567,18 @@ type Negativity interface {
 	//
 	// Pageable(ChargesAvailableForDunningResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar cobranças disponíveis para negativação: https://docs.asaas.com/reference/listar-cobrancas-disponiveis-para-negativacao
 	GetChargesAvailableForDunning(ctx context.Context, filter PageableDefaultRequest) (
-		*Pageable[ChargesAvailableForDunningResponse], Error)
+		*Pageable[ChargesAvailableForDunningResponse], error)
 }
 
 func NewNegativity(env Env, accessToken string) Negativity {
@@ -680,54 +589,51 @@ func NewNegativity(env Env, accessToken string) Negativity {
 	}
 }
 
-func (n negativity) Create(ctx context.Context, body CreateNegativityRequest) (*NegativityResponse, Error) {
+func (n negativity) Create(ctx context.Context, body CreateNegativityRequest) (*NegativityResponse, error) {
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPost, "/v3/paymentDunnings", body)
 }
 
-func (n negativity) Simulate(ctx context.Context, chargeId string) (*NegativitySimulateResponse, Error) {
-	if util.IsBlank(&chargeId) {
-		return nil, NewError(ErrorTypeValidation, "chargeId is required")
-	}
+func (n negativity) Simulate(ctx context.Context, chargeId string) (*NegativitySimulateResponse, error) {
 	req := NewRequest[NegativitySimulateResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/simulate?payment=%s", chargeId), nil)
 }
 
 func (n negativity) ResendDocumentsById(ctx context.Context, negativityId string, body NegativityResendDocumentsRequest) (
-	*NegativityResponse, Error) {
+	*NegativityResponse, error) {
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
 	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/%s/documents", negativityId), body)
 }
 
-func (n negativity) CancelById(ctx context.Context, negativityId string) (*NegativityResponse, Error) {
+func (n negativity) CancelById(ctx context.Context, negativityId string) (*NegativityResponse, error) {
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/%s/cancel", negativityId), nil)
 }
 
-func (n negativity) GetById(ctx context.Context, negativityId string) (*NegativityResponse, Error) {
+func (n negativity) GetById(ctx context.Context, negativityId string) (*NegativityResponse, error) {
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentDunnings/%s", negativityId), nil)
 }
 
-func (n negativity) GetAll(ctx context.Context, filter GetAllNegativitiesRequest) (*Pageable[NegativityResponse], Error) {
+func (n negativity) GetAll(ctx context.Context, filter GetAllNegativitiesRequest) (*Pageable[NegativityResponse], error) {
 	req := NewRequest[Pageable[NegativityResponse]](ctx, n.env, n.accessToken)
 	return req.make(http.MethodGet, "/v3/paymentDunnings", filter)
 }
 
 func (n negativity) GetHistoryById(ctx context.Context, negativityId string, filter PageableDefaultRequest) (
-	*Pageable[NegativityHistoryResponse], Error) {
+	*Pageable[NegativityHistoryResponse], error) {
 	req := NewRequest[Pageable[NegativityHistoryResponse]](ctx, n.env, n.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentDunnings/%s/history", negativityId), filter)
 }
 
 func (n negativity) GetPaymentsById(ctx context.Context, negativityId string, filter PageableDefaultRequest) (
-	*Pageable[NegativityPaymentsResponse], Error) {
+	*Pageable[NegativityPaymentsResponse], error) {
 	req := NewRequest[Pageable[NegativityPaymentsResponse]](ctx, n.env, n.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentDunnings/%s/partialPayments", negativityId), filter)
 }
 
 func (n negativity) GetChargesAvailableForDunning(ctx context.Context, filter PageableDefaultRequest) (
-	*Pageable[ChargesAvailableForDunningResponse], Error) {
+	*Pageable[ChargesAvailableForDunningResponse], error) {
 	req := NewRequest[Pageable[ChargesAvailableForDunningResponse]](ctx, n.env, n.accessToken)
 	return req.make(http.MethodGet, "/v3/paymentDunnings/paymentsAvailableForDunning", filter)
 }

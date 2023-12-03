@@ -193,29 +193,19 @@ type Subscription interface {
 	//
 	// SubscriptionResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Criar nova assinatura: https://docs.asaas.com/reference/criar-nova-assinatura
 	//
 	// Criar assinatura com cartão de crédito: https://docs.asaas.com/reference/criar-assinatura-com-cartao-de-credito
-	Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, Error)
+	Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, error)
 	// CreateInvoiceSettingById (Criar configuração para emissão de Notas Fiscais)
 	//
 	// # Resposta: 200
@@ -256,28 +246,18 @@ type Subscription interface {
 	//
 	// InvoiceSettingResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Criar configuração para emissão de Notas Fiscais: https://docs.asaas.com/reference/criar-configuracao-para-emissao-de-notas-fiscais
 	CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
-		*InvoiceSettingResponse, Error)
+		*InvoiceSettingResponse, error)
 	// UpdateById (Atualizar assinatura existente)
 	//
 	// Ao atualizar uma assinatura, o parâmetro nextDueDate permite indicar o vencimento da próxima mensalidade a
@@ -325,27 +305,17 @@ type Subscription interface {
 	//
 	// SubscriptionResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar assinatura existente: https://docs.asaas.com/reference/atualizar-assinatura-existente
-	UpdateById(ctx context.Context, subscriptionId string, body UpdateSubscriptionRequest) (*SubscriptionResponse, Error)
+	UpdateById(ctx context.Context, subscriptionId string, body UpdateSubscriptionRequest) (*SubscriptionResponse, error)
 	// UpdateInvoiceSettingsById (Atualizar configuração para emissão de Notas Fiscais)
 	//
 	// A nova configuração apenas será aplicada nas notas fiscais das próximas cobranças da assinatura,
@@ -389,28 +359,18 @@ type Subscription interface {
 	//
 	// InvoiceSettingResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar configuração para emissão de Notas Fiscais: https://docs.asaas.com/reference/atualizar-configuracao-para-emissao-de-notas-fiscais
 	UpdateInvoiceSettingsById(ctx context.Context, subscriptionId string, body UpdateInvoiceSettingRequest) (
-		*InvoiceSettingResponse, Error)
+		*InvoiceSettingResponse, error)
 	// DeleteById (Remover assinatura)
 	//
 	// Ao remover uma assinatura, as mensalidades aguardando pagamento ou vencidas também são removidas.
@@ -453,27 +413,17 @@ type Subscription interface {
 	//
 	// DeleteResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Remover assinatura: https://docs.asaas.com/reference/remover-assinatura
-	DeleteById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error)
+	DeleteById(ctx context.Context, subscriptionId string) (*DeleteResponse, error)
 	// DeleteInvoiceSettingById (Remover configuração para emissão de Notas Fiscais)
 	//
 	// Ao remover a configuração, todas as notas fiscais agendadas para as cobranças desta assinatura serão canceladas
@@ -517,27 +467,17 @@ type Subscription interface {
 	//
 	// DeleteResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Remover configuração para emissão de Notas Fiscais: https://docs.asaas.com/reference/remover-configuracao-para-emissao-de-notas-fiscais
-	DeleteInvoiceSettingById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error)
+	DeleteInvoiceSettingById(ctx context.Context, subscriptionId string) (*DeleteResponse, error)
 	// GetById (Recuperar uma única assinatura)
 	//
 	// Para recuperar uma assinatura específica é necessário que você tenha o ID que o Asaas retornou no momento da criação dela.
@@ -581,27 +521,17 @@ type Subscription interface {
 	//
 	// SubscriptionResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar uma única assinatura: https://docs.asaas.com/reference/recuperar-uma-unica-assinatura
-	GetById(ctx context.Context, subscriptionId string) (*SubscriptionResponse, Error)
+	GetById(ctx context.Context, subscriptionId string) (*SubscriptionResponse, error)
 	// GetInvoiceSettingById (Recuperar configuração para emissão de Notas Fiscais)
 	//
 	// Para recuperar a configuração de emissão de notas fiscais de uma assinatura é necessário que você tenha criada
@@ -644,27 +574,17 @@ type Subscription interface {
 	//
 	// InvoiceSettingResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar configuração para emissão de Notas Fiscais: https://docs.asaas.com/reference/recuperar-configuracao-para-emissao-de-notas-fiscais
-	GetInvoiceSettingById(ctx context.Context, subscriptionId string) (*InvoiceSettingResponse, Error)
+	GetInvoiceSettingById(ctx context.Context, subscriptionId string) (*InvoiceSettingResponse, error)
 	// GetPaymentBookById (Gerar carnê de assinatura)
 	//
 	// Para gerar os carnês gerados a partir de uma assinatura em formato PDF, é necessário que você tenha o
@@ -708,28 +628,18 @@ type Subscription interface {
 	//
 	// FileTextPlainResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Gerar carnê de assinatura: https://docs.asaas.com/reference/gerar-carne-de-assinatura
 	GetPaymentBookById(ctx context.Context, subscriptionId string, filter SubscriptionPaymentBookRequest) (
-		*FileTextPlainResponse, Error)
+		*FileTextPlainResponse, error)
 	// GetAll (Listar assinaturas)
 	//
 	// Diferente da recuperação de uma assinatura específica, este método retorna uma lista paginada com todas
@@ -767,27 +677,17 @@ type Subscription interface {
 	//
 	// Pageable(SubscriptionResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar assinaturas: https://docs.asaas.com/reference/listar-assinaturas
-	GetAll(ctx context.Context, filter GetAllSubscriptionsRequest) (*Pageable[SubscriptionResponse], Error)
+	GetAll(ctx context.Context, filter GetAllSubscriptionsRequest) (*Pageable[SubscriptionResponse], error)
 	// GetAllChargesBySubscription (Listar cobranças)
 	//
 	// Para listar as cobranças geradas a partir de uma assinatura utilize esse endpoint.
@@ -824,28 +724,18 @@ type Subscription interface {
 	//
 	// Pageable(ChargeResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar cobranças de uma assinatura: https://docs.asaas.com/reference/listar-cobrancas-de-uma-assinatura
 	GetAllChargesBySubscription(ctx context.Context, subscriptionId string, filter GetAllChargesBySubscriptionRequest) (
-		*Pageable[ChargeResponse], Error)
+		*Pageable[ChargeResponse], error)
 	// GetAllInvoicesBySubscription (Listar cobranças)
 	//
 	// Este método retorna uma lista paginada com todas as notas fiscais geradas a partir de cobranças da assinatura informada.
@@ -884,28 +774,18 @@ type Subscription interface {
 	//
 	// Pageable(InvoiceResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar notas fiscais das cobranças de uma assinatura: https://docs.asaas.com/reference/listar-notas-fiscais-das-cobrancas-de-uma-assinatura
 	GetAllInvoicesBySubscription(ctx context.Context, subscriptionId string, filter GetAllSubscriptionInvoicesRequest) (
-		*Pageable[InvoiceResponse], Error)
+		*Pageable[InvoiceResponse], error)
 }
 
 func NewSubscription(env Env, accessToken string) Subscription {
@@ -916,52 +796,52 @@ func NewSubscription(env Env, accessToken string) Subscription {
 	}
 }
 
-func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, Error) {
+func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, error) {
 	s.prepareCreateBodyRequest(&body)
 	req := NewRequest[SubscriptionResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPost, "/v3/subscriptions", body)
 }
 
 func (s subscription) CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
-	*InvoiceSettingResponse, Error) {
+	*InvoiceSettingResponse, error) {
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), body)
 }
 
 func (s subscription) UpdateById(ctx context.Context, subscriptionId string, body UpdateSubscriptionRequest) (
-	*SubscriptionResponse, Error) {
+	*SubscriptionResponse, error) {
 	req := NewRequest[SubscriptionResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s", subscriptionId), body)
 }
 
 func (s subscription) UpdateInvoiceSettingsById(ctx context.Context, subscriptionId string, body UpdateInvoiceSettingRequest) (
-	*InvoiceSettingResponse, Error) {
+	*InvoiceSettingResponse, error) {
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), body)
 }
 
-func (s subscription) DeleteById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error) {
+func (s subscription) DeleteById(ctx context.Context, subscriptionId string) (*DeleteResponse, error) {
 	req := NewRequest[DeleteResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/subscriptions/%s", subscriptionId), nil)
 }
 
-func (s subscription) DeleteInvoiceSettingById(ctx context.Context, subscriptionId string) (*DeleteResponse, Error) {
+func (s subscription) DeleteInvoiceSettingById(ctx context.Context, subscriptionId string) (*DeleteResponse, error) {
 	req := NewRequest[DeleteResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), nil)
 }
 
-func (s subscription) GetById(ctx context.Context, subscriptionId string) (*SubscriptionResponse, Error) {
+func (s subscription) GetById(ctx context.Context, subscriptionId string) (*SubscriptionResponse, error) {
 	req := NewRequest[SubscriptionResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s", subscriptionId), nil)
 }
 
-func (s subscription) GetInvoiceSettingById(ctx context.Context, subscriptionId string) (*InvoiceSettingResponse, Error) {
+func (s subscription) GetInvoiceSettingById(ctx context.Context, subscriptionId string) (*InvoiceSettingResponse, error) {
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), nil)
 }
 
 func (s subscription) GetPaymentBookById(ctx context.Context, subscriptionId string, filter SubscriptionPaymentBookRequest) (
-	*FileTextPlainResponse, Error) {
+	*FileTextPlainResponse, error) {
 	req := NewRequest[FileTextPlainResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/paymentBook", subscriptionId), filter)
 }
@@ -969,19 +849,19 @@ func (s subscription) GetPaymentBookById(ctx context.Context, subscriptionId str
 func (s subscription) GetAllChargesBySubscription(
 	ctx context.Context,
 	subscriptionId string,
-	filter GetAllChargesBySubscriptionRequest) (*Pageable[ChargeResponse], Error) {
+	filter GetAllChargesBySubscriptionRequest) (*Pageable[ChargeResponse], error) {
 	req := NewRequest[Pageable[ChargeResponse]](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/payments", subscriptionId), filter)
 }
 
 func (s subscription) GetAllInvoicesBySubscription(ctx context.Context, subscriptionId string,
-	filter GetAllSubscriptionInvoicesRequest) (*Pageable[InvoiceResponse], Error) {
+	filter GetAllSubscriptionInvoicesRequest) (*Pageable[InvoiceResponse], error) {
 	req := NewRequest[Pageable[InvoiceResponse]](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/invoices", subscriptionId), filter)
 }
 
 func (s subscription) GetAll(ctx context.Context, filter GetAllSubscriptionsRequest) (*Pageable[SubscriptionResponse],
-	Error) {
+	error) {
 	req := NewRequest[Pageable[SubscriptionResponse]](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, "/v3/subscriptions", filter)
 }

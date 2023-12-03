@@ -67,27 +67,17 @@ type Webhook interface {
 	//
 	// WebhookResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// https://docs.asaas.com/reference/webhook-para-cobrancas-criar-ou-atualizar-configuracoes
-	SaveSetting(ctx context.Context, typeWebhook WebhookType, body SaveWebhookSettingRequest) (*WebhookResponse, Error)
+	SaveSetting(ctx context.Context, typeWebhook WebhookType, body SaveWebhookSettingRequest) (*WebhookResponse, error)
 	// GetSetting (Recuperar configurações)
 	//
 	// # Resposta: 200
@@ -127,27 +117,17 @@ type Webhook interface {
 	//
 	// WebhookResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// https://docs.asaas.com/reference/webhook-para-cobran%C3%A7as-recuperar-configuracoes
-	GetSetting(ctx context.Context, typeWebhook WebhookType) (*WebhookResponse, Error)
+	GetSetting(ctx context.Context, typeWebhook WebhookType) (*WebhookResponse, error)
 }
 
 func NewWebhook(env Env, accessToken string) Webhook {
@@ -159,20 +139,12 @@ func NewWebhook(env Env, accessToken string) Webhook {
 }
 
 func (w webhook) SaveSetting(ctx context.Context, typeWebhook WebhookType, body SaveWebhookSettingRequest) (
-	*WebhookResponse, Error) {
-	if !typeWebhook.IsEnumValid() {
-		return nil, NewError(ErrorTypeValidation, "invalid typeWebhook")
-	} else if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
+	*WebhookResponse, error) {
 	req := NewRequest[WebhookResponse](ctx, w.env, w.accessToken)
 	return req.make(http.MethodPost, "/v3/webhook"+typeWebhook.PathUrl(), body)
 }
 
-func (w webhook) GetSetting(ctx context.Context, typeWebhook WebhookType) (*WebhookResponse, Error) {
-	if !typeWebhook.IsEnumValid() {
-		return nil, NewError(ErrorTypeValidation, "invalid typeWebhook")
-	}
+func (w webhook) GetSetting(ctx context.Context, typeWebhook WebhookType) (*WebhookResponse, error) {
 	req := NewRequest[WebhookResponse](ctx, w.env, w.accessToken)
 	return req.make(http.MethodGet, "/v3/webhook"+typeWebhook.PathUrl(), nil)
 }

@@ -129,27 +129,17 @@ type FiscalInfo interface {
 	//
 	// FiscalInfoResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Criar e atualizar informações fiscais: https://docs.asaas.com/reference/criar-e-atualizar-informacoes-fiscais
-	Save(ctx context.Context, body SaveFiscalInfoRequest) (*FiscalInfoResponse, Error)
+	Save(ctx context.Context, body SaveFiscalInfoRequest) (*FiscalInfoResponse, error)
 	// Get (Recuperar informações fiscais)
 	//
 	// Permite verificar as configurações para emissão de notas fiscais. Caso ainda não tenha sido cadastrada,
@@ -182,27 +172,17 @@ type FiscalInfo interface {
 	//
 	// FiscalInfoResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar informações fiscais: https://docs.asaas.com/reference/recuperar-informacoes-fiscais
-	Get(ctx context.Context) (*FiscalInfoResponse, Error)
+	Get(ctx context.Context) (*FiscalInfoResponse, error)
 	// GetMunicipalSettings (Listar configurações municipais)
 	//
 	// Algumas configurações para emissão de notas fiscais dependem da prefeitura onde a nota fiscal é emitida.
@@ -235,27 +215,17 @@ type FiscalInfo interface {
 	//
 	// MunicipalSettingsResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar configurações municipais: https://docs.asaas.com/reference/listar-configuracoes-municipais
-	GetMunicipalSettings(ctx context.Context) (*MunicipalSettingsResponse, Error)
+	GetMunicipalSettings(ctx context.Context) (*MunicipalSettingsResponse, error)
 	// GetAllServices (Listar serviços municipais)
 	//
 	// # Resposta: 200
@@ -290,27 +260,17 @@ type FiscalInfo interface {
 	//
 	// Pageable(FiscalInfoServiceResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar serviços municipais: https://docs.asaas.com/reference/listar-servicos-municipais
-	GetAllServices(ctx context.Context, filter GetAllServicesRequest) (*Pageable[FiscalInfoServiceResponse], Error)
+	GetAllServices(ctx context.Context, filter GetAllServicesRequest) (*Pageable[FiscalInfoServiceResponse], error)
 }
 
 func NewFiscalInfo(env Env, accessToken string) FiscalInfo {
@@ -321,23 +281,23 @@ func NewFiscalInfo(env Env, accessToken string) FiscalInfo {
 	}
 }
 
-func (f fiscalInfo) Save(ctx context.Context, body SaveFiscalInfoRequest) (*FiscalInfoResponse, Error) {
+func (f fiscalInfo) Save(ctx context.Context, body SaveFiscalInfoRequest) (*FiscalInfoResponse, error) {
 	req := NewRequest[FiscalInfoResponse](ctx, f.env, f.accessToken)
 	return req.makeMultipartForm(http.MethodPost, "/v3/fiscalInfo", body)
 }
 
-func (f fiscalInfo) Get(ctx context.Context) (*FiscalInfoResponse, Error) {
+func (f fiscalInfo) Get(ctx context.Context) (*FiscalInfoResponse, error) {
 	req := NewRequest[FiscalInfoResponse](ctx, f.env, f.accessToken)
 	return req.make(http.MethodGet, "/v3/fiscalInfo", nil)
 }
 
-func (f fiscalInfo) GetMunicipalSettings(ctx context.Context) (*MunicipalSettingsResponse, Error) {
+func (f fiscalInfo) GetMunicipalSettings(ctx context.Context) (*MunicipalSettingsResponse, error) {
 	req := NewRequest[MunicipalSettingsResponse](ctx, f.env, f.accessToken)
 	return req.make(http.MethodGet, "/v3/fiscalInfo/municipalOptions", nil)
 }
 
 func (f fiscalInfo) GetAllServices(ctx context.Context, filter GetAllServicesRequest) (
-	*Pageable[FiscalInfoServiceResponse], Error) {
+	*Pageable[FiscalInfoServiceResponse], error) {
 	req := NewRequest[Pageable[FiscalInfoServiceResponse]](ctx, f.env, f.accessToken)
 	return req.make(http.MethodGet, "/v3/fiscalInfo/services", filter)
 }

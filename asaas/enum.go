@@ -11,8 +11,6 @@ type ChargebackReason string
 type ChargebackStatus string
 type DiscountType string
 type Env int
-type ErrorType string
-type ErrorCode string
 type FineType string
 type InterestType string
 type RefundStatus string
@@ -451,10 +449,6 @@ const (
 	EnvProduction Env = iota
 )
 const (
-	ErrorTypeValidation ErrorType = "VALIDATION"
-	ErrorTypeUnexpected ErrorType = "UNEXPECTED"
-)
-const (
 	FineTypeFixed      FineType = "FIXED"
 	FineTypePercentage FineType = "PERCENTAGE"
 )
@@ -852,14 +846,6 @@ func (a Env) IsEnumValid() bool {
 	return false
 }
 
-func (e ErrorType) IsEnumValid() bool {
-	switch e {
-	case ErrorTypeValidation, ErrorTypeUnexpected:
-		return true
-	}
-	return false
-}
-
 func (f FineType) IsEnumValid() bool {
 	switch f {
 	case FineTypeFixed, FineTypePercentage:
@@ -1039,7 +1025,7 @@ func (t WebhookType) PathUrl() string {
 	case WebhookTypeMobileAccountStatus:
 		return "/accountStatus"
 	}
-	return ""
+	return "/"
 }
 
 func (f FinanceTransType) IsEnumValid() bool {

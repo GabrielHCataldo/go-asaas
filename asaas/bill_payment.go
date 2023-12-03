@@ -124,27 +124,17 @@ type BillPayment interface {
 	//
 	// BillPaymentResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Criar um pagamento de conta: https://docs.asaas.com/reference/criar-um-pagamento-de-conta
-	Create(ctx context.Context, body BillPaymentRequest) (*BillPaymentResponse, Error)
+	Create(ctx context.Context, body BillPaymentRequest) (*BillPaymentResponse, error)
 	// Simulate (Simular um pagamento de conta)
 	//
 	// Permite a simulação de um pagamento de conta por meio da linha digitável ou código de barras do boleto.
@@ -177,27 +167,17 @@ type BillPayment interface {
 	//
 	// BillPaymentSimulateResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Simular um pagamento de conta: https://docs.asaas.com/reference/simular-um-pagamento-de-conta
-	Simulate(ctx context.Context, body BillPaymentSimulateRequest) (*BillPaymentSimulateResponse, Error)
+	Simulate(ctx context.Context, body BillPaymentSimulateRequest) (*BillPaymentSimulateResponse, error)
 	// CancelById (Cancelar pagamento de contas)
 	//
 	// Permite o cancelamento do pagamento de conta. Utilize a propriedade BillPaymentResponse.CanBeCancelled do objeto
@@ -233,27 +213,17 @@ type BillPayment interface {
 	//
 	// BillPaymentResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Cancelar pagamento de contas: https://docs.asaas.com/reference/cancelar-pagamento-de-contas
-	CancelById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, Error)
+	CancelById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, error)
 	// GetById (Recuperar um único pagamento de conta)
 	//
 	// Para recuperar um pagamento de conta específico é necessário que você tenha o ID que o Asaas retornou no
@@ -296,27 +266,17 @@ type BillPayment interface {
 	//
 	// BillPaymentResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar um único pagamento de conta: https://docs.asaas.com/reference/recuperar-um-unico-pagamento-de-conta
-	GetById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, Error)
+	GetById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, error)
 	// GetAll (Listar pagamento de contas)
 	//
 	// Diferente da recuperação de um pagamento de conta específico, este método retorna uma lista paginada
@@ -354,27 +314,17 @@ type BillPayment interface {
 	//
 	// Pageable(BillPaymentResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar pagamento de contas: https://docs.asaas.com/reference/listar-pagamento-de-contas
-	GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[BillPaymentResponse], Error)
+	GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[BillPaymentResponse], error)
 }
 
 func NewBillPayment(env Env, accessToken string) BillPayment {
@@ -385,27 +335,27 @@ func NewBillPayment(env Env, accessToken string) BillPayment {
 	}
 }
 
-func (b billPayment) Create(ctx context.Context, body BillPaymentRequest) (*BillPaymentResponse, Error) {
+func (b billPayment) Create(ctx context.Context, body BillPaymentRequest) (*BillPaymentResponse, error) {
 	req := NewRequest[BillPaymentResponse](ctx, b.env, b.accessToken)
 	return req.make(http.MethodPost, "/v3/bill", body)
 }
 
-func (b billPayment) Simulate(ctx context.Context, body BillPaymentSimulateRequest) (*BillPaymentSimulateResponse, Error) {
+func (b billPayment) Simulate(ctx context.Context, body BillPaymentSimulateRequest) (*BillPaymentSimulateResponse, error) {
 	req := NewRequest[BillPaymentSimulateResponse](ctx, b.env, b.accessToken)
 	return req.make(http.MethodPost, "/v3/bill/simulate", body)
 }
 
-func (b billPayment) CancelById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, Error) {
+func (b billPayment) CancelById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, error) {
 	req := NewRequest[BillPaymentResponse](ctx, b.env, b.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/bill/%s/cancel", billPaymentId), nil)
 }
 
-func (b billPayment) GetById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, Error) {
+func (b billPayment) GetById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, error) {
 	req := NewRequest[BillPaymentResponse](ctx, b.env, b.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/bill/%s", billPaymentId), nil)
 }
 
-func (b billPayment) GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[BillPaymentResponse], Error) {
+func (b billPayment) GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[BillPaymentResponse], error) {
 	req := NewRequest[Pageable[BillPaymentResponse]](ctx, b.env, b.accessToken)
 	return req.make(http.MethodPost, "/v3/bill", filter)
 }

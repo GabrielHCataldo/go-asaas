@@ -179,27 +179,17 @@ type Subaccount interface {
 	//
 	// SubaccountResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Criar subconta: https://docs.asaas.com/reference/criar-subconta
-	Create(ctx context.Context, body CreateSubaccountRequest) (*SubaccountResponse, Error)
+	Create(ctx context.Context, body CreateSubaccountRequest) (*SubaccountResponse, error)
 	// SendWhiteLabelDocument (Enviar documentos via API)
 	//
 	// Quando houver o atributo onboardingUrl no objeto do documento, ele deverá ser enviado via link externo.
@@ -233,28 +223,18 @@ type Subaccount interface {
 	//
 	// SubaccountDocumentSentResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Enviar documentos via API: https://docs.asaas.com/reference/enviar-documentos-via-api
 	SendWhiteLabelDocument(ctx context.Context, accountId string, body SendWhiteLabelDocumentRequest) (
-		*SubaccountDocumentSentResponse, Error)
+		*SubaccountDocumentSentResponse, error)
 	// UpdateWhiteLabelDocumentSentById (Atualizar documento enviado)
 	//
 	// # Resposta: 200
@@ -295,28 +275,18 @@ type Subaccount interface {
 	//
 	// SubaccountDocumentSentResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar documento enviado: https://docs.asaas.com/reference/atualizar-documento-enviado
 	UpdateWhiteLabelDocumentSentById(ctx context.Context, documentSentId string, body UpdateWhiteLabelDocumentSentRequest) (
-		*SubaccountDocumentSentResponse, Error)
+		*SubaccountDocumentSentResponse, error)
 	// DeleteWhiteLabelDocumentSentById (Remover documento enviado)
 	//
 	// # Resposta: 200
@@ -357,27 +327,17 @@ type Subaccount interface {
 	//
 	// DeleteResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Remover documento enviado: https://docs.asaas.com/reference/remover-documento-enviado
-	DeleteWhiteLabelDocumentSentById(ctx context.Context, documentSentId string) (*DeleteResponse, Error)
+	DeleteWhiteLabelDocumentSentById(ctx context.Context, documentSentId string) (*DeleteResponse, error)
 	// GetById (Recuperar uma única subconta)
 	//
 	// # Resposta: 200
@@ -417,27 +377,17 @@ type Subaccount interface {
 	//
 	// SubaccountResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar uma única subconta: https://docs.asaas.com/reference/recuperar-uma-unica-subconta
-	GetById(ctx context.Context, subaccountId string) (*SubaccountResponse, Error)
+	GetById(ctx context.Context, subaccountId string) (*SubaccountResponse, error)
 	// GetDocumentSentById (Visualizar documento enviado)
 	//
 	// # Resposta: 200
@@ -477,27 +427,17 @@ type Subaccount interface {
 	//
 	// SubaccountDocumentSentResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Visualizar documento enviado: https://docs.asaas.com/reference/visualizar-documento-enviado
-	GetDocumentSentById(ctx context.Context, documentSentId string) (*SubaccountDocumentSentResponse, Error)
+	GetDocumentSentById(ctx context.Context, documentSentId string) (*SubaccountDocumentSentResponse, error)
 	// GetAll (Listar subcontas)
 	//
 	// # Resposta: 200
@@ -532,27 +472,17 @@ type Subaccount interface {
 	//
 	// Pageable(SubaccountResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar subcontas: https://docs.asaas.com/reference/listar-subcontas
-	GetAll(ctx context.Context, filter GetAllSubaccountsRequest) (*Pageable[SubaccountResponse], Error)
+	GetAll(ctx context.Context, filter GetAllSubaccountsRequest) (*Pageable[SubaccountResponse], error)
 	// GetPendingDocuments (Verificar documentos pendentes)
 	//
 	// Para recuperar os documentos pendentes e ter acesso ao onboardingUrl dos mesmos.
@@ -589,27 +519,17 @@ type Subaccount interface {
 	//
 	// SubaccountDocumentsResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Verificar documentos pendentes: https://docs.asaas.com/reference/verificar-documentos-pendentes
-	GetPendingDocuments(ctx context.Context) (*SubaccountDocumentsResponse, Error)
+	GetPendingDocuments(ctx context.Context) (*SubaccountDocumentsResponse, error)
 }
 
 func NewSubaccount(env Env, accessToken string) Subaccount {
@@ -620,13 +540,13 @@ func NewSubaccount(env Env, accessToken string) Subaccount {
 	}
 }
 
-func (s subaccount) Create(ctx context.Context, body CreateSubaccountRequest) (*SubaccountResponse, Error) {
+func (s subaccount) Create(ctx context.Context, body CreateSubaccountRequest) (*SubaccountResponse, error) {
 	req := NewRequest[SubaccountResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPost, "/v3/accounts", body)
 }
 
 func (s subaccount) SendWhiteLabelDocument(ctx context.Context, accountId string, body SendWhiteLabelDocumentRequest) (
-	*SubaccountDocumentSentResponse, Error) {
+	*SubaccountDocumentSentResponse, error) {
 	req := NewRequest[SubaccountDocumentSentResponse](ctx, s.env, s.accessToken)
 	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/myAccount/documents/%s", accountId), body)
 }
@@ -635,33 +555,33 @@ func (s subaccount) UpdateWhiteLabelDocumentSentById(
 	ctx context.Context,
 	documentSentId string,
 	body UpdateWhiteLabelDocumentSentRequest,
-) (*SubaccountDocumentSentResponse, Error) {
+) (*SubaccountDocumentSentResponse, error) {
 	req := NewRequest[SubaccountDocumentSentResponse](ctx, s.env, s.accessToken)
 	return req.makeMultipartForm(http.MethodPut, fmt.Sprintf("/v3/myAccount/documents/files/%s", documentSentId), body)
 }
 
-func (s subaccount) DeleteWhiteLabelDocumentSentById(ctx context.Context, documentSentId string) (*DeleteResponse, Error) {
+func (s subaccount) DeleteWhiteLabelDocumentSentById(ctx context.Context, documentSentId string) (*DeleteResponse, error) {
 	req := NewRequest[DeleteResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/myAccount/documents/files/%s", documentSentId), nil)
 }
 
-func (s subaccount) GetById(ctx context.Context, subaccountId string) (*SubaccountResponse, Error) {
+func (s subaccount) GetById(ctx context.Context, subaccountId string) (*SubaccountResponse, error) {
 	req := NewRequest[SubaccountResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/accounts/%s", subaccountId), nil)
 }
 
 func (s subaccount) GetDocumentSentById(ctx context.Context, documentSentId string) (*SubaccountDocumentSentResponse,
-	Error) {
+	error) {
 	req := NewRequest[SubaccountDocumentSentResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/myAccount/documents/files/%s", documentSentId), nil)
 }
 
-func (s subaccount) GetAll(ctx context.Context, filter GetAllSubaccountsRequest) (*Pageable[SubaccountResponse], Error) {
+func (s subaccount) GetAll(ctx context.Context, filter GetAllSubaccountsRequest) (*Pageable[SubaccountResponse], error) {
 	req := NewRequest[Pageable[SubaccountResponse]](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, "/v3/accounts", filter)
 }
 
-func (s subaccount) GetPendingDocuments(ctx context.Context) (*SubaccountDocumentsResponse, Error) {
+func (s subaccount) GetPendingDocuments(ctx context.Context) (*SubaccountDocumentsResponse, error) {
 	req := NewRequest[SubaccountDocumentsResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, "/v3/myAccount/documents", nil)
 }

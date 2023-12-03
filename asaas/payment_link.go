@@ -157,27 +157,17 @@ type PaymentLink interface {
 	//
 	// PaymentLinkResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Criar um link de pagamentos: https://docs.asaas.com/reference/criar-um-link-de-pagamentos
-	Create(ctx context.Context, body CreatePaymentLinkRequest) (*PaymentLinkResponse, Error)
+	Create(ctx context.Context, body CreatePaymentLinkRequest) (*PaymentLinkResponse, error)
 	// SendImageById (Adicionar uma imagem a um link de pagamentos)
 	//
 	// Permite adicionar imagens ao seu link de pagamentos.
@@ -220,28 +210,18 @@ type PaymentLink interface {
 	//
 	// PaymentLinkImageResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Adicionar uma imagem a um link de pagamentos: https://docs.asaas.com/reference/adicionar-uma-imagem-a-um-link-de-pagamentos
 	SendImageById(ctx context.Context, paymentLinkId string, body SendImagePaymentLinksRequest) (
-		*PaymentLinkImageResponse, Error)
+		*PaymentLinkImageResponse, error)
 	// UpdateById (Atualizar um link de pagamentos)
 	//
 	// Permite a atualização de um link de pagamentos já existente.
@@ -284,27 +264,17 @@ type PaymentLink interface {
 	//
 	// PaymentLinkResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar um link de pagamentos: https://docs.asaas.com/reference/atualizar-um-link-de-pagamentos
-	UpdateById(ctx context.Context, paymentLinkId string, body UpdatePaymentLinkRequest) (*PaymentLinkResponse, Error)
+	UpdateById(ctx context.Context, paymentLinkId string, body UpdatePaymentLinkRequest) (*PaymentLinkResponse, error)
 	// UpdateImageAsMainById (Definir imagem principal do link de pagamentos)
 	//
 	// Permite a alteração da imagem principal do seu link de pagamentos.
@@ -346,27 +316,17 @@ type PaymentLink interface {
 	//
 	// PaymentLinkImageResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Definir imagem principal do link de pagamentos: https://docs.asaas.com/reference/definir-imagem-principal-do-link-de-pagamentos
-	UpdateImageAsMainById(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, Error)
+	UpdateImageAsMainById(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, error)
 	// DeleteById (Remover um link de pagamentos)
 	//
 	// # Resposta: 200
@@ -406,27 +366,17 @@ type PaymentLink interface {
 	//
 	// DeleteResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Remover um link de pagamentos: https://docs.asaas.com/reference/remover-um-link-de-pagamentos
-	DeleteById(ctx context.Context, paymentLinkId string) (*DeleteResponse, Error)
+	DeleteById(ctx context.Context, paymentLinkId string) (*DeleteResponse, error)
 	// DeleteImageById (Remover uma imagem do link de pagamentos)
 	//
 	// Permite a remoção de uma imagem do link de pagamentos.
@@ -468,27 +418,17 @@ type PaymentLink interface {
 	//
 	// DeleteResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Remover uma imagem do link de pagamentos: https://docs.asaas.com/reference/remover-uma-imagem-do-link-de-pagamentos
-	DeleteImageById(ctx context.Context, paymentLinkId, imageId string) (*DeleteResponse, Error)
+	DeleteImageById(ctx context.Context, paymentLinkId, imageId string) (*DeleteResponse, error)
 	// RestoreById (Restaurar um link de pagamentos)
 	//
 	// Possibilita a restauração de um link de pagamentos removido.
@@ -531,27 +471,17 @@ type PaymentLink interface {
 	//
 	// PaymentLinkResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Restaurar um link de pagamentos: https://docs.asaas.com/reference/restaurar-um-link-de-pagamentos
-	RestoreById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error)
+	RestoreById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, error)
 	// GetById (Recuperar um único link de pagamentos)
 	//
 	// Para recuperar um link de pagamentos específico é necessário que você tenha o ID que o Asaas retornou
@@ -594,27 +524,17 @@ type PaymentLink interface {
 	//
 	// PaymentLinkResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar um único link de pagamentos: https://docs.asaas.com/reference/recuperar-um-unico-link-de-pagamentos
-	GetById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error)
+	GetById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, error)
 	// GetImageById (Recuperar uma única imagem do link de pagamentos)
 	//
 	// Para recuperar a imagem de um link de pagamentos específico é necessário que você tenha o ID que o Asaas retornou
@@ -657,27 +577,17 @@ type PaymentLink interface {
 	//
 	// PaymentLinkImageResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar uma única imagem do link de pagamentos: https://docs.asaas.com/reference/recuperar-uma-unica-imagem-do-link-de-pagamentos
-	GetImageById(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, Error)
+	GetImageById(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, error)
 	// GetAll (Listar links de pagamentos)
 	//
 	// Diferente da recuperação de um link de pagamentos específico, este método retorna uma lista paginada com todos
@@ -715,27 +625,17 @@ type PaymentLink interface {
 	//
 	// Pageable(PaymentLinkResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar links de pagamentos: https://docs.asaas.com/reference/listar-links-de-pagamentos
-	GetAll(ctx context.Context, filter GetAllPaymentLinksRequest) (*Pageable[PaymentLinkResponse], Error)
+	GetAll(ctx context.Context, filter GetAllPaymentLinksRequest) (*Pageable[PaymentLinkResponse], error)
 	// GetImagesById (Listar imagens de um link de pagamentos)
 	//
 	// Este método retorna uma lista paginada com todas as imagens do link de pagamentos informado.
@@ -772,27 +672,17 @@ type PaymentLink interface {
 	//
 	// Pageable(PaymentLinkImageResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar imagens de um link de pagamentos: https://docs.asaas.com/reference/listar-imagens-de-um-link-de-pagamentos
-	GetImagesById(ctx context.Context, paymentLinkId string) (*Pageable[PaymentLinkImageResponse], Error)
+	GetImagesById(ctx context.Context, paymentLinkId string) (*Pageable[PaymentLinkImageResponse], error)
 }
 
 func NewPaymentLink(env Env, accessToken string) PaymentLink {
@@ -803,60 +693,60 @@ func NewPaymentLink(env Env, accessToken string) PaymentLink {
 	}
 }
 
-func (p paymentLink) Create(ctx context.Context, body CreatePaymentLinkRequest) (*PaymentLinkResponse, Error) {
+func (p paymentLink) Create(ctx context.Context, body CreatePaymentLinkRequest) (*PaymentLinkResponse, error) {
 	req := NewRequest[PaymentLinkResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPost, "/v3/paymentLinks", body)
 }
 
 func (p paymentLink) SendImageById(ctx context.Context, paymentLinkId string, body SendImagePaymentLinksRequest) (
-	*PaymentLinkImageResponse, Error) {
+	*PaymentLinkImageResponse, error) {
 	req := NewRequest[PaymentLinkImageResponse](ctx, p.env, p.accessToken)
 	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/paymentLinks/%s/images", paymentLinkId), body)
 }
 
 func (p paymentLink) UpdateById(ctx context.Context, paymentLinkId string, body UpdatePaymentLinkRequest) (
-	*PaymentLinkResponse, Error) {
+	*PaymentLinkResponse, error) {
 	req := NewRequest[PaymentLinkResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/paymentLinks/%s", paymentLinkId), body)
 }
 
 func (p paymentLink) UpdateImageAsMainById(ctx context.Context, paymentLinkId, imageId string) (
-	*PaymentLinkImageResponse, Error) {
+	*PaymentLinkImageResponse, error) {
 	req := NewRequest[PaymentLinkImageResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/paymentLinks/%s/images/%s/setAsMain", paymentLinkId, imageId), nil)
 }
 
-func (p paymentLink) RestoreById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error) {
+func (p paymentLink) RestoreById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, error) {
 	req := NewRequest[PaymentLinkResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/paymentLinks/%s", paymentLinkId), nil)
 }
 
-func (p paymentLink) DeleteById(ctx context.Context, paymentLinkId string) (*DeleteResponse, Error) {
+func (p paymentLink) DeleteById(ctx context.Context, paymentLinkId string) (*DeleteResponse, error) {
 	req := NewRequest[DeleteResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/paymentLinks/%s", paymentLinkId), nil)
 }
 
-func (p paymentLink) DeleteImageById(ctx context.Context, paymentLinkId, imageId string) (*DeleteResponse, Error) {
+func (p paymentLink) DeleteImageById(ctx context.Context, paymentLinkId, imageId string) (*DeleteResponse, error) {
 	req := NewRequest[DeleteResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/paymentLinks/%s/images/%s", paymentLinkId, imageId), nil)
 }
 
-func (p paymentLink) GetById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, Error) {
+func (p paymentLink) GetById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, error) {
 	req := NewRequest[PaymentLinkResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentLinks/%s", paymentLinkId), nil)
 }
 
-func (p paymentLink) GetImageById(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, Error) {
+func (p paymentLink) GetImageById(ctx context.Context, paymentLinkId, imageId string) (*PaymentLinkImageResponse, error) {
 	req := NewRequest[PaymentLinkImageResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentLinks/%s/images/%s", paymentLinkId, imageId), nil)
 }
 
-func (p paymentLink) GetAll(ctx context.Context, filter GetAllPaymentLinksRequest) (*Pageable[PaymentLinkResponse], Error) {
+func (p paymentLink) GetAll(ctx context.Context, filter GetAllPaymentLinksRequest) (*Pageable[PaymentLinkResponse], error) {
 	req := NewRequest[Pageable[PaymentLinkResponse]](ctx, p.env, p.accessToken)
 	return req.make(http.MethodGet, "/v3/paymentLinks", filter)
 }
 
-func (p paymentLink) GetImagesById(ctx context.Context, paymentLinkId string) (*Pageable[PaymentLinkImageResponse], Error) {
+func (p paymentLink) GetImagesById(ctx context.Context, paymentLinkId string) (*Pageable[PaymentLinkImageResponse], error) {
 	req := NewRequest[Pageable[PaymentLinkImageResponse]](ctx, p.env, p.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/paymentLinks/%s/images", paymentLinkId), nil)
 }

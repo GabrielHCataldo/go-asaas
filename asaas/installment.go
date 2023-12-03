@@ -88,28 +88,18 @@ type Installment interface {
 	//
 	// UpdateInstallmentSplitsResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar splits do parcelamento: https://docs.asaas.com/reference/atualizar-split-do-parcelamento
 	UpdateSplitsById(ctx context.Context, installmentId string, body []SplitRequest) (*UpdateInstallmentSplitsResponse,
-		Error)
+		error)
 	// RefundById (Estornar parcelamento)
 	//
 	// É possível estornar um parcelamento via cartão de crédito recebido ou confirmado. Como já ocorre no processo de
@@ -155,27 +145,17 @@ type Installment interface {
 	//
 	// InstallmentResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Estornar parcelamento: https://docs.asaas.com/reference/estornar-parcelamento
-	RefundById(ctx context.Context, installmentId string) (*InstallmentResponse, Error)
+	RefundById(ctx context.Context, installmentId string) (*InstallmentResponse, error)
 	// DeleteById (Remover parcelamento)
 	//
 	// Somente é possível remover parcelamentos com cobranças aguardando pagamento ou vencidas e que não possuem
@@ -219,27 +199,17 @@ type Installment interface {
 	//
 	// DeleteResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Remover parcelamento: https://docs.asaas.com/reference/remover-parcelamento
-	DeleteById(ctx context.Context, installmentId string) (*DeleteResponse, Error)
+	DeleteById(ctx context.Context, installmentId string) (*DeleteResponse, error)
 	// GetById (Recuperar um único parcelamento)
 	//
 	// O identificador único do parcelamento no Asaas pode ser obtido por meio do atributo installment,
@@ -282,27 +252,17 @@ type Installment interface {
 	//
 	// InstallmentResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar um único parcelamento: https://docs.asaas.com/reference/repurar-um-unico-parcelamento
-	GetById(ctx context.Context, installmentId string) (*InstallmentResponse, Error)
+	GetById(ctx context.Context, installmentId string) (*InstallmentResponse, error)
 	// GetPaymentBookById (Gerar carnê de parcelamento)
 	//
 	// Para gerar os carnês de um parcelamento em formato PDF, é necessário que você tenha o ID do
@@ -346,28 +306,18 @@ type Installment interface {
 	//
 	// FileTextPlainResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Gerar carnê de parcelamento: https://docs.asaas.com/reference/gerar-carne-de-parcelamento
 	GetPaymentBookById(ctx context.Context, installmentId string, filter InstallmentPaymentBookRequest) (
-		*FileTextPlainResponse, Error)
+		*FileTextPlainResponse, error)
 	// GetAll (Listar parcelamentos)
 	//
 	// Diferente da recuperação de um parcelamento específico, este método retorna uma lista paginada com
@@ -405,27 +355,17 @@ type Installment interface {
 	//
 	// Pageable(InstallmentResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar parcelamentos: https://docs.asaas.com/reference/listar-parcelamentos
-	GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[InstallmentResponse], Error)
+	GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[InstallmentResponse], error)
 }
 
 func NewInstallment(env Env, accessToken string) Installment {
@@ -437,32 +377,32 @@ func NewInstallment(env Env, accessToken string) Installment {
 }
 
 func (i installment) UpdateSplitsById(ctx context.Context, installmentId string, body []SplitRequest) (
-	*UpdateInstallmentSplitsResponse, Error) {
+	*UpdateInstallmentSplitsResponse, error) {
 	req := NewRequest[UpdateInstallmentSplitsResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/splits", installmentId), body)
 }
 
-func (i installment) RefundById(ctx context.Context, installmentId string) (*InstallmentResponse, Error) {
+func (i installment) RefundById(ctx context.Context, installmentId string) (*InstallmentResponse, error) {
 	req := NewRequest[InstallmentResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/refund", installmentId), nil)
 }
 
-func (i installment) DeleteById(ctx context.Context, installmentId string) (*DeleteResponse, Error) {
+func (i installment) DeleteById(ctx context.Context, installmentId string) (*DeleteResponse, error) {
 	req := NewRequest[DeleteResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/installments/%s", installmentId), nil)
 }
 
-func (i installment) GetById(ctx context.Context, installmentId string) (*InstallmentResponse, Error) {
+func (i installment) GetById(ctx context.Context, installmentId string) (*InstallmentResponse, error) {
 	req := NewRequest[InstallmentResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/installments/%s", installmentId), nil)
 }
 
-func (i installment) GetPaymentBookById(ctx context.Context, installmentId string, filter InstallmentPaymentBookRequest) (*FileTextPlainResponse, Error) {
+func (i installment) GetPaymentBookById(ctx context.Context, installmentId string, filter InstallmentPaymentBookRequest) (*FileTextPlainResponse, error) {
 	req := NewRequest[FileTextPlainResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/installments/%s/paymentBook", installmentId), filter)
 }
 
-func (i installment) GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[InstallmentResponse], Error) {
+func (i installment) GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[InstallmentResponse], error) {
 	req := NewRequest[Pageable[InstallmentResponse]](ctx, i.env, i.accessToken)
 	return req.make(http.MethodGet, "/v3/installments", filter)
 }

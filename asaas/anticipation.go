@@ -135,27 +135,17 @@ type Anticipation interface {
 	//
 	// AnticipationResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Solicitar antecipação: https://docs.asaas.com/reference/solicitar-antecipacao
-	Request(ctx context.Context, body AnticipationRequest) (*AnticipationResponse, Error)
+	Request(ctx context.Context, body AnticipationRequest) (*AnticipationResponse, error)
 	// Simulate (Simular antecipação)
 	//
 	// # Resposta: 200
@@ -186,27 +176,17 @@ type Anticipation interface {
 	//
 	// AnticipationSimulateResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Simular antecipação: https://docs.asaas.com/reference/simular-antecipacao
-	Simulate(ctx context.Context, body AnticipationSimulateRequest) (*AnticipationSimulateResponse, Error)
+	Simulate(ctx context.Context, body AnticipationSimulateRequest) (*AnticipationSimulateResponse, error)
 	// AgreementSign (Concordar ou discordar do Aditivo aos Termos de Uso do ASAAS para contratação do Serviço de Antecipação)
 	//
 	// Possibilita concordar ou discordar do Aditivo aos Termos de Uso do ASAAS para contratação do Serviço de Antecipação.
@@ -245,27 +225,17 @@ type Anticipation interface {
 	//
 	// AgreementSignResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// https://docs.asaas.com/reference/concordar-ou-discordar-do-aditivo-aos-termos-de-uso-do-asaas-para-contratacao-do-servico-de-antecipacao
-	AgreementSign(ctx context.Context, body AgreementSignRequest) (*AgreementSignResponse, Error)
+	AgreementSign(ctx context.Context, body AgreementSignRequest) (*AgreementSignResponse, error)
 	// GetById (Recuperar uma única antecipação)
 	//
 	// Para recuperar uma antecipação é necessário que você tenha o ID que o Asaas retornou no momento da solicitação.
@@ -307,27 +277,17 @@ type Anticipation interface {
 	//
 	// AnticipationResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar uma única antecipação: https://docs.asaas.com/reference/recuperar-uma-unica-antecipacao
-	GetById(ctx context.Context, anticipationId string) (*AnticipationResponse, Error)
+	GetById(ctx context.Context, anticipationId string) (*AnticipationResponse, error)
 	// GetLimits (Recuperar limites de antecipações)
 	//
 	// Permite você recuperar os limites de antecipações liberados na conta e também o limite disponível para antecipar.
@@ -359,27 +319,17 @@ type Anticipation interface {
 	//
 	// AnticipationLimitsResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar limites de antecipações: https://docs.asaas.com/reference/recuperar-limites-de-antecipacoes
-	GetLimits(ctx context.Context) (*AnticipationLimitsResponse, Error)
+	GetLimits(ctx context.Context) (*AnticipationLimitsResponse, error)
 	// GetAll (Listar antecipações)
 	//
 	// Diferente da recuperação de uma antecipação específica, este método retorna uma lista paginada com todas as
@@ -417,27 +367,17 @@ type Anticipation interface {
 	//
 	// Pageable(AnticipationResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar antecipações: https://docs.asaas.com/reference/listar-antecipacoes
-	GetAll(ctx context.Context, filter GetAllAnticipationsRequest) (*Pageable[AnticipationResponse], Error)
+	GetAll(ctx context.Context, filter GetAllAnticipationsRequest) (*Pageable[AnticipationResponse], error)
 }
 
 func NewAnticipation(env Env, accessToken string) Anticipation {
@@ -448,34 +388,34 @@ func NewAnticipation(env Env, accessToken string) Anticipation {
 	}
 }
 
-func (a anticipation) Request(ctx context.Context, body AnticipationRequest) (*AnticipationResponse, Error) {
+func (a anticipation) Request(ctx context.Context, body AnticipationRequest) (*AnticipationResponse, error) {
 	req := NewRequest[AnticipationResponse](ctx, a.env, a.accessToken)
 	return req.makeMultipartForm(http.MethodPost, "/v3/anticipations", body)
 }
 
 func (a anticipation) Simulate(ctx context.Context, body AnticipationSimulateRequest) (*AnticipationSimulateResponse,
-	Error) {
+	error) {
 	req := NewRequest[AnticipationSimulateResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodPost, "/v3/anticipations/simulate", body)
 }
 
-func (a anticipation) AgreementSign(ctx context.Context, body AgreementSignRequest) (*AgreementSignResponse, Error) {
+func (a anticipation) AgreementSign(ctx context.Context, body AgreementSignRequest) (*AgreementSignResponse, error) {
 	req := NewRequest[AgreementSignResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodPost, "/v3/anticipations/agreement/sign", body)
 }
 
-func (a anticipation) GetById(ctx context.Context, anticipationId string) (*AnticipationResponse, Error) {
+func (a anticipation) GetById(ctx context.Context, anticipationId string) (*AnticipationResponse, error) {
 	req := NewRequest[AnticipationResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/anticipations/%s", anticipationId), nil)
 }
 
-func (a anticipation) GetLimits(ctx context.Context) (*AnticipationLimitsResponse, Error) {
+func (a anticipation) GetLimits(ctx context.Context) (*AnticipationLimitsResponse, error) {
 	req := NewRequest[AnticipationLimitsResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/anticipations/limits", nil)
 }
 
 func (a anticipation) GetAll(ctx context.Context, filter GetAllAnticipationsRequest) (
-	*Pageable[AnticipationResponse], Error) {
+	*Pageable[AnticipationResponse], error) {
 	req := NewRequest[Pageable[AnticipationResponse]](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/anticipations", filter)
 }

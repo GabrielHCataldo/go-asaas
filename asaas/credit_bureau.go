@@ -89,27 +89,17 @@ type CreditBureau interface {
 	//
 	// CreditBureauReportResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Realizar consulta: https://docs.asaas.com/reference/realizar-consulta
-	GetReport(ctx context.Context, body GetReportRequest) (*CreditBureauReportResponse, Error)
+	GetReport(ctx context.Context, body GetReportRequest) (*CreditBureauReportResponse, error)
 	// GetReportById (Recuperar uma consulta)
 	//
 	// Para recuperar uma consulta específica é necessário que você tenha o ID que o Asaas retornou no momento
@@ -152,27 +142,17 @@ type CreditBureau interface {
 	//
 	// CreditBureauReportResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar uma consulta: https://docs.asaas.com/reference/recuperar-uma-consulta
-	GetReportById(ctx context.Context, creditBureauReportId string) (*CreditBureauReportResponse, Error)
+	GetReportById(ctx context.Context, creditBureauReportId string) (*CreditBureauReportResponse, error)
 	// GetAllReports (Listar consultas)
 	//
 	// Diferente da recuperação de uma consulta específica, este método retorna uma lista paginada com todas as
@@ -210,27 +190,17 @@ type CreditBureau interface {
 	//
 	// Pageable(CreditBureauReportResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar consultas: https://docs.asaas.com/reference/listar-consultas
-	GetAllReports(ctx context.Context, filter GetAllReportsRequest) (*Pageable[CreditBureauReportResponse], Error)
+	GetAllReports(ctx context.Context, filter GetAllReportsRequest) (*Pageable[CreditBureauReportResponse], error)
 }
 
 func NewCreditBureau(env Env, accessToken string) CreditBureau {
@@ -241,18 +211,18 @@ func NewCreditBureau(env Env, accessToken string) CreditBureau {
 	}
 }
 
-func (c creditBureau) GetReport(ctx context.Context, body GetReportRequest) (*CreditBureauReportResponse, Error) {
+func (c creditBureau) GetReport(ctx context.Context, body GetReportRequest) (*CreditBureauReportResponse, error) {
 	req := NewRequest[CreditBureauReportResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/creditBureauReport", body)
 }
 
-func (c creditBureau) GetReportById(ctx context.Context, creditBureauReportId string) (*CreditBureauReportResponse, Error) {
+func (c creditBureau) GetReportById(ctx context.Context, creditBureauReportId string) (*CreditBureauReportResponse, error) {
 	req := NewRequest[CreditBureauReportResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/creditBureauReport/%s", creditBureauReportId), nil)
 }
 
 func (c creditBureau) GetAllReports(ctx context.Context, filter GetAllReportsRequest) (
-	*Pageable[CreditBureauReportResponse], Error) {
+	*Pageable[CreditBureauReportResponse], error) {
 	req := NewRequest[Pageable[CreditBureauReportResponse]](ctx, c.env, c.accessToken)
 	return req.make(http.MethodGet, "/v3/creditBureauReport", filter)
 }

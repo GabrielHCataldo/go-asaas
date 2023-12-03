@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"github.com/fatih/structs"
@@ -24,8 +25,8 @@ type request[T any] struct {
 }
 
 type Request[T any] interface {
-	make(method string, path string, payload any) (*T, Error)
-	makeMultipartForm(method string, path string, payload any) (*T, Error)
+	make(method string, path string, payload any) (*T, error)
+	makeMultipartForm(method string, path string, payload any) (*T, error)
 }
 
 func NewRequest[T any](ctx context.Context, env Env, accessToken string) Request[T] {
@@ -36,21 +37,21 @@ func NewRequest[T any](ctx context.Context, env Env, accessToken string) Request
 	}
 }
 
-func (r request[T]) make(method string, path string, payload any) (*T, Error) {
+func (r request[T]) make(method string, path string, payload any) (*T, error) {
 	req, err := r.createHttpRequest(r.ctx, method, path, payload)
 	if err != nil {
-		return nil, NewByError(err)
+		return nil, err
 	}
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return nil, NewByError(err)
+		return nil, err
 	}
 	defer r.closeBody(res.Body)
 	var respBody T
 	err = r.readResponse(res, &respBody)
 	if err != nil {
-		return nil, NewByError(err)
+		return nil, err
 	}
 	if res.StatusCode == http.StatusOK ||
 		res.StatusCode == http.StatusBadRequest ||
@@ -60,26 +61,26 @@ func (r request[T]) make(method string, path string, payload any) (*T, Error) {
 	return r.prepareResponseUnexpected(res)
 }
 
-func (r request[T]) makeMultipartForm(method string, path string, payload any) (*T, Error) {
+func (r request[T]) makeMultipartForm(method string, path string, payload any) (*T, error) {
 	multipartPayload, err := r.prepareMultipartPayload(payload)
 	if err != nil {
-		return nil, NewByError(err)
+		return nil, err
 	}
 	req, err := r.createHttpRequestMultipartForm(r.ctx, method, path, multipartPayload)
 	if err != nil {
-		return nil, NewByError(err)
+		return nil, err
 	}
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
-		return nil, NewByError(err)
+		return nil, err
 	}
 	defer r.closeBody(res.Body)
 	if res.StatusCode == http.StatusOK || res.StatusCode == http.StatusBadRequest {
 		var result T
 		err = r.readResponse(res, &result)
 		if err != nil {
-			return nil, NewByError(err)
+			return nil, err
 		}
 		return &result, nil
 	}
@@ -253,12 +254,12 @@ func (r request[T]) prepareMultipartWriter(form *multipart.Writer, k string, rea
 	return
 }
 
-func (r request[T]) prepareResponseUnexpected(res *http.Response) (*T, Error) {
+func (r request[T]) prepareResponseUnexpected(res *http.Response) (*T, error) {
 	var respBody T
 	rv := reflect.ValueOf(&respBody)
 	fv := rv.Elem().FieldByName("Errors")
 	if rv.Kind() == reflect.Struct && fv.Kind() != reflect.Slice {
-		return nil, NewError(ErrorTypeUnexpected, "poorly formatted response structure, does not contain the errors field")
+		return nil, errors.New("poorly formatted response structure, does not contain the errors field")
 	} else if fv.Kind() == reflect.Slice {
 		fv.Set(reflect.MakeSlice(fv.Type(), 1, 1))
 		fv.Index(0).Set(reflect.ValueOf(ErrorResponse{

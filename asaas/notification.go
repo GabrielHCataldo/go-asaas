@@ -120,27 +120,17 @@ type Notification interface {
 	//
 	// NotificationResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar notificação existente: https://docs.asaas.com/reference/atualizar-notificacao-existente
-	UpdateById(ctx context.Context, notificationId string, body UpdateNotificationRequest) (*NotificationResponse, Error)
+	UpdateById(ctx context.Context, notificationId string, body UpdateNotificationRequest) (*NotificationResponse, error)
 	// UpdateManyByCustomer (Atualizar notificações existentes em lote)
 	//
 	// É possível personalizar várias notificações, independente do canal de comunicação que utilizar (email, SMS e voz)
@@ -175,28 +165,18 @@ type Notification interface {
 	//
 	// UpdateManyNotificationsResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar notificações existentes em lote: https://docs.asaas.com/reference/atualizar-notificacoes-existentes-em-lote
 	UpdateManyByCustomer(ctx context.Context, body UpdateManyNotificationsRequest) (*UpdateManyNotificationsResponse,
-		Error)
+		error)
 	// GetAllByCustomer (Recuperar notificações de um cliente)
 	//
 	// # Resposta: 200
@@ -231,27 +211,17 @@ type Notification interface {
 	//
 	// Pageable(NotificationResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar notificações de um cliente: https://docs.asaas.com/reference/recuperar-notificacoes-de-um-cliente
-	GetAllByCustomer(ctx context.Context, customerId string) (*Pageable[NotificationResponse], Error)
+	GetAllByCustomer(ctx context.Context, customerId string) (*Pageable[NotificationResponse], error)
 }
 
 func NewNotification(env Env, accessToken string) Notification {
@@ -263,18 +233,18 @@ func NewNotification(env Env, accessToken string) Notification {
 }
 
 func (n notification) UpdateById(ctx context.Context, notificationId string, body UpdateNotificationRequest) (
-	*NotificationResponse, Error) {
+	*NotificationResponse, error) {
 	req := NewRequest[NotificationResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/notifications/%s", notificationId), body)
 }
 
 func (n notification) UpdateManyByCustomer(ctx context.Context, body UpdateManyNotificationsRequest) (
-	*UpdateManyNotificationsResponse, Error) {
+	*UpdateManyNotificationsResponse, error) {
 	req := NewRequest[UpdateManyNotificationsResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPut, "/v3/notifications/batch", body)
 }
 
-func (n notification) GetAllByCustomer(ctx context.Context, customerId string) (*Pageable[NotificationResponse], Error) {
+func (n notification) GetAllByCustomer(ctx context.Context, customerId string) (*Pageable[NotificationResponse], error) {
 	req := NewRequest[Pageable[NotificationResponse]](ctx, n.env, n.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/customers/%s/notifications", customerId), nil)
 }

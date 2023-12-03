@@ -223,27 +223,17 @@ type Invoice interface {
 	//
 	// InvoiceResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Agendar nota fiscal: https://docs.asaas.com/reference/agendar-nota-fiscal
-	Schedule(ctx context.Context, body ScheduleInvoiceRequest) (*InvoiceResponse, Error)
+	Schedule(ctx context.Context, body ScheduleInvoiceRequest) (*InvoiceResponse, error)
 	// AuthorizeById (Emitir uma nota fiscal)
 	//
 	// Para emitir uma nota fiscal específica é necessário que você tenha o ID que o Asaas retornou no momento
@@ -287,27 +277,17 @@ type Invoice interface {
 	//
 	// InvoiceResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Cancelar uma nota fiscal: https://docs.asaas.com/reference/emitir-uma-nota-fiscal
-	AuthorizeById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error)
+	AuthorizeById(ctx context.Context, invoiceId string) (*InvoiceResponse, error)
 	// CancelById (Cancelar uma nota fiscal)
 	//
 	// Para cancelar uma nota fiscal específica é necessário que você tenha o ID que o Asaas retornou no momento
@@ -351,27 +331,17 @@ type Invoice interface {
 	//
 	// InvoiceResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Cancelar uma nota fiscal: https://docs.asaas.com/reference/cancelar-uma-nota-fiscal
-	CancelById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error)
+	CancelById(ctx context.Context, invoiceId string) (*InvoiceResponse, error)
 	// UpdateById (Atualizar nota fiscal)
 	//
 	// É possível atualizar notas fiscais que ainda não tenham sido emitidas, ou seja, estão
@@ -415,27 +385,17 @@ type Invoice interface {
 	//
 	// InvoiceResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Atualizar nota fiscal: https://docs.asaas.com/reference/atualizar-nota-fiscal
-	UpdateById(ctx context.Context, invoiceId string, body UpdateInvoiceRequest) (*InvoiceResponse, Error)
+	UpdateById(ctx context.Context, invoiceId string, body UpdateInvoiceRequest) (*InvoiceResponse, error)
 	// GetById (Recuperar uma nota fiscal)
 	//
 	// # Resposta: 200
@@ -475,27 +435,17 @@ type Invoice interface {
 	//
 	// InvoiceResponse = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Recuperar uma nota fiscal: https://docs.asaas.com/reference/recuperar-uma-nota-fiscal
-	GetById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error)
+	GetById(ctx context.Context, invoiceId string) (*InvoiceResponse, error)
 	// GetAll (Listar notas fiscais)
 	//
 	// Diferente da recuperação de uma nota fiscal específica, este método retorna uma lista paginada com todas as notas
@@ -533,27 +483,17 @@ type Invoice interface {
 	//
 	// Pageable(InvoiceResponse) = nil
 	//
-	// Error = not nil
+	// error = not nil
 	//
-	// Se o campo ErrorAsaas.Type tiver com valor ErrorTypeValidation quer dizer que não passou pela validação dos
-	// parâmetros informados segundo a documentação.
-	// Por fim se o campo ErrorAsaas.Type tiver com valor ErrorTypeUnexpected quer dizer que ocorreu um erro inesperado
+	// Se o parâmetro de retorno error não estiver nil quer dizer que ocorreu um erro inesperado
 	// na lib go-asaas.
 	//
-	// Para obter mais detalhes confira as colunas:
-	//
-	// ErrorAsaas.Msg (mensagem do erro),
-	//
-	// ErrorAsaas.File (Arquivo aonde ocorreu o erro),
-	//
-	// ErrorAsaas.Line (Linha aonde ocorreu o erro)
-	//
-	// Caso ocorra um erro inesperado por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
+	// Se isso acontecer por favor report o erro no repositório: https://github.com/GabrielHCataldo/go-asaas
 	//
 	// # DOCS
 	//
 	// Listar notas fiscais: https://docs.asaas.com/reference/listar-notas-fiscais
-	GetAll(ctx context.Context, filter GetAllInvoicesRequest) (*Pageable[InvoiceResponse], Error)
+	GetAll(ctx context.Context, filter GetAllInvoicesRequest) (*Pageable[InvoiceResponse], error)
 }
 
 func NewInvoice(env Env, accessToken string) Invoice {
@@ -564,32 +504,32 @@ func NewInvoice(env Env, accessToken string) Invoice {
 	}
 }
 
-func (i invoice) Schedule(ctx context.Context, body ScheduleInvoiceRequest) (*InvoiceResponse, Error) {
+func (i invoice) Schedule(ctx context.Context, body ScheduleInvoiceRequest) (*InvoiceResponse, error) {
 	req := NewRequest[InvoiceResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, "/v3/invoices", body)
 }
 
-func (i invoice) AuthorizeById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error) {
+func (i invoice) AuthorizeById(ctx context.Context, invoiceId string) (*InvoiceResponse, error) {
 	req := NewRequest[InvoiceResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/invoices/%s/authorize", invoiceId), nil)
 }
 
-func (i invoice) CancelById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error) {
+func (i invoice) CancelById(ctx context.Context, invoiceId string) (*InvoiceResponse, error) {
 	req := NewRequest[InvoiceResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/invoices/%s/cancel", invoiceId), nil)
 }
 
-func (i invoice) UpdateById(ctx context.Context, invoiceId string, body UpdateInvoiceRequest) (*InvoiceResponse, Error) {
+func (i invoice) UpdateById(ctx context.Context, invoiceId string, body UpdateInvoiceRequest) (*InvoiceResponse, error) {
 	req := NewRequest[InvoiceResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/invoices/%s", invoiceId), body)
 }
 
-func (i invoice) GetById(ctx context.Context, invoiceId string) (*InvoiceResponse, Error) {
+func (i invoice) GetById(ctx context.Context, invoiceId string) (*InvoiceResponse, error) {
 	req := NewRequest[InvoiceResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/invoices/%s", invoiceId), nil)
 }
 
-func (i invoice) GetAll(ctx context.Context, filter GetAllInvoicesRequest) (*Pageable[InvoiceResponse], Error) {
+func (i invoice) GetAll(ctx context.Context, filter GetAllInvoicesRequest) (*Pageable[InvoiceResponse], error) {
 	req := NewRequest[Pageable[InvoiceResponse]](ctx, i.env, i.accessToken)
 	return req.make(http.MethodGet, "/v3/invoices/", filter)
 }

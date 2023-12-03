@@ -49,7 +49,7 @@ type creditCard struct {
 }
 
 type CreditCard interface {
-	Tokenize(ctx context.Context, body CreditCardTokenizeRequest) (*CreditCardTokenizeResponse, Error)
+	Tokenize(ctx context.Context, body CreditCardTokenizeRequest) (*CreditCardTokenizeResponse, error)
 }
 
 func NewCreditCard(env Env, accessToken string) CreditCard {
@@ -61,7 +61,7 @@ func NewCreditCard(env Env, accessToken string) CreditCard {
 }
 
 func (c creditCard) Tokenize(ctx context.Context, body CreditCardTokenizeRequest) (*CreditCardTokenizeResponse,
-	Error) {
+	error) {
 	req := NewRequest[CreditCardTokenizeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/creditCard/tokenize", body)
 }
