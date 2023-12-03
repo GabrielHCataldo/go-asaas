@@ -12,7 +12,7 @@ func TestMobilePhoneRecharge(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nMobilePhone := NewMobilePhone(EnvSandbox, accessToken)
+	nMobilePhone := NewMobilePhone(EnvSandbox, *accessToken)
 	resp, errAsaas := nMobilePhone.Recharge(ctx, MobilePhoneRechargeRequest{
 		PhoneNumber: "47997576130",
 		Value:       15,

@@ -130,7 +130,7 @@ type GetAllChargesRequest struct {
 
 type ChargeReceiveInCashRequest struct {
 	// Data em que o cliente efetuou o pagamento (REQUIRED)
-	PaymentDate Date `json:"paymentDate,omitempty" validate:"required"`
+	PaymentDate *Date `json:"paymentDate,omitempty" validate:"required"`
 	// Valor pago pelo cliente (REQUIRED)
 	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
 	// Enviar ou não notificação de pagamento confirmado para o cliente
@@ -163,7 +163,6 @@ type CallbackRequest struct {
 type ChargeResponse struct {
 	Id                    string              `json:"id,omitempty"`
 	Customer              string              `json:"customer,omitempty"`
-	Installment           string              `json:"installment,omitempty"`
 	Status                ChargeStatus        `json:"status,omitempty"`
 	PaymentLink           string              `json:"paymentLink,omitempty"`
 	DueDate               *Date               `json:"dueDate,omitempty"`
@@ -262,7 +261,7 @@ type Charge interface {
 	// É possível escolher entre as formas de pagamento com boleto, cartão de crédito,
 	// pix ou permitir que o cliente escolha a forma que desejar.
 	//
-	// O CreateChargeRequest.BillingType BillingTypeBankSlip habilita o pagamento em PIX e Boleto. Em BillingTypePix,
+	// O CreateChargeRequest.BillingType BillingTypeBill habilita o pagamento em PIX e Boleto. Em BillingTypePix,
 	// apenas o pagamento em PIX, e em BillingTypeCreditCard, em cartão de crédito e débito (na fatura).
 	//
 	// Não é possível gerar uma cobrança com dois BillingType diferentes (BillingTypePix e BillingTypeCreditCard,
@@ -584,7 +583,7 @@ type Charge interface {
 	//
 	// É possível estornar cobranças via cartão de crédito recebidas ou confirmadas. Ao fazer isto o saldo correspondente
 	// é debitado de sua conta no Asaas e a cobrança cancelada no cartão do seu cliente. O cancelamento pode levar até 10
-	// dias úteis para aparecer na fatura de seu cliente. Cobranças recebidas via pix, permitem o estorno integral ou
+	// dias úteis para aparecer na fatura de seu cliente. Cobranças recebidas via Pix, permitem o estorno integral ou
 	// vários estornos parciais. A soma desses estornos não poderão ultrapassar o valor total da cobrança recebida.
 	//
 	// # Resposta: 200
@@ -1607,7 +1606,13 @@ func (c charge) prepareCreateBodyRequest(body *CreateChargeRequest) {
 	if !body.BillingType.IsEnumValid() {
 		body.BillingType = BillingTypeUndefined
 	}
-	if body.BillingType != BillingTypeCreditCard {
+	switch body.BillingType {
+	case BillingTypeCreditCard:
+		if body.Fine != nil {
+			body.Fine.DueDateLimitDays = 0
+		}
+		break
+	default:
 		body.CreditCard = nil
 		body.CreditCardHolderInfo = nil
 		body.CreditCardToken = ""

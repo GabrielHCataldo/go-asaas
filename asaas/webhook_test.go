@@ -12,7 +12,7 @@ func TestWebhookGetSettingNoContent(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nWebhook := NewWebhook(EnvSandbox, accessToken)
+	nWebhook := NewWebhook(EnvSandbox, *accessToken)
 	resp, errAsaas := nWebhook.GetSetting(ctx, WebhookTypePayment)
 	assertResponseNoContent(t, resp, errAsaas)
 }

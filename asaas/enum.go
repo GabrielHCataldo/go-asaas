@@ -377,7 +377,7 @@ const (
 	SubscriptionCycleYearly       SubscriptionCycle = "YEARLY"
 )
 const (
-	BillingTypeBankSlip   BillingType = "BOLETO"
+	BillingTypeBill       BillingType = "BOLETO"
 	BillingTypeCreditCard BillingType = "CREDIT_CARD"
 	BillingTypeUndefined  BillingType = "UNDEFINED"
 	BillingTypeDebitCard  BillingType = "DEBIT_CARD"
@@ -811,7 +811,7 @@ func (c ChargebackReason) IsEnumValid() bool {
 
 func (c BillingType) IsEnumValid() bool {
 	switch c {
-	case BillingTypeBankSlip, BillingTypeCreditCard, BillingTypeUndefined, BillingTypeDebitCard, BillingTypeTransfer, BillingTypeDeposit, BillingTypePix:
+	case BillingTypeBill, BillingTypeCreditCard, BillingTypeUndefined, BillingTypeDebitCard, BillingTypeTransfer, BillingTypeDeposit, BillingTypePix:
 		return true
 	}
 	return false

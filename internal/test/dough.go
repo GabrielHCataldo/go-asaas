@@ -1,11 +1,24 @@
 package test
 
 import (
+	"errors"
+	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"io"
 	"os"
 	"strconv"
 	"time"
 )
+
+const PrefixEnvAccessToken = "ASAAS_ACCESS_TOKEN"
+const MessageAccessTokenRequired = "ASAAS_ACCESS_TOKEN env is required"
+
+func GetAccessTokenByEnv() (*string, error) {
+	accessToken := os.Getenv(PrefixEnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return nil, errors.New(MessageAccessTokenRequired)
+	}
+	return &accessToken, nil
+}
 
 func GetCustomerIdDefault() string {
 	return "cus_000005791749"
@@ -23,11 +36,12 @@ func GetPaymentLinkIdDefault() string {
 	return "le5jqxz8as7pgwn9"
 }
 
-func GetCreatePixChargeRequestDefault() []byte {
+func GetCreateChargePixRequestDefault() []byte {
 	return []byte(`
 		{
 			"billingType": "PIX",
-			"dueDate": "2099-11-26",
+			"customer": "cus_000005791749",
+			"dueDate": "2100-11-26",
 			"value": 100,
 			"description": "Cobrança via teste unitário em Golang",
 			"remoteIp": "191.253.125.194"
@@ -35,9 +49,10 @@ func GetCreatePixChargeRequestDefault() []byte {
 	`)
 }
 
-func GetCreateBankSlipChargeRequestDefault() []byte {
+func GetCreateChargeBillRequestDefault() []byte {
 	return []byte(`
 		{
+			"customer": "cus_000005791749",
 			"billingType": "BOLETO",
 			"discount": {
 				"value": 10,
@@ -50,7 +65,7 @@ func GetCreateBankSlipChargeRequestDefault() []byte {
 			"fine": {
 				"value": 1
 			},
-			"dueDate": "2099-11-29",
+			"dueDate": "2023-11-29",
 			"value": 100,
 			"description": "Cobrança via teste unitário em Golang",
 			"remoteIp": "191.253.125.194"
@@ -58,23 +73,13 @@ func GetCreateBankSlipChargeRequestDefault() []byte {
 	`)
 }
 
-func GetCreateUndefinedChargeRequestDefault() []byte {
+func GetCreateChargeCreditCardRequestDefault() []byte {
 	return []byte(`
 		{
-			"billingType": "UNDEFINED",
-			"dueDate": "2099-11-29",
-			"value": 100,
-			"description": "Cobrança via teste unitário em Golang"
-		}
-	`)
-}
-
-func GetCreateCreditCardChargeRequestDefault() []byte {
-	return []byte(`
-		{
+			"customer": "cus_000005791749",
 			"billingType": "CREDIT_CARD",
 			"value": 10.0,
-			"dueDate": "2099-11-26",
+			"dueDate": "2100-11-26",
 			"description": "Cobrança via teste unitário em Golang",
 			"creditCard": {
 				"holderName": "unit test go",
@@ -92,20 +97,18 @@ func GetCreateCreditCardChargeRequestDefault() []byte {
 				"postalCode": "89223-005",
 				"addressNumber": "277"
 			},
-			"installmentCount": 2,
-			"installmentValue": 5,
 			"remoteIp": "191.253.125.194"
 		}
 	`)
 }
 
-func GetCreateCreditCardChargeFailureRequestDefault() []byte {
+func GetCreateChargeCreditCardFailureRequestDefault() []byte {
 	return []byte(`
 		{
 			"customer": "cus_000005791749",
 			"billingType": "CREDIT_CARD",
 			"value": 10.0,
-			"dueDate": "2099-11-28",
+			"dueDate": "2024-11-28",
 			"description": "Cobrança via teste unitário em Golang",
 			"creditCard": {
 				"holderName": "unit test go",
@@ -192,10 +195,6 @@ func GetSimpleFile() (*os.File, error) {
 		return nil, err
 	}
 	return os.Open(nameFile)
-}
-
-func GetSimpleImage() (*os.File, error) {
-	return os.Open("../gopher-asaas.png")
 }
 
 func GetCreateCustomerRequestDefault() []byte {

@@ -16,7 +16,7 @@ func TestTransferTransferToBankSuccess(t *testing.T) {
 	req := &TransferToBankRequest{}
 	err = json.Unmarshal(test.GetTransferToBankRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
-	nTransfer := NewTransfer(EnvSandbox, accessToken)
+	nTransfer := NewTransfer(EnvSandbox, *accessToken)
 	resp, errAsaas := nTransfer.TransferToBank(ctx, *req)
 	assertResponseSuccess(t, resp, errAsaas)
 }
@@ -29,7 +29,7 @@ func TestTransferTransferToBankFailure(t *testing.T) {
 	req := &TransferToBankRequest{}
 	err = json.Unmarshal(test.GetTransferToBankFailureRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
-	nTransfer := NewTransfer(EnvSandbox, accessToken)
+	nTransfer := NewTransfer(EnvSandbox, *accessToken)
 	_, errAsaas := nTransfer.TransferToBank(ctx, *req)
 	assertSuccessNonnull(t, errAsaas)
 }

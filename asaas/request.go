@@ -220,14 +220,11 @@ func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader
 			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.FormatBool(b))}
 		} else if s, ok = vf.(string); ok {
 			multipartPayload[k] = []io.Reader{strings.NewReader(s)}
-		} else if f, ok = vf.(*os.File); ok && f != nil {
+		} else if f, ok = vf.(*os.File); ok {
 			multipartPayload[k] = []io.Reader{f}
-		} else if fs, ok = vf.([]*os.File); ok && fs != nil {
+		} else if fs, ok = vf.([]*os.File); ok {
 			var files []io.Reader
 			for _, file := range fs {
-				if file == nil {
-					continue
-				}
 				files = append(files, file)
 			}
 			multipartPayload[k] = files
@@ -243,7 +240,7 @@ func (r request[T]) prepareMultipartWriter(form *multipart.Writer, k string, rea
 	if c, ok := reader.(io.Closer); ok {
 		defer r.closeCloser(c)
 	}
-	if file, ok := reader.(*os.File); ok && file != nil {
+	if file, ok := reader.(*os.File); ok {
 		if fw, err = form.CreateFormFile(k, file.Name()); err != nil {
 			return err
 		}

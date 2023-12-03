@@ -12,7 +12,7 @@ func TestInstallmentGetAllSuccess(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nInstallment := NewInstallment(EnvSandbox, accessToken)
+	nInstallment := NewInstallment(EnvSandbox, *accessToken)
 	resp, errAsaas := nInstallment.GetAll(ctx, PageableDefaultRequest{})
 	assertResponseSuccess(t, resp, errAsaas)
 }

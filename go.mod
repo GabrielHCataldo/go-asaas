@@ -17,7 +17,6 @@ require (
 	github.com/leodido/go-urn v1.2.4 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mvrilo/go-cpf v0.0.0-20150109121854-4113d38c8d21 // indirect
 	github.com/rakyll/gotest v0.0.6 // indirect
 	golang.org/x/crypto v0.16.0 // indirect
 	golang.org/x/net v0.19.0 // indirect

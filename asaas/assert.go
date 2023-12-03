@@ -14,11 +14,13 @@ func assertFatalErrorNonnull(t *testing.T, err error) {
 }
 
 func assertSuccessNonnull(t *testing.T, v any) {
-	if v != nil || !reflect.ValueOf(v).IsNil() {
-		vJson, _ := json.Marshal(v)
-		logDebugSkipCaller(4, "success: object nonnull", string(vJson))
+	if v == nil || reflect.ValueOf(v).IsNil() {
+		logErrorSkipCaller(4, "unexpect: object is nil")
+		t.Fail()
+		return
 	}
-	t.Fail()
+	vJson, _ := json.Marshal(v)
+	logDebugSkipCaller(4, "success: object nonnull", string(vJson))
 }
 
 func assertResponseSuccess(t *testing.T, resp any, err any) {
@@ -34,7 +36,7 @@ func assertResponseSuccess(t *testing.T, resp any, err any) {
 		t.Fail()
 	} else {
 		vJson, _ := json.Marshal(resp)
-		if iResp.IsSuccess() && !iResp.IsNoContent() && !iResp.IsFailure() {
+		if iResp.IsSuccess() {
 			logDebugSkipCaller(4, "success: resp is success:", string(vJson))
 		} else {
 			logErrorSkipCaller(4, "unexpect: resp is failure:", string(vJson))
@@ -56,7 +58,7 @@ func assertResponseFailure(t *testing.T, resp any, err any) {
 		t.Fail()
 	} else {
 		vJson, _ := json.Marshal(resp)
-		if iResp.IsSuccess() || !iResp.IsFailure() || iResp.IsNoContent() {
+		if iResp.IsSuccess() {
 			logErrorSkipCaller(4, "unexpect: resp is success: ", string(vJson))
 			t.Fail()
 		} else {
@@ -80,7 +82,7 @@ func assertResponseNoContent(t *testing.T, resp any, err any) {
 		return
 	}
 	vJson, _ := json.Marshal(resp)
-	if iResp.IsNoContent() && !iResp.IsSuccess() && !iResp.IsFailure() {
+	if iResp.IsNoContent() {
 		logDebugSkipCaller(4, "success: resp is no content", string(vJson))
 	} else {
 		logErrorSkipCaller(4, "unexpect: resp has content ", string(vJson))

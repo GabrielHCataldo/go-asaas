@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-type SaveInvoiceCustomizationRequest struct {
+type CreateInvoiceCustomizationRequest struct {
 	// Cor de fundo do logo (REQUIRED)
 	LogoBackgroundColor string `json:"logoBackgroundColor,omitempty" validate:"required,color"`
 	// Cor de fundo das suas informações (REQUIRED)
@@ -344,7 +344,7 @@ type Account interface {
 	// # DOCS
 	//
 	// Salvar personalização da fatura: https://docs.asaas.com/reference/salvar-personalizacao-da-fatura
-	SaveInvoiceCustomization(ctx context.Context, body SaveInvoiceCustomizationRequest) (
+	SaveInvoiceCustomization(ctx context.Context, body CreateInvoiceCustomizationRequest) (
 		*InvoiceCustomizationResponse, Error)
 	// Update (Atualizar dados comerciais)
 	//
@@ -987,7 +987,7 @@ func NewAccount(env Env, accessToken string) Account {
 	}
 }
 
-func (a account) SaveInvoiceCustomization(ctx context.Context, body SaveInvoiceCustomizationRequest) (
+func (a account) SaveInvoiceCustomization(ctx context.Context, body CreateInvoiceCustomizationRequest) (
 	*InvoiceCustomizationResponse, Error) {
 	if err := Validate().Struct(body); err != nil {
 		return nil, NewError(ErrorTypeValidation, err)
