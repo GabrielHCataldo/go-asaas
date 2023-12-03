@@ -10,29 +10,29 @@ import (
 
 type CreateNegativityRequest struct {
 	// Identificador único da cobrança a ser recuperada no Asaas (REQUIRED)
-	Payment string `json:"payment,omitempty" validate:"required"`
+	Payment string `json:"payment,omitempty"`
 	// Tipo de negativação (REQUIRED)
-	Type NegativityType `json:"type,omitempty" validate:"required,enum"`
+	Type NegativityType `json:"type,omitempty"`
 	// Descrição do produto ou serviço prestado
 	Description string `json:"description,omitempty"`
 	// Nome do cliente (REQUIRED)
-	CustomerName string `json:"customerName,omitempty" validate:"required,full_name"`
+	CustomerName string `json:"customerName,omitempty"`
 	// CPF ou CNPJ do cliente (REQUIRED)
-	CustomerCpfCnpj string `json:"customerCpfCnpj,omitempty" validate:"required,document"`
+	CustomerCpfCnpj string `json:"customerCpfCnpj,omitempty"`
 	// Telefone principal do cliente (REQUIRED)
-	CustomerPrimaryPhone string `json:"customerPrimaryPhone,omitempty" validate:"required,phone"`
+	CustomerPrimaryPhone string `json:"customerPrimaryPhone,omitempty"`
 	// Telefone secundário do cliente
-	CustomerSecondaryPhone string `json:"customerSecondaryPhone,omitempty" validate:"omitempty,phone"`
+	CustomerSecondaryPhone string `json:"customerSecondaryPhone,omitempty"`
 	// CEP do endereço do cliente (REQUIRED)
-	CustomerPostalCode string `json:"customerPostalCode,omitempty" validate:"required,postal_code"`
+	CustomerPostalCode string `json:"customerPostalCode,omitempty"`
 	// Logradouro do cliente (REQUIRED)
-	CustomerAddress string `json:"customerAddress,omitempty" validate:"required"`
+	CustomerAddress string `json:"customerAddress,omitempty"`
 	// Número do endereço do cliente (REQUIRED)
-	CustomerAddressNumber string `json:"customerAddressNumber,omitempty" validate:"required"`
+	CustomerAddressNumber string `json:"customerAddressNumber,omitempty"`
 	// Complemento do endereço do cliente
 	CustomerComplement string `json:"customerComplement,omitempty"`
 	// Bairro do cliente (REQUIRED)
-	CustomerProvince string `json:"customerProvince,omitempty" validate:"required"`
+	CustomerProvince string `json:"customerProvince,omitempty"`
 	// Nota fiscal e/ou contrato com firma reconhecida em cartório
 	Documents *FileRequest `json:"documents,omitempty"`
 }
@@ -56,7 +56,7 @@ type GetAllNegativitiesRequest struct {
 
 type NegativityResendDocumentsRequest struct {
 	// Nota fiscal e/ou contrato com firma reconhecida em cartório (REQUIRED)
-	Documents *os.File `json:"documents,omitempty" validate:"required"`
+	Documents *os.File `json:"documents,omitempty"`
 }
 
 type NegativityResponse struct {
@@ -681,9 +681,6 @@ func NewNegativity(env Env, accessToken string) Negativity {
 }
 
 func (n negativity) Create(ctx context.Context, body CreateNegativityRequest) (*NegativityResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPost, "/v3/paymentDunnings", body)
 }
@@ -698,9 +695,6 @@ func (n negativity) Simulate(ctx context.Context, chargeId string) (*NegativityS
 
 func (n negativity) ResendDocumentsById(ctx context.Context, negativityId string, body NegativityResendDocumentsRequest) (
 	*NegativityResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[NegativityResponse](ctx, n.env, n.accessToken)
 	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/paymentDunnings/%s/documents", negativityId), body)
 }

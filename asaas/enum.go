@@ -202,7 +202,7 @@ const (
 const (
 	BillPaymentStatusPending        BillPaymentStatus = "PENDING"
 	BillPaymentStatusBankProcessing BillPaymentStatus = "BANK_PROCESSING"
-	BillPaymentStatusBankPaid       BillPaymentStatus = "PAId"
+	BillPaymentStatusBankPaid       BillPaymentStatus = "PAID"
 	BillPaymentStatusFailed         BillPaymentStatus = "FAILED"
 	BillPaymentStatusCancelled      BillPaymentStatus = "CANCELLED"
 )
@@ -230,8 +230,8 @@ const (
 	NegativityStatusAwaitingApproval     NegativityStatus = "AWAITING_APPROVAL"
 	NegativityStatusAwaitingCancellation NegativityStatus = "AWAITING_CANCELLATION"
 	NegativityStatusProcessed            NegativityStatus = "PROCESSED"
-	NegativityStatusPaid                 NegativityStatus = "PAId"
-	NegativityStatusPartiallyPaid        NegativityStatus = "PARTIALLY_PAId"
+	NegativityStatusPaid                 NegativityStatus = "PAID"
+	NegativityStatusPartiallyPaid        NegativityStatus = "PARTIALLY_PAID"
 	NegativityStatusDenied               NegativityStatus = "DENIED"
 	NegativityStatusCancelled            NegativityStatus = "CANCELLED"
 )
@@ -266,7 +266,7 @@ const (
 )
 const (
 	PersonTypePhysical  PersonType = "FISICA"
-	PersonTypeJuridical PersonType = "JURIdICA"
+	PersonTypeJuridical PersonType = "JURIDICA"
 )
 const (
 	HttpContentTypeJSON = "application/json"
@@ -377,7 +377,7 @@ const (
 	SubscriptionCycleYearly       SubscriptionCycle = "YEARLY"
 )
 const (
-	BillingTypeBill       BillingType = "BOLETO"
+	BillingTypeBankSlip   BillingType = "BOLETO"
 	BillingTypeCreditCard BillingType = "CREDIT_CARD"
 	BillingTypeUndefined  BillingType = "UNDEFINED"
 	BillingTypeDebitCard  BillingType = "DEBIT_CARD"
@@ -811,7 +811,7 @@ func (c ChargebackReason) IsEnumValid() bool {
 
 func (c BillingType) IsEnumValid() bool {
 	switch c {
-	case BillingTypeBill, BillingTypeCreditCard, BillingTypeUndefined, BillingTypeDebitCard, BillingTypeTransfer, BillingTypeDeposit, BillingTypePix:
+	case BillingTypeBankSlip, BillingTypeCreditCard, BillingTypeUndefined, BillingTypeDebitCard, BillingTypeTransfer, BillingTypeDeposit, BillingTypePix:
 		return true
 	}
 	return false

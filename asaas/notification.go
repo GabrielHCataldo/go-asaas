@@ -27,14 +27,14 @@ type UpdateNotificationRequest struct {
 
 type UpdateManyNotificationsRequest struct {
 	// Identificador único do cliente no Asaas (REQUIRED)
-	Customer string `json:"customer,omitempty" validate:"required"`
+	Customer string `json:"customer,omitempty"`
 	// Lista de informações das notificações
-	Notifications []UpdateManyNotificationRequest `json:"notifications,omitempty" validate:"required"`
+	Notifications []UpdateManyNotificationRequest `json:"notifications,omitempty"`
 }
 
 type UpdateManyNotificationRequest struct {
 	// Identificador único da notificação (REQUIRED)
-	Id string `json:"id,omitempty" validate:"required"`
+	Id string `json:"id,omitempty"`
 	// Habilita/desabilita a notificação
 	Enabled bool `json:"enabled,omitempty"`
 	// Habilita/desabilita o email enviado para você
@@ -264,18 +264,12 @@ func NewNotification(env Env, accessToken string) Notification {
 
 func (n notification) UpdateById(ctx context.Context, notificationId string, body UpdateNotificationRequest) (
 	*NotificationResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[NotificationResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/notifications/%s", notificationId), body)
 }
 
 func (n notification) UpdateManyByCustomer(ctx context.Context, body UpdateManyNotificationsRequest) (
 	*UpdateManyNotificationsResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[UpdateManyNotificationsResponse](ctx, n.env, n.accessToken)
 	return req.make(http.MethodPut, "/v3/notifications/batch", body)
 }

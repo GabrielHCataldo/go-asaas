@@ -2,9 +2,7 @@ package asaas
 
 import (
 	"context"
-	berrors "errors"
 	"fmt"
-	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"net/http"
 	"os"
 )
@@ -451,18 +449,12 @@ func NewAnticipation(env Env, accessToken string) Anticipation {
 }
 
 func (a anticipation) Request(ctx context.Context, body AnticipationRequest) (*AnticipationResponse, Error) {
-	if err := a.validateBodyRequest(&body.Payment, &body.Installment); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[AnticipationResponse](ctx, a.env, a.accessToken)
 	return req.makeMultipartForm(http.MethodPost, "/v3/anticipations", body)
 }
 
 func (a anticipation) Simulate(ctx context.Context, body AnticipationSimulateRequest) (*AnticipationSimulateResponse,
 	Error) {
-	if err := a.validateBodyRequest(&body.Payment, &body.Installment); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[AnticipationSimulateResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodPost, "/v3/anticipations/simulate", body)
 }
@@ -486,11 +478,4 @@ func (a anticipation) GetAll(ctx context.Context, filter GetAllAnticipationsRequ
 	*Pageable[AnticipationResponse], Error) {
 	req := NewRequest[Pageable[AnticipationResponse]](ctx, a.env, a.accessToken)
 	return req.make(http.MethodGet, "/v3/anticipations", filter)
-}
-
-func (a anticipation) validateBodyRequest(payment, installment *string) error {
-	if util.IsBlank(payment) && util.IsBlank(installment) {
-		return berrors.New("inform payment or installment")
-	}
-	return nil
 }

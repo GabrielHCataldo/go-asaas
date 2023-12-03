@@ -2,27 +2,25 @@ package asaas
 
 import (
 	"context"
-	berrors "errors"
 	"fmt"
-	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"net/http"
 )
 
 type BillPaymentRequest struct {
 	// Linha digitável do boleto (REQUIRED)
-	IdentificationField string `json:"identificationField,omitempty" validate:"required"`
+	IdentificationField string `json:"identificationField,omitempty"`
 	// Data de agendamento do pagamento
-	ScheduleDate *Date `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
+	ScheduleDate *Date `json:"scheduleDate,omitempty"`
 	// Descrição do pagamento de conta
 	Description string `json:"description,omitempty"`
 	// Desconto atribuído ao pagamento
-	Discount float64 `json:"discount,omitempty" validate:"omitempty,gte=0"`
+	Discount float64 `json:"discount,omitempty"`
 	// Juros atribuído ao pagamento
-	Interest float64 `json:"interest,omitempty" validate:"omitempty,gte=0"`
+	Interest float64 `json:"interest,omitempty"`
 	// Multa atribuída ao pagamento
-	Fine float64 `json:"fine,omitempty" validate:"omitempty,gte=0"`
+	Fine float64 `json:"fine,omitempty"`
 	// Valor da conta caso seja do tipo que não possui essa informação (Ex: faturas de cartão de crédito)
-	Value float64 `json:"value,omitempty" validate:"omitempty,gte=0"`
+	Value float64 `json:"value,omitempty"`
 	// Data de vencimento da conta caso seja do tipo que não possui essa informação
 	DueDate *Date `json:"dueDate,omitempty"`
 }
@@ -388,17 +386,11 @@ func NewBillPayment(env Env, accessToken string) BillPayment {
 }
 
 func (b billPayment) Create(ctx context.Context, body BillPaymentRequest) (*BillPaymentResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[BillPaymentResponse](ctx, b.env, b.accessToken)
 	return req.make(http.MethodPost, "/v3/bill", body)
 }
 
 func (b billPayment) Simulate(ctx context.Context, body BillPaymentSimulateRequest) (*BillPaymentSimulateResponse, Error) {
-	if err := b.validateBodySimulateRequest(&body.IdentificationField, &body.BarCode); err != nil {
-		return nil, NewError(ErrorTypeValidation, "inform identificationField or barCode")
-	}
 	req := NewRequest[BillPaymentSimulateResponse](ctx, b.env, b.accessToken)
 	return req.make(http.MethodPost, "/v3/bill/simulate", body)
 }
@@ -416,11 +408,4 @@ func (b billPayment) GetById(ctx context.Context, billPaymentId string) (*BillPa
 func (b billPayment) GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[BillPaymentResponse], Error) {
 	req := NewRequest[Pageable[BillPaymentResponse]](ctx, b.env, b.accessToken)
 	return req.make(http.MethodPost, "/v3/bill", filter)
-}
-
-func (b billPayment) validateBodySimulateRequest(identificationField, barCode *string) error {
-	if util.IsBlank(barCode) && util.IsBlank(identificationField) {
-		return berrors.New("inform barCode or identificationField")
-	}
-	return nil
 }

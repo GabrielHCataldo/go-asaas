@@ -54,7 +54,7 @@ func createChargePix() {
 func createChargeBill() {
 	resp, err := chargeAsaas.Create(context.TODO(), asaas.CreateChargeRequest{
 		Customer:             "cus_000005799255",
-		BillingType:          asaas.BillingTypeBill,
+		BillingType:          asaas.BillingTypeBankSlip,
 		Value:                10,
 		DueDate:              asaas.NewDate(2023, 12, 2, time.Local),
 		Description:          "Example bill charge",
@@ -158,7 +158,7 @@ func createChargeUndefined() {
 func updateChargeById() {
 	resp, err := chargeAsaas.UpdateById(context.TODO(), "pay_jxqnfvp1qt8qpf5s", asaas.UpdateChargeRequest{
 		Customer:          "",
-		BillingType:       asaas.BillingTypeBill,
+		BillingType:       asaas.BillingTypeBankSlip,
 		Value:             5,
 		DueDate:           nil,
 		Description:       "updated",

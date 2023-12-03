@@ -2,9 +2,8 @@ package asaas
 
 type FineRequest struct {
 	// Percentual de multa sobre o valor da cobrança para pagamento após o vencimento
-	Value            float64  `json:"value,omitempty" validate:"required,gt=0"`
-	DueDateLimitDays int      `json:"dueDateLimitDays,omitempty" validate:"omitempty,gte=0"`
-	Type             FineType `json:"type,omitempty" validate:"omitempty,enum"`
+	Value float64  `json:"value,omitempty"`
+	Type  FineType `json:"type,omitempty"`
 }
 
 type FineResponse struct {

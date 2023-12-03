@@ -8,13 +8,13 @@ import (
 
 type CreateSubscriptionRequest struct {
 	// Identificador único do cliente no Asaas (REQUIRED)
-	Customer string `json:"customer,omitempty" validate:"required"`
+	Customer string `json:"customer,omitempty"`
 	// Forma de pagamento (Default: BillingTypeUndefined)
-	BillingType BillingType `json:"billingType,omitempty" validate:"required,enum"`
+	BillingType BillingType `json:"billingType,omitempty"`
 	// Valor da assinatura
-	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	Value float64 `json:"value,omitempty"`
 	// Vencimento da primeira mensalidade
-	NextDueDate Date `json:"nextDueDate,omitempty" validate:"required,after_now"`
+	NextDueDate Date `json:"nextDueDate,omitempty"`
 	// Informações de desconto
 	Discount *DiscountRequest `json:"discount,omitempty"`
 	// Informações de juros para pagamento após o vencimento
@@ -22,9 +22,9 @@ type CreateSubscriptionRequest struct {
 	// Informações de multa para pagamento após o vencimento
 	Fine *FineRequest `json:"fine,omitempty"`
 	// Periodicidade da cobrança (REQUIRED)
-	Cycle SubscriptionCycle `json:"cycle,omitempty" validate:"required,enum"`
+	Cycle SubscriptionCycle `json:"cycle,omitempty"`
 	// Descrição da assinatura (máx. 500 caracteres)
-	Description string `json:"description,omitempty" validate:"omitempty,lte=500"`
+	Description string `json:"description,omitempty"`
 	// Informações do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
 	CreditCard *CreditCardRequest `json:"creditCard,omitempty"`
 	// Informações do titular do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
@@ -32,9 +32,9 @@ type CreateSubscriptionRequest struct {
 	// Token do cartão de crédito para uso da funcionalidade de tokenização de cartão de crédito
 	CreditCardToken string `json:"creditCardToken,omitempty"`
 	// Data limite para vencimento das mensalidades
-	EndDate *Date `json:"endDate,omitempty" validate:"omitempty,after_now"`
+	EndDate *Date `json:"endDate,omitempty"`
 	// Número máximo de mensalidades a serem geradas para esta assinatura
-	MaxPayments int `json:"maxPayments,omitempty" validate:"omitempty,gt=0"`
+	MaxPayments int `json:"maxPayments,omitempty"`
 	// Identificador da assinatura no seu sistema
 	ExternalReference string `json:"externalReference,omitempty"`
 	// Informações de split
@@ -45,11 +45,11 @@ type CreateSubscriptionRequest struct {
 
 type UpdateSubscriptionRequest struct {
 	// Forma de pagamento
-	BillingType BillingType `json:"billingType,omitempty" validate:"omitempty,enum"`
+	BillingType BillingType `json:"billingType,omitempty"`
 	// Valor da assinatura
-	Value float64 `json:"value,omitempty" validate:"omitempty,gt=0"`
+	Value float64 `json:"value,omitempty"`
 	// Status da assinatura
-	Status SubscriptionStatus `json:"status,omitempty" validate:"omitempty,enum"`
+	Status SubscriptionStatus `json:"status,omitempty"`
 	// Vencimento da próxima mensalidade
 	NextDueDate *Date `json:"nextDueDate,omitempty"`
 	// Informações de desconto
@@ -59,9 +59,9 @@ type UpdateSubscriptionRequest struct {
 	// Informações de multa para pagamento após o vencimento
 	Fine *FineRequest `json:"fine,omitempty"`
 	// Periodicidade da cobrança
-	Cycle SubscriptionCycle `json:"cycle,omitempty" validate:"omitempty,enum"`
+	Cycle SubscriptionCycle `json:"cycle,omitempty"`
 	// Descrição da assinatura (máx. 500 caracteres)
-	Description string `json:"description,omitempty" validate:"omitempty,lte=500"`
+	Description string `json:"description,omitempty"`
 	// Informações do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
 	CreditCard *CreditCardRequest `json:"creditCard,omitempty"`
 	// Informações do titular do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
@@ -125,13 +125,13 @@ type GetAllChargesBySubscriptionRequest struct {
 
 type SubscriptionPaymentBookRequest struct {
 	// Mês final para geração do carnê (REQUIRED)
-	Month int `json:"month,omitempty" validate:"required,gte=1,lte=12"`
+	Month int `json:"month,omitempty"`
 	// Ano final para geração do carnê (REQUIRED)
-	Year int `json:"year,omitempty" validate:"required,gt=0"`
+	Year int `json:"year,omitempty"`
 	// Filtrar pelo nome da coluna
-	Sort SortPaymentBookField `json:"sort,omitempty" validate:"omitempty,enum"`
+	Sort SortPaymentBookField `json:"sort,omitempty"`
 	// Ordenação da coluna
-	Order Order `json:"order,omitempty" validate:"omitempty,enum"`
+	Order Order `json:"order,omitempty"`
 }
 
 type SubscriptionResponse struct {
@@ -917,9 +917,6 @@ func NewSubscription(env Env, accessToken string) Subscription {
 }
 
 func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest) (*SubscriptionResponse, Error) {
-	if err := s.validateCreateBodyRequest(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	s.prepareCreateBodyRequest(&body)
 	req := NewRequest[SubscriptionResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPost, "/v3/subscriptions", body)
@@ -927,27 +924,18 @@ func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest
 
 func (s subscription) CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
 	*InvoiceSettingResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), body)
 }
 
 func (s subscription) UpdateById(ctx context.Context, subscriptionId string, body UpdateSubscriptionRequest) (
 	*SubscriptionResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[SubscriptionResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s", subscriptionId), body)
 }
 
 func (s subscription) UpdateInvoiceSettingsById(ctx context.Context, subscriptionId string, body UpdateInvoiceSettingRequest) (
 	*InvoiceSettingResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), body)
 }
@@ -974,9 +962,6 @@ func (s subscription) GetInvoiceSettingById(ctx context.Context, subscriptionId 
 
 func (s subscription) GetPaymentBookById(ctx context.Context, subscriptionId string, filter SubscriptionPaymentBookRequest) (
 	*FileTextPlainResponse, Error) {
-	if err := Validate().Struct(filter); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[FileTextPlainResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/subscriptions/%s/paymentBook", subscriptionId), filter)
 }
@@ -1001,25 +986,8 @@ func (s subscription) GetAll(ctx context.Context, filter GetAllSubscriptionsRequ
 	return req.make(http.MethodGet, "/v3/subscriptions", filter)
 }
 
-func (s subscription) validateCreateBodyRequest(body CreateSubscriptionRequest) error {
-	if err := Validate().Struct(body); err != nil {
-		return err
-	}
-	return validateBillingBody(body.BillingType, body.CreditCard, body.CreditCardHolderInfo, body.CreditCardToken,
-		body.RemoteIp)
-}
-
 func (s subscription) prepareCreateBodyRequest(body *CreateSubscriptionRequest) {
-	if !body.BillingType.IsEnumValid() {
-		body.BillingType = BillingTypeUndefined
-	}
-	switch body.BillingType {
-	case BillingTypeCreditCard:
-		if body.Fine != nil {
-			body.Fine.DueDateLimitDays = 0
-		}
-		break
-	default:
+	if body.BillingType != BillingTypeCreditCard {
 		body.CreditCard = nil
 		body.CreditCardHolderInfo = nil
 		body.CreditCardToken = ""

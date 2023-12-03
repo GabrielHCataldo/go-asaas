@@ -8,9 +8,9 @@ import (
 
 type InstallmentPaymentBookRequest struct {
 	// Filtrar pelo nome da coluna
-	Sort SortPaymentBookField `json:"sort,omitempty" validate:"omitempty,enum"`
+	Sort SortPaymentBookField `json:"sort,omitempty"`
 	// Ordenação da coluna
-	Order Order `json:"order,omitempty" validate:"omitempty,enum"`
+	Order Order `json:"order,omitempty"`
 }
 
 type InstallmentResponse struct {
@@ -438,9 +438,6 @@ func NewInstallment(env Env, accessToken string) Installment {
 
 func (i installment) UpdateSplitsById(ctx context.Context, installmentId string, body []SplitRequest) (
 	*UpdateInstallmentSplitsResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[UpdateInstallmentSplitsResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/splits", installmentId), body)
 }

@@ -2,13 +2,13 @@ package asaas
 
 type SplitRequest struct {
 	// Identificador da carteira (retornado no momento da criação da conta) (REQUIRED)
-	WalletId string `json:"walletId,omitempty" validate:"required"`
+	WalletId string `json:"walletId,omitempty"`
 	// Valor fixo a ser transferido para a conta quando a cobrança for recebida
-	FixedValue float64 `json:"fixedValue,omitempty" validate:"omitempty,gt=0"`
+	FixedValue float64 `json:"fixedValue,omitempty"`
 	// Percentual sobre o valor líquido da cobrança a ser transferido quando for recebida
-	PercentualValue float64 `json:"percentualValue,omitempty" validate:"omitempty,gt=0"`
+	PercentualValue float64 `json:"percentualValue,omitempty"`
 	// (Somente parcelamentos). Valor que será feito split referente ao valor total que será parcelado.
-	TotalFixedValue float64 `json:"totalFixedValue,omitempty" validate:"omitempty,gt=0"`
+	TotalFixedValue float64 `json:"totalFixedValue,omitempty"`
 }
 
 type SplitResponse struct {

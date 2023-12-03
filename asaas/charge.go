@@ -9,15 +9,15 @@ import (
 
 type CreateChargeRequest struct {
 	// Identificador único do cliente no Asaas (REQUIRED)
-	Customer string `json:"customer,omitempty" validate:"required"`
+	Customer string `json:"customer,omitempty"`
 	// Forma de pagamento (Default: BillingTypeUndefined)
-	BillingType BillingType `json:"billingType,omitempty" validate:"omitempty,enum"`
+	BillingType BillingType `json:"billingType,omitempty"`
 	// Valor da cobrança (REQUIRED)
-	Value float64 `json:"value,omitempty" validate:"gte=0"`
+	Value float64 `json:"value,omitempty"`
 	// Data de vencimento da cobrança (REQUIRED)
-	DueDate Date `json:"dueDate,omitempty" validate:"required,after_now"`
+	DueDate Date `json:"dueDate,omitempty"`
 	// Descrição da cobrança (máx. 500 caracteres)
-	Description string `json:"description,omitempty" validate:"omitempty,lte=500"`
+	Description string `json:"description,omitempty"`
 	// Campo livre para busca
 	ExternalReference string `json:"externalReference,omitempty"`
 	// Informações de desconto
@@ -39,9 +39,9 @@ type CreateChargeRequest struct {
 	// Token do cartão de crédito para uso da funcionalidade de tokenização de cartão de crédito
 	CreditCardToken string `json:"creditCardToken,omitempty"`
 	// Número de parcelas (somente no caso de cobrança parcelada)
-	InstallmentCount int `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
+	InstallmentCount int `json:"installmentCount,omitempty"`
 	// Valor de cada parcela (somente no caso de cobrança parcelada)
-	InstallmentValue float64 `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
+	InstallmentValue float64 `json:"installmentValue,omitempty"`
 	// Realizar apenas a Pré-Autorização da cobrança
 	AuthorizeOnly bool `json:"authorizeOnly,omitempty"`
 	// IP de onde o cliente está fazendo a compra. Não deve ser informado o IP do seu servidor (REQUIRED se BillingType = BillingTypeCreditCard)
@@ -52,9 +52,9 @@ type UpdateChargeRequest struct {
 	// Identificador único do cliente no Asaas
 	Customer string `json:"customer,omitempty"`
 	// Forma de pagamento
-	BillingType BillingType `json:"billingType,omitempty" validate:"omitempty,enum"`
+	BillingType BillingType `json:"billingType,omitempty"`
 	// Valor da cobrança
-	Value float64 `json:"value,omitempty" validate:"omitempty,gt=0"`
+	Value float64 `json:"value,omitempty"`
 	// Data de vencimento da cobrança
 	DueDate *Date `json:"dueDate,omitempty"`
 	// Descrição da cobrança (máx. 500 caracteres)
@@ -74,9 +74,9 @@ type UpdateChargeRequest struct {
 	// Informações de redirecionamento automático após pagamento na tela de fatura
 	Callback *CallbackRequest `json:"callback,omitempty"`
 	// Número de parcelas (somente no caso de cobrança parcelada)
-	InstallmentCount int `json:"installmentCount,omitempty" validate:"omitempty,gte=2"`
+	InstallmentCount int `json:"installmentCount,omitempty"`
 	// Valor de cada parcela (somente no caso de cobrança parcelada)
-	InstallmentValue float64 `json:"installmentValue,omitempty" validate:"omitempty,gt=0"`
+	InstallmentValue float64 `json:"installmentValue,omitempty"`
 }
 
 type GetAllChargesRequest struct {
@@ -130,9 +130,9 @@ type GetAllChargesRequest struct {
 
 type ChargeReceiveInCashRequest struct {
 	// Data em que o cliente efetuou o pagamento (REQUIRED)
-	PaymentDate *Date `json:"paymentDate,omitempty" validate:"required"`
+	PaymentDate *Date `json:"paymentDate,omitempty"`
 	// Valor pago pelo cliente (REQUIRED)
-	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	Value float64 `json:"value,omitempty"`
 	// Enviar ou não notificação de pagamento confirmado para o cliente
 	NotifyCustomer bool `json:"notifyCustomer,omitempty"`
 }
@@ -141,21 +141,21 @@ type UploadChargeDocumentRequest struct {
 	// true para disponibilizar o arquivo somente após o recebimento da cobrança
 	AvailableAfterPayment bool `json:"availableAfterPayment"`
 	// Tipo de documento (REQUIRED)
-	Type DocumentType `json:"type,omitempty" validate:"required,enum"`
+	Type DocumentType `json:"type,omitempty"`
 	// Arquivo a ser anexado (REQUIRED)
-	File *os.File `json:"file,omitempty" validate:"required"`
+	File *os.File `json:"file,omitempty"`
 }
 
 type UpdateChargeDocumentDefinitionsRequest struct {
 	// Define se o arquivo será disponibilizado somente após o pagamento
 	AvailableAfterPayment bool `json:"availableAfterPayment"`
 	// Novo tipo do documento (REQUIRED)
-	Type DocumentType `json:"type,omitempty" validate:"required,enum"`
+	Type DocumentType `json:"type,omitempty"`
 }
 
 type CallbackRequest struct {
 	// URL que o cliente será redirecionado após o pagamento com sucesso da fatura ou link de pagamento (REQUIRED)
-	SuccessUrl string `json:"successUrl,omitempty" validate:"required,url"`
+	SuccessUrl string `json:"successUrl,omitempty"`
 	// Definir se o cliente será redirecionado automaticamente ou será apenas informado com um botão para retornar ao site. O padrão é true, caso queira desativar informar false
 	AutoRedirect bool `json:"autoRedirect,omitempty"`
 }
@@ -261,7 +261,7 @@ type Charge interface {
 	// É possível escolher entre as formas de pagamento com boleto, cartão de crédito,
 	// pix ou permitir que o cliente escolha a forma que desejar.
 	//
-	// O CreateChargeRequest.BillingType BillingTypeBill habilita o pagamento em PIX e Boleto. Em BillingTypePix,
+	// O CreateChargeRequest.BillingType BillingTypeBankSlip habilita o pagamento em PIX e Boleto. Em BillingTypePix,
 	// apenas o pagamento em PIX, e em BillingTypeCreditCard, em cartão de crédito e débito (na fatura).
 	//
 	// Não é possível gerar uma cobrança com dois BillingType diferentes (BillingTypePix e BillingTypeCreditCard,
@@ -1468,9 +1468,6 @@ func NewCharge(env Env, accessCode string) Charge {
 }
 
 func (c charge) Create(ctx context.Context, body CreateChargeRequest) (*ChargeResponse, Error) {
-	if err := c.validateCreateBodyRequest(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	c.prepareCreateBodyRequest(&body)
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/payments", body)
@@ -1478,18 +1475,12 @@ func (c charge) Create(ctx context.Context, body CreateChargeRequest) (*ChargeRe
 
 func (c charge) PayWithCreditCard(ctx context.Context, chargeId string, body CreditCardRequest) (*ChargeResponse,
 	Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/payWithCreditCard`, chargeId), body)
 }
 
 func (c charge) UpdateById(ctx context.Context, chargeId string, body UpdateChargeRequest) (*ChargeResponse,
 	Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s`, chargeId), body)
 }
@@ -1512,9 +1503,6 @@ func (c charge) RefundById(ctx context.Context, chargeId string, body RefundRequ
 
 func (c charge) ReceiveInCashById(ctx context.Context, chargeId string, body ChargeReceiveInCashRequest) (
 	*ChargeResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/receiveInCash`, chargeId), body)
 }
@@ -1526,9 +1514,6 @@ func (c charge) UndoReceivedInCashById(ctx context.Context, chargeId string) (*C
 
 func (c charge) UploadDocumentById(ctx context.Context, chargeId string, body UploadChargeDocumentRequest) (
 	*ChargeDocumentResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[ChargeDocumentResponse](ctx, c.env, c.accessToken)
 	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/documents`, chargeId), body)
 }
@@ -1539,9 +1524,6 @@ func (c charge) UpdateDocumentDefinitionsById(
 	docId string,
 	body UpdateChargeDocumentDefinitionsRequest,
 ) (*ChargeDocumentResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[ChargeDocumentResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPut, fmt.Sprintf(`/v3/payments/%s/documents/%v`, chargeId, docId), body)
 }
@@ -1594,25 +1576,8 @@ func (c charge) GetAllDocumentsById(ctx context.Context, chargeId string, filter
 	return req.make(http.MethodGet, fmt.Sprintf(`/v3/payments/%s/documents`, chargeId), filter)
 }
 
-func (c charge) validateCreateBodyRequest(body CreateChargeRequest) error {
-	if err := Validate().Struct(body); err != nil {
-		return err
-	}
-	return validateBillingBody(body.BillingType, body.CreditCard, body.CreditCardHolderInfo, body.CreditCardToken,
-		body.RemoteIp)
-}
-
 func (c charge) prepareCreateBodyRequest(body *CreateChargeRequest) {
-	if !body.BillingType.IsEnumValid() {
-		body.BillingType = BillingTypeUndefined
-	}
-	switch body.BillingType {
-	case BillingTypeCreditCard:
-		if body.Fine != nil {
-			body.Fine.DueDateLimitDays = 0
-		}
-		break
-	default:
+	if body.BillingType != BillingTypeCreditCard {
 		body.CreditCard = nil
 		body.CreditCardHolderInfo = nil
 		body.CreditCardToken = ""

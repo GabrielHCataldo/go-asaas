@@ -7,11 +7,11 @@ import (
 
 type SaveWebhookSettingRequest struct {
 	// URL que receberá as informações de sincronização (REQUIRED)
-	Url string `json:"url,omitempty" validate:"required,url"`
+	Url string `json:"url,omitempty"`
 	// Email para receber as notificações em caso de erros na fila (REQUIRED)
-	Email string `json:"email,omitempty" validate:"required,email"`
+	Email string `json:"email,omitempty"`
 	// Versão utilizada da API. Utilize "3" para a versão v3 (REQUIRED)
-	ApiVersion string `json:"apiVersion,omitempty" validate:"required,numeric,max=4"`
+	ApiVersion string `json:"apiVersion,omitempty"`
 	// Habilitar ou não o webhook
 	Enabled bool `json:"enabled"`
 	// Situação da fila de sincronização

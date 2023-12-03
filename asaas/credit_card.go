@@ -6,28 +6,28 @@ import (
 )
 
 type CreditCardRequest struct {
-	HolderName  string `json:"holderName,omitempty" validate:"required,full_name"`
-	Number      string `json:"number,omitempty" validate:"required,numeric,min=10,max=19"`
-	ExpiryMonth string `json:"expiryMonth,omitempty" validate:"required,numeric,len=2"`
-	ExpiryYear  string `json:"expiryYear,omitempty" validate:"required,numeric,len=4"`
-	Ccv         string `json:"ccv,omitempty" validate:"required,numeric,min=3,max=4"`
+	HolderName  string `json:"holderName,omitempty"`
+	Number      string `json:"number,omitempty"`
+	ExpiryMonth string `json:"expiryMonth,omitempty"`
+	ExpiryYear  string `json:"expiryYear,omitempty"`
+	Ccv         string `json:"ccv,omitempty"`
 }
 
 type CreditCardHolderInfoRequest struct {
-	Name              string `json:"name,omitempty" validate:"required,full_name"`
-	CpfCnpj           string `json:"cpfCnpj,omitempty" validate:"required,document"`
-	Email             string `json:"email,omitempty" validate:"required,email"`
-	Phone             string `json:"phone,omitempty" validate:"required,phone"`
-	MobilePhone       string `json:"mobilePhone,omitempty" validate:"omitempty,phone"`
-	PostalCode        string `json:"postalCode,omitempty" validate:"required,postal_code"`
-	AddressNumber     string `json:"addressNumber,omitempty" validate:"required,numeric"`
+	Name              string `json:"name,omitempty"`
+	CpfCnpj           string `json:"cpfCnpj,omitempty"`
+	Email             string `json:"email,omitempty"`
+	Phone             string `json:"phone,omitempty"`
+	MobilePhone       string `json:"mobilePhone,omitempty"`
+	PostalCode        string `json:"postalCode,omitempty"`
+	AddressNumber     string `json:"addressNumber,omitempty"`
 	AddressComplement string `json:"addressComplement,omitempty"`
 }
 
 type CreditCardTokenizeRequest struct {
-	Customer             string                      `json:"customer,omitempty" validate:"required"`
-	CreditCard           CreditCardRequest           `json:"creditCard,omitempty" validate:"required"`
-	CreditCardHolderInfo CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty" validate:"required"`
+	Customer             string                      `json:"customer,omitempty"`
+	CreditCard           CreditCardRequest           `json:"creditCard,omitempty"`
+	CreditCardHolderInfo CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
 }
 
 type CreditCardResponse struct {
@@ -62,9 +62,6 @@ func NewCreditCard(env Env, accessToken string) CreditCard {
 
 func (c creditCard) Tokenize(ctx context.Context, body CreditCardTokenizeRequest) (*CreditCardTokenizeResponse,
 	Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[CreditCardTokenizeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/creditCard/tokenize", body)
 }

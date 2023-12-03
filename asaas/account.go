@@ -8,11 +8,11 @@ import (
 
 type CreateInvoiceCustomizationRequest struct {
 	// Cor de fundo do logo (REQUIRED)
-	LogoBackgroundColor string `json:"logoBackgroundColor,omitempty" validate:"required,color"`
+	LogoBackgroundColor string `json:"logoBackgroundColor,omitempty"`
 	// Cor de fundo das suas informações (REQUIRED)
-	InfoBackgroundColor string `json:"infoBackgroundColor,omitempty" validate:"required,color"`
+	InfoBackgroundColor string `json:"infoBackgroundColor,omitempty"`
 	// Cor da fonte das suas informações (REQUIRED)
-	FontColor string `json:"fontColor,omitempty" validate:"required"`
+	FontColor string `json:"fontColor,omitempty"`
 	// True para habilitar a personalização
 	Enabled bool `json:"enabled,omitempty"`
 	// Logo que aparecerá no topo da fatura
@@ -21,23 +21,23 @@ type CreateInvoiceCustomizationRequest struct {
 
 type UpdateAccountRequest struct {
 	// Tipo de Pessoa
-	PersonType PersonType `json:"personType,omitempty" validate:"omitempty,enum"`
+	PersonType PersonType `json:"personType,omitempty"`
 	// CPF ou CNPJ do proprietário da conta
-	CpfCnpj string `json:"cpfCnpj,omitempty" validate:"omitempty,document"`
+	CpfCnpj string `json:"cpfCnpj,omitempty"`
 	// Data de nascimento necessária caso as informações forem de pessoa física
-	BirthDate Date `json:"birthDate,omitempty" validate:"omitempty,before_now"`
+	BirthDate Date `json:"birthDate,omitempty"`
 	// Tipo da empresa (somente quando Pessoa Jurídica)
-	CompanyType CompanyType `json:"companyType,omitempty" validate:"omitempty,enum"`
+	CompanyType CompanyType `json:"companyType,omitempty"`
 	// Email da conta
-	Email string `json:"email,omitempty" validate:"omitempty,email"`
+	Email string `json:"email,omitempty"`
 	// Telefone
-	Phone string `json:"phone,omitempty" validate:"omitempty,phone"`
+	Phone string `json:"phone,omitempty"`
 	// Telefone celular
-	MobilePhone string `json:"mobilePhone,omitempty" validate:"omitempty,phone"`
+	MobilePhone string `json:"mobilePhone,omitempty"`
 	// URL do site da conta
-	Site string `json:"site,omitempty" validate:"omitempty,url"`
+	Site string `json:"site,omitempty"`
 	// CEP do endereço
-	PostalCode string `json:"postalCode,omitempty" validate:"omitempty,postal_code"`
+	PostalCode string `json:"postalCode,omitempty"`
 	// Logradouro
 	Address string `json:"address,omitempty"`
 	// Número do endereço
@@ -50,7 +50,7 @@ type UpdateAccountRequest struct {
 
 type DeleteWhiteLabelSubaccountRequest struct {
 	// Motivo da remoção (REQUIRED)
-	RemoveReason string `json:"removeReason,omitempty" validate:"required"`
+	RemoveReason string `json:"removeReason,omitempty"`
 }
 
 type GetAccountStatementRequest struct {
@@ -989,26 +989,17 @@ func NewAccount(env Env, accessToken string) Account {
 
 func (a account) SaveInvoiceCustomization(ctx context.Context, body CreateInvoiceCustomizationRequest) (
 	*InvoiceCustomizationResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[InvoiceCustomizationResponse](ctx, a.env, a.accessToken)
 	return req.makeMultipartForm(http.MethodPost, "/v3/myAccount/paymentCheckoutConfig", body)
 }
 
 func (a account) Update(ctx context.Context, body UpdateAccountRequest) (*AccountResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[AccountResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodPut, "/v3/myAccount/commercialInfo", body)
 }
 
 func (a account) DeleteWhiteLabelSubaccount(ctx context.Context, body DeleteWhiteLabelSubaccountRequest) (
 	*DeleteWhiteLabelSubaccountResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[DeleteWhiteLabelSubaccountResponse](ctx, a.env, a.accessToken)
 	return req.make(http.MethodDelete, "/v3/myAccount", body)
 }

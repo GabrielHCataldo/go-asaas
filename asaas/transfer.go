@@ -8,47 +8,47 @@ import (
 
 type TransferToBankRequest struct {
 	// Valor a ser transferido (REQUIRED)
-	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	Value float64 `json:"value,omitempty"`
 	// Informe os dados da conta caso seja uma transferência para conta bancária (REQUIRED)
-	BankAccount       BackAccountRequest    `json:"bankAccount,omitempty" validate:"required"`
-	OperationType     TransferOperationType `json:"operationType,omitempty" validate:"omitempty,enum"`
+	BankAccount       BackAccountRequest    `json:"bankAccount,omitempty"`
+	OperationType     TransferOperationType `json:"operationType,omitempty"`
 	PixAddressKey     string                `json:"pixAddressKey,omitempty"`
-	PixAddressKeyType PixKeyType            `json:"pixAddressKeyType,omitempty" validate:"omitempty,enum"`
+	PixAddressKeyType PixKeyType            `json:"pixAddressKeyType,omitempty"`
 	Description       string                `json:"description,omitempty"`
-	ScheduleDate      *Date                 `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
+	ScheduleDate      *Date                 `json:"scheduleDate,omitempty"`
 }
 
 type TransferToAssasRequest struct {
-	Value    float64 `json:"value,omitempty" validate:"required,gt=0"`
-	WalletId string  `json:"walletId,omitempty" validate:"required"`
+	Value    float64 `json:"value,omitempty"`
+	WalletId string  `json:"walletId,omitempty"`
 }
 
 type BackAccountRequest struct {
 	// Informações da instituição bancária
-	Bank BankRequest `json:"bank,omitempty" validate:"required"`
+	Bank BankRequest `json:"bank,omitempty"`
 	// Nome da conta bancária
 	AccountName string `json:"accountName,omitempty"`
 	// Nome do proprietário da conta bancária (REQUIRED)
-	OwnerName string `json:"ownerName,omitempty" validate:"required"`
+	OwnerName string `json:"ownerName,omitempty"`
 	// Data de nascimento do proprietário da conta. Somente quando a conta bancária não pertencer ao mesmo CPF ou CNPJ da conta Asaas.
-	OwnerBirthDate *Date `json:"ownerBirthDate,omitempty" validate:"omitempty,before_now"`
+	OwnerBirthDate *Date `json:"ownerBirthDate,omitempty"`
 	// CPF ou CNPJ do proprietário da conta bancária (REQUIRED)
-	CpfCnpj string `json:"cpfCnpj,omitempty" validate:"required,document"`
+	CpfCnpj string `json:"cpfCnpj,omitempty"`
 	// Número da agência sem dígito (REQUIRED)
-	Agency string `json:"agency,omitempty" validate:"required,numeric,max=5"`
+	Agency string `json:"agency,omitempty"`
 	// Número da conta bancária sem dígito (REQUIRED
-	Account string `json:"account,omitempty" validate:"required,numeric,max=12"`
+	Account string `json:"account,omitempty"`
 	// Dígito da conta bancária (REQUIRED
-	AccountDigit string `json:"accountDigit,omitempty" validate:"required,numeric,max=2"`
+	AccountDigit string `json:"accountDigit,omitempty"`
 	// Tipo da conta (REQUIRED)
-	BankAccountType BankAccountType `json:"bankAccountType,omitempty" validate:"required,enum"`
+	BankAccountType BankAccountType `json:"bankAccountType,omitempty"`
 	// Identificador no Sistema de Pagamentos Brasileiro
 	Ispb string `json:"ispb,omitempty"`
 }
 
 type BankRequest struct {
 	// Código de compensação do banco no sistema bancário (REQUIRED)
-	Code string `json:"code,omitempty" validate:"required"`
+	Code string `json:"code,omitempty"`
 }
 
 type GetAllTransfersRequest struct {
@@ -408,18 +408,12 @@ func NewTransfer(env Env, accessToken string) Transfer {
 }
 
 func (t transfer) TransferToBank(ctx context.Context, body TransferToBankRequest) (*TransferResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[TransferResponse](ctx, t.env, t.accessToken)
 	return req.make(http.MethodPost, "/v3/transfers", body)
 }
 
 func (t transfer) TransferToAsaas(ctx context.Context, body TransferToAssasRequest) (*TransferResponse,
 	Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[TransferResponse](ctx, t.env, t.accessToken)
 	return req.make(http.MethodPost, "/v3/transfers", body)
 }

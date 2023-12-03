@@ -8,9 +8,9 @@ import (
 
 type MobilePhoneRechargeRequest struct {
 	// Número do celular (REQUIRED)
-	PhoneNumber string `json:"phoneNumber,omitempty" validate:"required,phone"`
+	PhoneNumber string `json:"phoneNumber,omitempty"`
 	// Valor da recarga (REQUIRED)
-	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	Value float64 `json:"value,omitempty"`
 }
 
 type MobilePhoneRechargeResponse struct {
@@ -343,9 +343,6 @@ func NewMobilePhone(env Env, accessToken string) MobilePhone {
 }
 
 func (m mobilePhone) Recharge(ctx context.Context, body MobilePhoneRechargeRequest) (*MobilePhoneRechargeResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[MobilePhoneRechargeResponse](ctx, m.env, m.accessToken)
 	return req.make(http.MethodPost, "/v3/mobilePhoneRecharges", body)
 }

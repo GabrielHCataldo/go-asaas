@@ -2,9 +2,7 @@ package asaas
 
 import (
 	"context"
-	berrors "errors"
 	"fmt"
-	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"net/http"
 )
 
@@ -12,9 +10,9 @@ type GetReportRequest struct {
 	// Identificador único do cliente no Asaas (REQUIRED se CpfCnpj não for informado)
 	Customer string `json:"customer,omitempty"`
 	// CPF ou CNPJ do cliente. Informe este campo caso seu cliente não esteja cadastrado no Asaas (REQUIRED se Customer não for informado)
-	CpfCnpj string `json:"cpfCnpj,omitempty" validate:"omitempty,document"`
+	CpfCnpj string `json:"cpfCnpj,omitempty"`
 	// Estado em que deseja realizar a consulta. (REQUIRED)
-	State string `json:"state,omitempty" validate:"omitempty,state"`
+	State string `json:"state,omitempty"`
 }
 
 type GetAllReportsRequest struct {
@@ -244,9 +242,6 @@ func NewCreditBureau(env Env, accessToken string) CreditBureau {
 }
 
 func (c creditBureau) GetReport(ctx context.Context, body GetReportRequest) (*CreditBureauReportResponse, Error) {
-	if err := c.validateBodyReportRequest(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[CreditBureauReportResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/creditBureauReport", body)
 }
@@ -260,13 +255,4 @@ func (c creditBureau) GetAllReports(ctx context.Context, filter GetAllReportsReq
 	*Pageable[CreditBureauReportResponse], Error) {
 	req := NewRequest[Pageable[CreditBureauReportResponse]](ctx, c.env, c.accessToken)
 	return req.make(http.MethodGet, "/v3/creditBureauReport", filter)
-}
-
-func (c creditBureau) validateBodyReportRequest(body GetReportRequest) error {
-	if err := Validate().Struct(body); err != nil {
-		return err
-	} else if util.IsBlank(&body.Customer) && util.IsBlank(&body.CpfCnpj) {
-		return berrors.New("inform customer or cpfCnpj")
-	}
-	return nil
 }

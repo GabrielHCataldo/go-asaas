@@ -8,7 +8,7 @@ import (
 )
 
 type createPixKeyRequest struct {
-	Type PixKeyType `json:"type,omitempty" validate:"required,enum"`
+	Type PixKeyType `json:"type,omitempty"`
 }
 
 type CreatePixKeyStaticRequest struct {
@@ -17,33 +17,33 @@ type CreatePixKeyStaticRequest struct {
 	// Descrição do QrCode
 	Description string `json:"description,omitempty"`
 	// Valor do QrCode, caso não informado o pagador poderá escolher o valor
-	Value float64 `json:"value,omitempty" validate:"omitempty,gt=0"`
+	Value float64 `json:"value,omitempty"`
 	// Formato do QrCode
-	Format QrCodeFormat `json:"format,omitempty" validate:"omitempty,enum"`
+	Format QrCodeFormat `json:"format,omitempty"`
 	// Data/Hora de expiração do QrCode, após desta data todos os pagamentos serão recusados.
 	ExpirationDate *Datetime `json:"expirationDate,omitempty"`
 	// Determina a data de expiração em segundos.
-	ExpirationSeconds int `json:"expirationSeconds,omitempty" validate:"omitempty,gt=0"`
+	ExpirationSeconds int `json:"expirationSeconds,omitempty"`
 	// Define se o QrCode pode ser pago múltiplas vezes, caso não informado o valor padrão é true.
 	AllowsMultiplePayments bool `json:"allowsMultiplePayments"`
 }
 
 type PayPixQrCodeRequest struct {
 	// Payload do QRCode para pagamento (REQUIRED)
-	QrCode PixQrCodeRequest `json:"qrCode,omitempty" validate:"required"`
+	QrCode PixQrCodeRequest `json:"qrCode,omitempty"`
 	// Valor a ser pago (REQUIRED)
-	Value float64 `json:"value,omitempty" validate:"required,gt=0"`
+	Value float64 `json:"value,omitempty"`
 	// Descrição do pagamento
 	Description string `json:"description,omitempty"`
 	// Utilizada para realizar agendamento do pagamento
-	ScheduleDate *Date `json:"scheduleDate,omitempty" validate:"omitempty,after_now"`
+	ScheduleDate *Date `json:"scheduleDate,omitempty"`
 }
 
 type PixQrCodeRequest struct {
 	// Payload do QRCode (REQUIRED)
-	Payload string `json:"payload,omitempty" validate:"required"`
+	Payload string `json:"payload,omitempty"`
 	// Valor do troco (para QRCode Troco)
-	ChangeValue float64 `json:"changeValue,omitempty" validate:"omitempty,gt=0"`
+	ChangeValue float64 `json:"changeValue,omitempty"`
 }
 
 type GetAllPixKeysRequest struct {
@@ -769,17 +769,11 @@ func NewPix(env Env, accessToken string) Pix {
 }
 
 func (p pix) PayQrCode(ctx context.Context, body PayPixQrCodeRequest) (*PixTransactionResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[PixTransactionResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPost, "/v3/pix/qrCodes/pay", body)
 }
 
 func (p pix) DecodeQrCode(ctx context.Context, body PixQrCodeRequest) (*DecodePixQrCodeResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[DecodePixQrCodeResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPost, "/v3/pix/qrCodes/decode", body)
 }
@@ -795,11 +789,6 @@ func (p pix) CreateKey(ctx context.Context) (*PixKeyResponse, Error) {
 }
 
 func (p pix) CreateStaticKey(ctx context.Context, body CreatePixKeyStaticRequest) (*QrCodeResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	} else if !body.Format.IsEnumValid() {
-		body.Format = QrCodeFormatAll
-	}
 	req := NewRequest[QrCodeResponse](ctx, p.env, p.accessToken)
 	return req.make(http.MethodPost, "/v3/pix/qrCodes/static", body)
 }

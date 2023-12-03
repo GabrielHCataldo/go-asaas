@@ -8,7 +8,7 @@ import (
 
 type SaveFiscalInfoRequest struct {
 	// Email para notificações de notas fiscais (REQUIRED)
-	Email string `json:"email,omitempty" validate:"required,email"`
+	Email string `json:"email,omitempty"`
 	// Inscrição municipal da empresa
 	MunicipalInscription string `json:"municipalInscription,omitempty"`
 	// Indica se a empresa é optante pelo simples nacional
@@ -322,9 +322,6 @@ func NewFiscalInfo(env Env, accessToken string) FiscalInfo {
 }
 
 func (f fiscalInfo) Save(ctx context.Context, body SaveFiscalInfoRequest) (*FiscalInfoResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[FiscalInfoResponse](ctx, f.env, f.accessToken)
 	return req.makeMultipartForm(http.MethodPost, "/v3/fiscalInfo", body)
 }

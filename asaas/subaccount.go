@@ -9,33 +9,33 @@ import (
 
 type CreateSubaccountRequest struct {
 	// Nome da subconta (REQUIRED)
-	Name string `json:"name,omitempty" validate:"required"`
+	Name string `json:"name,omitempty"`
 	// E-mail da subconta (REQUIRED)
-	Email string `json:"email,omitempty" validate:"required,email"`
+	Email string `json:"email,omitempty"`
 	// E-mail para login da subconta, caso não informado será utilizado o email da subconta
-	LoginEmail string `json:"loginEmail,omitempty" validate:"omitempty,email"`
+	LoginEmail string `json:"loginEmail,omitempty"`
 	// CPF ou CNPJ do proprietário da subconta
-	CpfCnpj string `json:"cpfCnpj,omitempty" validate:"required,document"`
+	CpfCnpj string `json:"cpfCnpj,omitempty"`
 	// Data de nascimento (somente quando Pessoa Física)
-	BirthDate *Date `json:"birthDate,omitempty" validate:"omitempty,before_now"`
+	BirthDate *Date `json:"birthDate,omitempty"`
 	// Tipo da empresa (somente quando Pessoa Jurídica)
-	CompanyType CompanyType `json:"companyType,omitempty" validate:"omitempty,enum"`
+	CompanyType CompanyType `json:"companyType,omitempty"`
 	// Fone fixo
-	Phone string `json:"phone,omitempty" validate:"omitempty,phone"`
+	Phone string `json:"phone,omitempty"`
 	// Fone celular (REQUIRED)
-	MobilePhone string `json:"mobilePhone,omitempty" validate:"required,phone"`
+	MobilePhone string `json:"mobilePhone,omitempty"`
 	// Enviar URL referente ao site da conta filha
-	Site string `json:"site,omitempty" validate:"omitempty,url"`
+	Site string `json:"site,omitempty"`
 	// Logradouro (REQUIRED)
-	Address string `json:"address,omitempty" validate:"required"`
+	Address string `json:"address,omitempty"`
 	// Número do endereço (REQUIRED)
-	AddressNumber string `json:"addressNumber,omitempty" validate:"required"`
+	AddressNumber string `json:"addressNumber,omitempty"`
 	// Complemento do endereço
 	Complement string `json:"complement,omitempty"`
 	// Bairro (REQUIRED)
 	Province string `json:"province,omitempty"`
 	// CEP do endereço (REQUIRED)
-	PostalCode string `json:"postalCode,omitempty" validate:"required,postal_code"`
+	PostalCode string `json:"postalCode,omitempty"`
 	// Array com as configurações de webhooks desejadas
 	Webhooks []CreateSubaccountWebhookRequest `json:"webhooks,omitempty"`
 }
@@ -57,11 +57,11 @@ type GetAllSubaccountsRequest struct {
 
 type CreateSubaccountWebhookRequest struct {
 	// URL que receberá as informações de sincronização (REQUIRED)
-	Url string `json:"url,omitempty" validate:"required,url"`
+	Url string `json:"url,omitempty"`
 	// E-mail para receber as notificações em caso de erros na fila (REQUIRED)
-	Email string `json:"email,omitempty" validate:"required,email"`
+	Email string `json:"email,omitempty"`
 	// Versão utilizada da API. Utilize "3" para a versão v3 (REQUIRED)
-	ApiVersion string `json:"apiVersion,omitempty" validate:"required,numeric,max=4"`
+	ApiVersion string `json:"apiVersion,omitempty"`
 	// Habilitar ou não o webhook
 	Enabled bool `json:"enabled"`
 	// Situação da fila de sincronização
@@ -69,19 +69,19 @@ type CreateSubaccountWebhookRequest struct {
 	// Token de autenticação
 	AuthToken string `json:"authToken,omitempty"`
 	// Tipo de webhook
-	Type WebhookType `json:"type,omitempty" validate:"omitempty,enum"`
+	Type WebhookType `json:"type,omitempty"`
 }
 
 type SendWhiteLabelDocumentRequest struct {
 	// Tipo de documento (REQUIRED)
-	Type SubaccountDocumentType `json:"type,omitempty" validate:"required,enum"`
+	Type SubaccountDocumentType `json:"type,omitempty"`
 	// Arquivo (REQUIRED)
-	DocumentFile *os.File `json:"documentFile,omitempty" validate:"required"`
+	DocumentFile *os.File `json:"documentFile,omitempty"`
 }
 
 type UpdateWhiteLabelDocumentSentRequest struct {
 	// Arquivo (REQUIRED)
-	DocumentFile *os.File `json:"documentFile,omitempty" validate:"required"`
+	DocumentFile *os.File `json:"documentFile,omitempty"`
 }
 
 type SubaccountResponse struct {
@@ -621,18 +621,12 @@ func NewSubaccount(env Env, accessToken string) Subaccount {
 }
 
 func (s subaccount) Create(ctx context.Context, body CreateSubaccountRequest) (*SubaccountResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[SubaccountResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPost, "/v3/accounts", body)
 }
 
 func (s subaccount) SendWhiteLabelDocument(ctx context.Context, accountId string, body SendWhiteLabelDocumentRequest) (
 	*SubaccountDocumentSentResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[SubaccountDocumentSentResponse](ctx, s.env, s.accessToken)
 	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/myAccount/documents/%s", accountId), body)
 }
@@ -642,9 +636,6 @@ func (s subaccount) UpdateWhiteLabelDocumentSentById(
 	documentSentId string,
 	body UpdateWhiteLabelDocumentSentRequest,
 ) (*SubaccountDocumentSentResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[SubaccountDocumentSentResponse](ctx, s.env, s.accessToken)
 	return req.makeMultipartForm(http.MethodPut, fmt.Sprintf("/v3/myAccount/documents/files/%s", documentSentId), body)
 }

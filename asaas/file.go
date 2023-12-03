@@ -9,9 +9,9 @@ import (
 )
 
 type FileRequest struct {
-	Name string       `json:"name" validate:"required"`
-	Mime FileMimeType `json:"mime" validate:"required"`
-	Data []byte       `json:"data" validate:"required"`
+	Name string       `json:"name"`
+	Mime FileMimeType `json:"mime"`
+	Data []byte       `json:"data"`
 }
 
 type FileTextPlainResponse struct {

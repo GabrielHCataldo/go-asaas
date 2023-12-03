@@ -8,15 +8,15 @@ import (
 
 type CustomerRequest struct {
 	// Nome do cliente (REQUIRED)
-	Name string `json:"name,omitempty" validate:"required"`
+	Name string `json:"name,omitempty"`
 	// CPF ou CNPJ do cliente (REQUIRED)
-	CpfCnpj string `json:"cpfCnpj,omitempty" validate:"required,document"`
+	CpfCnpj string `json:"cpfCnpj,omitempty"`
 	// Email do cliente
-	Email string `json:"email,omitempty" validate:"omitempty,email"`
+	Email string `json:"email,omitempty"`
 	// Fone fixo
-	Phone string `json:"phone,omitempty" validate:"omitempty,phone"`
+	Phone string `json:"phone,omitempty"`
 	// Fone celular
-	MobilePhone string `json:"mobilePhone,omitempty" validate:"omitempty,phone"`
+	MobilePhone string `json:"mobilePhone,omitempty"`
 	// Logradouro
 	Address string `json:"address,omitempty"`
 	// Número do endereço
@@ -26,7 +26,7 @@ type CustomerRequest struct {
 	// Bairro
 	Province string `json:"province,omitempty"`
 	// CEP do endereço
-	PostalCode string `json:"postalCode,omitempty" validate:"omitempty,postal_code"`
+	PostalCode string `json:"postalCode,omitempty"`
 	// Identificador do cliente no seu sistema
 	ExternalReference string `json:"externalReference,omitempty"`
 	// True para desabilitar o envio de notificações de cobrança
@@ -473,17 +473,11 @@ func NewCustomer(env Env, accessToken string) Customer {
 }
 
 func (c customer) Create(ctx context.Context, body CustomerRequest) (*CustomerResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/customers", body)
 }
 
 func (c customer) UpdateById(ctx context.Context, customerId string, body CustomerRequest) (*CustomerResponse, Error) {
-	if err := Validate().Struct(body); err != nil {
-		return nil, NewError(ErrorTypeValidation, err)
-	}
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerId), body)
 }
