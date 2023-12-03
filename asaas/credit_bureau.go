@@ -17,9 +17,9 @@ type GetReportRequest struct {
 
 type GetAllReportsRequest struct {
 	// Filtrar a partir da data de criação
-	StartDate *Date `json:"startDate,omitempty"`
+	StartDate Date `json:"startDate,omitempty"`
 	// Filtrar até uma data de criação
-	EndDate *Date `json:"endDate,omitempty"`
+	EndDate Date `json:"endDate,omitempty"`
 	// Elemento inicial da lista
 	Offset int `json:"offset,omitempty"`
 	// Número de elementos da lista (max: 100)
@@ -33,7 +33,7 @@ type CreditBureauReportResponse struct {
 	State       string          `json:"state,omitempty"`
 	DownloadUrl string          `json:"downloadUrl,omitempty"`
 	ReportFile  string          `json:"reportFile,omitempty"`
-	DateCreated *Date           `json:"dateCreated,omitempty"`
+	DateCreated Date            `json:"dateCreated,omitempty"`
 	Errors      []ErrorResponse `json:"errors,omitempty"`
 }
 

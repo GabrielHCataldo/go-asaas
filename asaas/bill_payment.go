@@ -10,7 +10,7 @@ type BillPaymentRequest struct {
 	// Linha digitável do boleto (REQUIRED)
 	IdentificationField string `json:"identificationField,omitempty"`
 	// Data de agendamento do pagamento
-	ScheduleDate *Date `json:"scheduleDate,omitempty"`
+	ScheduleDate Date `json:"scheduleDate,omitempty"`
 	// Descrição do pagamento de conta
 	Description string `json:"description,omitempty"`
 	// Desconto atribuído ao pagamento
@@ -22,7 +22,7 @@ type BillPaymentRequest struct {
 	// Valor da conta caso seja do tipo que não possui essa informação (Ex: faturas de cartão de crédito)
 	Value float64 `json:"value,omitempty"`
 	// Data de vencimento da conta caso seja do tipo que não possui essa informação
-	DueDate *Date `json:"dueDate,omitempty"`
+	DueDate Date `json:"dueDate,omitempty"`
 }
 
 type BillPaymentSimulateRequest struct {
@@ -46,14 +46,14 @@ type BillPaymentResponse struct {
 	TransactionReceiptUrl string            `json:"transactionReceiptUrl,omitempty"`
 	CanBeCancelled        bool              `json:"canBeCancelled,omitempty"`
 	FailReasons           string            `json:"failReasons,omitempty"`
-	DueDate               *Date             `json:"dueDate,omitempty"`
-	ScheduleDate          *Date             `json:"scheduleDate,omitempty"`
-	PaymentDate           *Date             `json:"paymentDate,omitempty"`
+	DueDate               Date              `json:"dueDate,omitempty"`
+	ScheduleDate          Date              `json:"scheduleDate,omitempty"`
+	PaymentDate           Date              `json:"paymentDate,omitempty"`
 	Errors                []ErrorResponse   `json:"errors,omitempty"`
 }
 
 type BillPaymentSimulateResponse struct {
-	MinimumScheduleDate *Date                           `json:"minimumScheduleDate,omitempty"`
+	MinimumScheduleDate Date                            `json:"minimumScheduleDate,omitempty"`
 	Fee                 float64                         `json:"fee,omitempty" `
 	BankSlipInfo        BillPaymentBankSlipInfoResponse `json:"bankSlipInfo,omitempty" `
 	Errors              []ErrorResponse                 `json:"errors,omitempty"`
@@ -62,7 +62,7 @@ type BillPaymentSimulateResponse struct {
 type BillPaymentBankSlipInfoResponse struct {
 	IdentificationField  string  `json:"identificationField,omitempty"`
 	Value                float64 `json:"value,omitempty"`
-	DueDate              *Date   `json:"dueDate,omitempty"`
+	DueDate              Date    `json:"dueDate,omitempty"`
 	CompanyName          string  `json:"companyName,omitempty"`
 	Bank                 string  `json:"bank,omitempty"`
 	BeneficiaryName      string  `json:"beneficiaryName,omitempty"`

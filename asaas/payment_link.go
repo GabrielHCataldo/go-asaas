@@ -17,7 +17,7 @@ type CreatePaymentLinkRequest struct {
 	// Forma de cobrança (Default: ChargeTypeDetached)
 	ChargeType ChargeType `json:"chargeType,omitempty"`
 	// Data de encerramento, a partir desta data o seu link de pagamentos será desativado automaticamente
-	EndDate *Date `json:"endDate,omitempty"`
+	EndDate Date `json:"endDate,omitempty"`
 	// Valor do link de pagamentos, caso não informado o pagador poderá informar o quanto deseja pagar
 	Value float64 `json:"value,omitempty"`
 	// Caso seja possível o pagamento via boleto bancário, define a quantidade de dias úteis que o seu cliente poderá pagar o boleto após gerado
@@ -42,7 +42,7 @@ type UpdatePaymentLinkRequest struct {
 	// Forma de cobrança
 	ChargeType ChargeType `json:"chargeType,omitempty"`
 	// Data de encerramento, a partir desta data o seu link de pagamentos será desativado automaticamente
-	EndDate *Date `json:"endDate,omitempty"`
+	EndDate Date `json:"endDate,omitempty"`
 	// Valor do link de pagamentos, caso não informado o pagador poderá informar o quanto deseja pagar
 	Value float64 `json:"value,omitempty"`
 	// Caso seja possível o pagamento via boleto bancário, define a quantidade de dias úteis que o seu cliente poderá pagar o boleto após gerado
@@ -84,7 +84,7 @@ type PaymentLinkResponse struct {
 	Active              bool              `json:"active,omitempty"`
 	BillingType         BillingType       `json:"billingType,omitempty"`
 	ChargeType          ChargeType        `json:"chargeType,omitempty"`
-	EndDate             *Date             `json:"endDate,omitempty"`
+	EndDate             Date              `json:"endDate,omitempty"`
 	Value               float64           `json:"value,omitempty"`
 	SubscriptionCycle   SubscriptionCycle `json:"subscriptionCycle,omitempty"`
 	Description         string            `json:"description,omitempty"`

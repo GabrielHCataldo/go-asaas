@@ -46,9 +46,9 @@ type AnticipationResponse struct {
 	Installment       string             `json:"installment,omitempty"`
 	Payment           string             `json:"payment,omitempty"`
 	Status            AnticipationStatus `json:"status,omitempty"`
-	AnticipationDate  *Date              `json:"anticipationDate,omitempty"`
-	DueDate           *Date              `json:"dueDate,omitempty"`
-	RequestDate       *Date              `json:"requestDate,omitempty"`
+	AnticipationDate  Date               `json:"anticipationDate,omitempty"`
+	DueDate           Date               `json:"dueDate,omitempty"`
+	RequestDate       Date               `json:"requestDate,omitempty"`
 	Fee               float64            `json:"fee,omitempty"`
 	AnticipationDays  int                `json:"anticipationDays,omitempty"`
 	NetValue          float64            `json:"netValue,omitempty"`
@@ -72,8 +72,8 @@ type AnticipationLimitResponse struct {
 type AnticipationSimulateResponse struct {
 	Payment                 string          `json:"payment,omitempty"`
 	Installment             string          `json:"installment,omitempty"`
-	AnticipationDate        *Date           `json:"anticipationDate,omitempty"`
-	DueDate                 *Date           `json:"dueDate,omitempty"`
+	AnticipationDate        Date            `json:"anticipationDate,omitempty"`
+	DueDate                 Date            `json:"dueDate,omitempty"`
 	Fee                     float64         `json:"fee,omitempty"`
 	AnticipationDays        int             `json:"anticipationDays,omitempty"`
 	NetValue                float64         `json:"netValue,omitempty"`

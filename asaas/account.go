@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-type CreateInvoiceCustomizationRequest struct {
+type SaveInvoiceCustomizationRequest struct {
 	// Cor de fundo do logo (REQUIRED)
 	LogoBackgroundColor string `json:"logoBackgroundColor,omitempty"`
 	// Cor de fundo das suas informações (REQUIRED)
@@ -14,7 +14,7 @@ type CreateInvoiceCustomizationRequest struct {
 	// Cor da fonte das suas informações (REQUIRED)
 	FontColor string `json:"fontColor,omitempty"`
 	// True para habilitar a personalização
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled bool `json:"enabled"`
 	// Logo que aparecerá no topo da fatura
 	LogoFile *os.File `json:"logoFile,omitempty"`
 }
@@ -27,25 +27,25 @@ type UpdateAccountRequest struct {
 	// Data de nascimento necessária caso as informações forem de pessoa física
 	BirthDate Date `json:"birthDate,omitempty"`
 	// Tipo da empresa (somente quando Pessoa Jurídica)
-	CompanyType CompanyType `json:"companyType,omitempty"`
+	CompanyType *CompanyType `json:"companyType,omitempty"`
 	// Email da conta
-	Email string `json:"email,omitempty"`
+	Email *string `json:"email,omitempty"`
 	// Telefone
-	Phone string `json:"phone,omitempty"`
+	Phone *string `json:"phone,omitempty"`
 	// Telefone celular
-	MobilePhone string `json:"mobilePhone,omitempty"`
+	MobilePhone *string `json:"mobilePhone,omitempty"`
 	// URL do site da conta
-	Site string `json:"site,omitempty"`
+	Site *string `json:"site,omitempty"`
 	// CEP do endereço
 	PostalCode string `json:"postalCode,omitempty"`
 	// Logradouro
-	Address string `json:"address,omitempty"`
+	Address *string `json:"address,omitempty"`
 	// Número do endereço
-	AddressNumber string `json:"addressNumber,omitempty"`
+	AddressNumber *string `json:"addressNumber,omitempty"`
 	// Complemento do endereço
-	Complement string `json:"complement,omitempty"`
+	Complement *string `json:"complement,omitempty"`
 	// Bairro
-	Province string `json:"province,omitempty"`
+	Province *string `json:"province,omitempty"`
 }
 
 type DeleteWhiteLabelSubaccountRequest struct {
@@ -55,9 +55,9 @@ type DeleteWhiteLabelSubaccountRequest struct {
 
 type GetAccountStatementRequest struct {
 	// Data inicial da lista
-	StartDate *Date `json:"startDate,omitempty"`
+	StartDate Date `json:"startDate,omitempty"`
 	// Data final da lista
-	FinishDate *Date `json:"finishDate,omitempty"`
+	FinishDate Date `json:"finishDate,omitempty"`
 	// Elemento inicial da lista
 	Offset int `json:"offset,omitempty"`
 	// Número de elementos da lista (max: 100)
@@ -74,19 +74,19 @@ type GetPaymentStatisticRequest struct {
 	// Filtrar por status
 	Status ChargeStatus `json:"status,omitempty"`
 	// Filtrar registros antecipados ou não
-	Anticipated bool `json:"anticipated,omitempty"`
+	Anticipated *bool `json:"anticipated,omitempty"`
 	// Filtrar a partir da data de vencimento inicial
-	DueDateGe *Date `json:"dueDate[ge],omitempty"`
+	DueDateGe Date `json:"dueDate[ge],omitempty"`
 	// Filtrar a partir da data de vencimento final
-	DueDateLe *Date `json:"dueDate[le],omitempty"`
+	DueDateLe Date `json:"dueDate[le],omitempty"`
 	// Filtrar a partir da data de criação inicial
-	DateCreatedGe *Date `json:"dateCreated[ge],omitempty"`
+	DateCreatedGe Date `json:"dateCreated[ge],omitempty"`
 	// Filtrar a partir da data de criação final
-	DateCreatedLe *Date `json:"dateCreated[le],omitempty"`
+	DateCreatedLe Date `json:"dateCreated[le],omitempty"`
 	// Filtrar a partir da data estimada de crédito inicial
-	EstimatedCreditDateGe *Date `json:"estimatedCreditDate[ge],omitempty"`
+	EstimatedCreditDateGe Date `json:"estimatedCreditDate[ge],omitempty"`
 	// Filtrar a partir da data estimada de crédito final
-	EstimatedCreditDateLe *Date `json:"estimatedCreditDate[le],omitempty"`
+	EstimatedCreditDateLe Date `json:"estimatedCreditDate[le],omitempty"`
 	// Filtrar pelo Identificador do seu sistema
 	ExternalReference string `json:"externalReference,omitempty"`
 }
@@ -126,7 +126,7 @@ type SplitStatisticResponse struct {
 
 type AccountResponse struct {
 	Name          string          `json:"name,omitempty"`
-	BirthDate     *Date           `json:"birthDate,omitempty"`
+	BirthDate     Date            `json:"birthDate,omitempty"`
 	CpfCnpj       string          `json:"cpfCnpj,omitempty"`
 	Email         string          `json:"email,omitempty"`
 	Phone         string          `json:"phone,omitempty"`
@@ -334,7 +334,7 @@ type Account interface {
 	// # DOCS
 	//
 	// Salvar personalização da fatura: https://docs.asaas.com/reference/salvar-personalizacao-da-fatura
-	SaveInvoiceCustomization(ctx context.Context, body CreateInvoiceCustomizationRequest) (
+	SaveInvoiceCustomization(ctx context.Context, body SaveInvoiceCustomizationRequest) (
 		*InvoiceCustomizationResponse, error)
 	// Update (Atualizar dados comerciais)
 	//
@@ -857,7 +857,7 @@ func NewAccount(env Env, accessToken string) Account {
 	}
 }
 
-func (a account) SaveInvoiceCustomization(ctx context.Context, body CreateInvoiceCustomizationRequest) (
+func (a account) SaveInvoiceCustomization(ctx context.Context, body SaveInvoiceCustomizationRequest) (
 	*InvoiceCustomizationResponse, error) {
 	req := NewRequest[InvoiceCustomizationResponse](ctx, a.env, a.accessToken)
 	return req.makeMultipartForm(http.MethodPost, "/v3/myAccount/paymentCheckoutConfig", body)

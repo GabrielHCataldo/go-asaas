@@ -17,7 +17,7 @@ type CreateSubaccountRequest struct {
 	// CPF ou CNPJ do proprietário da subconta
 	CpfCnpj string `json:"cpfCnpj,omitempty"`
 	// Data de nascimento (somente quando Pessoa Física)
-	BirthDate *Date `json:"birthDate,omitempty"`
+	BirthDate Date `json:"birthDate,omitempty"`
 	// Tipo da empresa (somente quando Pessoa Jurídica)
 	CompanyType CompanyType `json:"companyType,omitempty"`
 	// Fone fixo
@@ -91,7 +91,7 @@ type SubaccountResponse struct {
 	Email         string                  `json:"email,omitempty"`
 	LoginEmail    string                  `json:"loginEmail,omitempty"`
 	CpfCnpj       string                  `json:"cpfCnpj,omitempty"`
-	BirthDate     *Date                   `json:"birthDate,omitempty"`
+	BirthDate     Date                    `json:"birthDate,omitempty"`
 	CompanyType   CompanyType             `json:"companyType,omitempty"`
 	Phone         string                  `json:"phone,omitempty"`
 	MobilePhone   string                  `json:"mobilePhone,omitempty"`

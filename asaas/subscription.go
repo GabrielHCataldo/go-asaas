@@ -32,7 +32,7 @@ type CreateSubscriptionRequest struct {
 	// Token do cartão de crédito para uso da funcionalidade de tokenização de cartão de crédito
 	CreditCardToken string `json:"creditCardToken,omitempty"`
 	// Data limite para vencimento das mensalidades
-	EndDate *Date `json:"endDate,omitempty"`
+	EndDate Date `json:"endDate,omitempty"`
 	// Número máximo de mensalidades a serem geradas para esta assinatura
 	MaxPayments int `json:"maxPayments,omitempty"`
 	// Identificador da assinatura no seu sistema
@@ -51,7 +51,7 @@ type UpdateSubscriptionRequest struct {
 	// Status da assinatura
 	Status SubscriptionStatus `json:"status,omitempty"`
 	// Vencimento da próxima mensalidade
-	NextDueDate *Date `json:"nextDueDate,omitempty"`
+	NextDueDate Date `json:"nextDueDate,omitempty"`
 	// Informações de desconto
 	Discount *DiscountRequest `json:"discount,omitempty"`
 	// Informações de juros para pagamento após o vencimento
@@ -69,7 +69,7 @@ type UpdateSubscriptionRequest struct {
 	// Token do cartão de crédito para uso da funcionalidade de tokenização de cartão de crédito
 	CreditCardToken string `json:"creditCardToken,omitempty"`
 	// Data de validade da assinatura
-	EndDate *Date `json:"endDate,omitempty"`
+	EndDate Date `json:"endDate,omitempty"`
 	// True para atualizar mensalidades já existentes com o novo valor ou forma de pagamento
 	UpdatePendingPayments bool `json:"updatePendingPayments,omitempty"`
 	// Identificador da assinatura no seu sistema
@@ -103,9 +103,9 @@ type GetAllSubscriptionsRequest struct {
 
 type GetAllSubscriptionInvoicesRequest struct {
 	// Filtrar a partir de uma data de emissão
-	EffectiveDateGE *Date `json:"effectiveDate[ge],omitempty"`
+	EffectiveDateGE Date `json:"effectiveDate[ge],omitempty"`
 	// Filtrar até uma data de emissão
-	EffectiveDateLE *Date `json:"effectiveDate[le],omitempty"`
+	EffectiveDateLE Date `json:"effectiveDate[le],omitempty"`
 	// Identificador da nota fiscal no seu sistema
 	ExternalReference string `json:"externalReference,omitempty"`
 	// Status da nota fiscal
@@ -141,18 +141,18 @@ type SubscriptionResponse struct {
 	Refunds           []RefundResponse   `json:"refunds,omitempty"`
 	BillingType       BillingType        `json:"billingType,omitempty"`
 	Value             float64            `json:"value,omitempty"`
-	NextDueDate       *Date              `json:"nextDueDate,omitempty"`
+	NextDueDate       Date               `json:"nextDueDate,omitempty"`
 	Cycle             SubscriptionCycle  `json:"cycle,omitempty"`
 	Discount          *DiscountResponse  `json:"discount,omitempty"`
 	Interest          *InterestResponse  `json:"interest,omitempty"`
 	Fine              *FineResponse      `json:"fine,omitempty"`
 	Description       string             `json:"description,omitempty"`
-	EndDate           *Date              `json:"endDate,omitempty"`
+	EndDate           Date               `json:"endDate,omitempty"`
 	MaxPayments       int                `json:"maxPayments,omitempty"`
 	ExternalReference string             `json:"externalReference,omitempty"`
 	Deleted           bool               `json:"deleted,omitempty"`
 	Errors            []ErrorResponse    `json:"errors,omitempty"`
-	DateCreated       *Date              `json:"dateCreated,omitempty"`
+	DateCreated       Date               `json:"dateCreated,omitempty"`
 }
 
 type subscription struct {

@@ -10,5 +10,5 @@ type RefundResponse struct {
 	Value                 float64      `json:"value,omitempty"`
 	Description           string       `json:"description,omitempty"`
 	TransactionReceiptUrl string       `json:"transactionReceiptUrl,omitempty"`
-	DateCreated           *Date        `json:"dateCreated,omitempty"`
+	DateCreated           Date         `json:"dateCreated,omitempty"`
 }

@@ -119,9 +119,9 @@ type InvoiceTaxesRequest struct {
 
 type GetAllInvoicesRequest struct {
 	// Filtrar a partir de uma data de emissão
-	EffectiveDateGE *Date `json:"effectiveDate[ge],omitempty"`
+	EffectiveDateGE Date `json:"effectiveDate[ge],omitempty"`
 	// Filtrar até uma data de emissão
-	EffectiveDateLE *Date  `json:"effectiveDate[le],omitempty"`
+	EffectiveDateLE Date   `json:"effectiveDate[le],omitempty"`
 	Payment         string `json:"payment,omitempty"`
 	Installment     string `json:"installment,omitempty"`
 	// Filtrar pelo identificador único do cliente
@@ -166,7 +166,7 @@ type InvoiceResponse struct {
 	ValidationCode            string                `json:"validationCode,omitempty"`
 	Value                     float64               `json:"value,omitempty"`
 	Deductions                float64               `json:"deductions,omitempty"`
-	EffectiveDate             *Date                 `json:"effectiveDate,omitempty"`
+	EffectiveDate             Date                  `json:"effectiveDate,omitempty"`
 	Observations              string                `json:"observations,omitempty"`
 	EstimatedTaxesDescription string                `json:"estimatedTaxesDescription,omitempty"`
 	ExternalReference         string                `json:"externalReference,omitempty"`

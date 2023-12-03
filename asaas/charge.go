@@ -56,7 +56,7 @@ type UpdateChargeRequest struct {
 	// Valor da cobrança
 	Value float64 `json:"value,omitempty"`
 	// Data de vencimento da cobrança
-	DueDate *Date `json:"dueDate,omitempty"`
+	DueDate Date `json:"dueDate,omitempty"`
 	// Descrição da cobrança (máx. 500 caracteres)
 	Description string `json:"description,omitempty"`
 	// Campo livre para busca
@@ -97,29 +97,29 @@ type GetAllChargesRequest struct {
 	// Filtro para retornar cobranças que possuem ou não nota fiscal.
 	InvoiceStatus InvoiceStatus `json:"invoiceStatus,omitempty"`
 	// Filtrar pela data estimada de crédito.
-	EstimatedCreditDate *Date `json:"estimatedCreditDate,omitempty"`
+	EstimatedCreditDate Date `json:"estimatedCreditDate,omitempty"`
 	// Filtrar recebimentos originados de um QrCode estático utilizando o id gerado na hora da criação do QrCode.
 	PixQrCodeId string `json:"pixQrCodeId,omitempty"`
 	// Filtrar registros antecipados ou não
 	Anticipated bool `json:"anticipated,omitempty"`
 	// Filtrar pela data de pagamento
-	PaymentDate *Date `json:"paymentDate,omitempty"`
+	PaymentDate Date `json:"paymentDate,omitempty"`
 	// Filtrar a partir da data de criação inicial
-	DateCreatedGe *Date `json:"dateCreated[ge],omitempty"`
+	DateCreatedGe Date `json:"dateCreated[ge],omitempty"`
 	// Filtrar a partir da data de criação final
-	DateCreatedLe *Date `json:"dateCreated[le],omitempty"`
+	DateCreatedLe Date `json:"dateCreated[le],omitempty"`
 	// Filtrar a partir da data de recebimento inicial
-	PaymentDateGe *Date `json:"paymentDate[ge],omitempty"`
+	PaymentDateGe Date `json:"paymentDate[ge],omitempty"`
 	// Filtrar a partir da data de recebimento final
-	PaymentDateLe *Date `json:"paymentDate[le],omitempty"`
+	PaymentDateLe Date `json:"paymentDate[le],omitempty"`
 	// Filtrar a partir da data estimada de crédito inicial
-	EstimatedCreditDateGE *Date `json:"estimatedCreditDate[ge],omitempty"`
+	EstimatedCreditDateGE Date `json:"estimatedCreditDate[ge],omitempty"`
 	// Filtrar a partir da data estimada de crédito final
-	EstimatedCreditDateLE *Date `json:"estimatedCreditDate[le],omitempty"`
+	EstimatedCreditDateLE Date `json:"estimatedCreditDate[le],omitempty"`
 	// Filtrar a partir da data de vencimento inicial
-	DueDateGe *Date `json:"dueDate[ge],omitempty"`
+	DueDateGe Date `json:"dueDate[ge],omitempty"`
 	// Filtrar a partir da data de vencimento final
-	DueDateLe *Date `json:"dueDate[le],omitempty"`
+	DueDateLe Date `json:"dueDate[le],omitempty"`
 	// Filtrar pelo endereço de e-mail do usuário que criou a cobrança.
 	User string `json:"user,omitempty"`
 	// Elemento inicial da lista
@@ -130,7 +130,7 @@ type GetAllChargesRequest struct {
 
 type ChargeReceiveInCashRequest struct {
 	// Data em que o cliente efetuou o pagamento (REQUIRED)
-	PaymentDate *Date `json:"paymentDate,omitempty"`
+	PaymentDate Date `json:"paymentDate,omitempty"`
 	// Valor pago pelo cliente (REQUIRED)
 	Value float64 `json:"value,omitempty"`
 	// Enviar ou não notificação de pagamento confirmado para o cliente
@@ -165,7 +165,7 @@ type ChargeResponse struct {
 	Customer              string              `json:"customer,omitempty"`
 	Status                ChargeStatus        `json:"status,omitempty"`
 	PaymentLink           string              `json:"paymentLink,omitempty"`
-	DueDate               *Date               `json:"dueDate,omitempty"`
+	DueDate               Date                `json:"dueDate,omitempty"`
 	Value                 float64             `json:"value,omitempty"`
 	NetValue              float64             `json:"netValue,omitempty"`
 	BillingType           BillingType         `json:"billingType,omitempty"`
@@ -175,9 +175,9 @@ type ChargeResponse struct {
 	ExternalReference     string              `json:"externalReference,omitempty"`
 	OriginalValue         string              `json:"originalValue,omitempty"`
 	InterestValue         string              `json:"interestValue,omitempty"`
-	OriginalDueDate       *Date               `json:"originalDueDate,omitempty"`
-	PaymentDate           *Date               `json:"paymentDate,omitempty"`
-	ClientPaymentDate     *Date               `json:"clientPaymentDate,omitempty"`
+	OriginalDueDate       Date                `json:"originalDueDate,omitempty"`
+	PaymentDate           Date                `json:"paymentDate,omitempty"`
+	ClientPaymentDate     Date                `json:"clientPaymentDate,omitempty"`
 	InstallmentNumber     int                 `json:"installmentCount,omitempty"`
 	TransactionReceiptUrl string              `json:"transactionReceiptUrl,omitempty"`
 	NossoNumero           string              `json:"nossoNumero,omitempty"`
@@ -193,7 +193,7 @@ type ChargeResponse struct {
 	Anticipated           bool                `json:"anticipated,omitempty"`
 	Anticipable           bool                `json:"anticipable,omitempty"`
 	Refunds               []RefundResponse    `json:"refunds,omitempty"`
-	DateCreated           *Date               `json:"dateCreated,omitempty"`
+	DateCreated           Date                `json:"dateCreated,omitempty"`
 	Errors                []ErrorResponse     `json:"errors,omitempty"`
 }
 
@@ -212,7 +212,7 @@ type IdentificationFieldResponse struct {
 type ChargePixQrCodeResponse struct {
 	EncodedImage   string          `json:"encodedImage,omitempty"`
 	Payload        string          `json:"payload,omitempty"`
-	ExpirationDate *Date           `json:"expirationDate,omitempty"`
+	ExpirationDate Date            `json:"expirationDate,omitempty"`
 	Errors         []ErrorResponse `json:"errors,omitempty"`
 }
 

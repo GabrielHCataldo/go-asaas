@@ -15,7 +15,7 @@ type TransferToBankRequest struct {
 	PixAddressKey     string                `json:"pixAddressKey,omitempty"`
 	PixAddressKeyType PixKeyType            `json:"pixAddressKeyType,omitempty"`
 	Description       string                `json:"description,omitempty"`
-	ScheduleDate      *Date                 `json:"scheduleDate,omitempty"`
+	ScheduleDate      Date                  `json:"scheduleDate,omitempty"`
 }
 
 type TransferToAssasRequest struct {
@@ -31,7 +31,7 @@ type BackAccountRequest struct {
 	// Nome do proprietário da conta bancária (REQUIRED)
 	OwnerName string `json:"ownerName,omitempty"`
 	// Data de nascimento do proprietário da conta. Somente quando a conta bancária não pertencer ao mesmo CPF ou CNPJ da conta Asaas.
-	OwnerBirthDate *Date `json:"ownerBirthDate,omitempty"`
+	OwnerBirthDate Date `json:"ownerBirthDate,omitempty"`
 	// CPF ou CNPJ do proprietário da conta bancária (REQUIRED)
 	CpfCnpj string `json:"cpfCnpj,omitempty"`
 	// Número da agência sem dígito (REQUIRED)
@@ -53,13 +53,13 @@ type BankRequest struct {
 
 type GetAllTransfersRequest struct {
 	// Filtrar pela data de criação inicial
-	DateCreatedGe *Date `json:"dateCreated[ge],omitempty"`
+	DateCreatedGe Date `json:"dateCreated[ge],omitempty"`
 	// Filtrar pela data de criação final
-	DateCreatedLe *Date `json:"dateCreated[le],omitempty"`
+	DateCreatedLe Date `json:"dateCreated[le],omitempty"`
 	// Filtrar pela data inicial de efetivação de transferência
-	TransferDateGe *Date `json:"transferDate[ge],omitempty"`
+	TransferDateGe Date `json:"transferDate[ge],omitempty"`
 	// Filtrar pela data final de efetivação de transferência
-	TransferDateLe *Date `json:"transferDate[le],omitempty"`
+	TransferDateLe Date `json:"transferDate[le],omitempty"`
 	// Filtrar por tipo da transferência
 	Type TransferType `json:"type,omitempty"`
 }
@@ -71,9 +71,9 @@ type TransferResponse struct {
 	Value                 float64               `json:"value,omitempty"`
 	NetValue              float64               `json:"netValue,omitempty"`
 	TransferFee           float64               `json:"transferFee,omitempty"`
-	EffectiveDate         *Date                 `json:"effectiveDate,omitempty"`
+	EffectiveDate         Date                  `json:"effectiveDate,omitempty"`
 	EndToEndIdentifier    string                `json:"endToEndIdentifier,omitempty"`
-	ScheduleDate          *Date                 `json:"scheduleDate,omitempty"`
+	ScheduleDate          Date                  `json:"scheduleDate,omitempty"`
 	Authorized            bool                  `json:"authorized,omitempty"`
 	FailReason            string                `json:"failReason,omitempty"`
 	WalletId              string                `json:"walletId,omitempty"`
@@ -82,14 +82,14 @@ type TransferResponse struct {
 	OperationType         TransferOperationType `json:"operationType,omitempty"`
 	Description           string                `json:"description,omitempty"`
 	Errors                []ErrorResponse       `json:"errors,omitempty"`
-	DateCreated           *Date                 `json:"dateCreated,omitempty"`
+	DateCreated           Date                  `json:"dateCreated,omitempty"`
 }
 
 type BackAccountResponse struct {
 	Bank           BankResponse `json:"bank,omitempty"`
 	AccountName    string       `json:"accountName,omitempty"`
 	OwnerName      string       `json:"ownerName,omitempty"`
-	OwnerBirthDate *Date        `json:"ownerBirthDate,omitempty"`
+	OwnerBirthDate Date         `json:"ownerBirthDate,omitempty"`
 	CpfCnpj        string       `json:"cpfCnpj,omitempty"`
 	Agency         string       `json:"agency,omitempty"`
 	Account        string       `json:"account,omitempty"`
