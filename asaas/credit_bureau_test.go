@@ -12,7 +12,7 @@ func TestCreditBureauGetAllReportsNoContent(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nCreditBureau := NewCreditBureau(EnvSandbox, *accessToken)
+	nCreditBureau := NewCreditBureau(EnvSandbox, accessToken)
 	resp, errAsaas := nCreditBureau.GetAllReports(ctx, GetAllReportsRequest{})
 	assertResponseNoContent(t, resp, errAsaas)
 }
