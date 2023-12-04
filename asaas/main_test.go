@@ -2,10 +2,11 @@ package asaas
 
 import (
 	"context"
-	"github.com/GabrielHCataldo/go-asaas/internal/test"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"github.com/mvrilo/go-cpf"
+	"io"
 	"os"
+	"strconv"
 	"testing"
 	"time"
 )
@@ -429,7 +430,7 @@ func initBillPayment() {
 }
 
 func initFile() {
-	f, err := test.GetSimpleFile()
+	f, err := getTestFile()
 	if err != nil {
 		logError("error init file GetSimpleFile:", err)
 		return
@@ -438,7 +439,7 @@ func initFile() {
 }
 
 func initImage() {
-	f, err := test.GetSimpleImage()
+	f, err := getTestImage()
 	if err != nil {
 		logError("error init image GetSimpleImage:", err)
 		return
@@ -1064,6 +1065,28 @@ func clearTransferBankId() {
 	transferAsaas := NewTransfer(EnvSandbox, accessToken)
 	_, _ = transferAsaas.CancelById(ctx, transferId)
 	_ = os.Unsetenv(EnvTransferId)
+}
+
+func getTestFile() (*os.File, error) {
+	randomKey := strconv.FormatInt(time.Now().Unix()+int64(time.Now().Nanosecond()), 10)
+	nameFile := "test " + randomKey + ".txt"
+	f, err := os.Create(nameFile)
+	if err != nil {
+		return nil, err
+	}
+	_, err = io.WriteString(f, "unit test golang")
+	if err != nil {
+		return nil, err
+	}
+	err = f.Close()
+	if err != nil {
+		return nil, err
+	}
+	return os.Open(nameFile)
+}
+
+func getTestImage() (*os.File, error) {
+	return os.Open("../gopher-asaas.png")
 }
 
 func removeFileTest(fileName string) {
