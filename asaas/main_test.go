@@ -808,6 +808,28 @@ func initTransfer() {
 	setEnv(EnvTransferId, resp.Id)
 }
 
+func initWebhook() {
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nWebhook := NewWebhook(EnvSandbox, accessToken)
+	resp, err := nWebhook.SaveSetting(ctx, WebhookTypePayment, SaveWebhookSettingRequest{
+		Url:         "https://test.com",
+		Email:       "test@gmail.com",
+		ApiVersion:  "3",
+		Enabled:     Pointer(false),
+		Interrupted: Pointer(false),
+		AuthToken:   "",
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+}
+
 func clearCustomerId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {

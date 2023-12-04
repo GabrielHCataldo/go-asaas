@@ -13,9 +13,9 @@ type SaveWebhookSettingRequest struct {
 	// Versão utilizada da API. Utilize "3" para a versão v3 (REQUIRED)
 	ApiVersion string `json:"apiVersion,omitempty"`
 	// Habilitar ou não o webhook
-	Enabled bool `json:"enabled"`
+	Enabled *bool `json:"enabled"`
 	// Situação da fila de sincronização
-	Interrupted bool `json:"interrupted"`
+	Interrupted *bool `json:"interrupted"`
 	// Token de autenticação
 	AuthToken string `json:"authToken,omitempty"`
 }
