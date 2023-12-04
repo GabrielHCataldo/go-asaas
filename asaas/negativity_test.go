@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func TestNegativityCreateSuccess(t *testing.T) {
+func TestNegativityCreate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	f, err := os.Open(getEnvValue(EnvFileName))

@@ -12,11 +12,11 @@ import (
 
 const EnvAccessToken = "ASAAS_ACCESS_TOKEN"
 const EnvAccessTokenSecondary = "ASAAS_ACCESS_TOKEN_SECONDARY"
+const EnvWalletIdSecondary = "ASAAS_WALLET_ID_SECONDARY"
 const EnvFileName = "ASAAS_FILE_NAME"
 const EnvImageName = "ASAAS_IMAGE_NAME"
 const EnvCustomerId = "ASAAS_CUSTOMER_ID"
-
-// const EnvCustomerDeletedId = "ASAAS_CUSTOMER_DELETED_ID"
+const EnvCustomerDeletedId = "ASAAS_CUSTOMER_DELETED_ID"
 const EnvCreditCardChargeId = "ASAAS_CREDIT_CARD_CHARGE_ID"
 const EnvPixChargeId = "ASAAS_PIX_CHARGE_ID"
 const EnvBankSlipChargeId = "ASAAS_BANK_SLIP_CHARGE_ID"
@@ -34,7 +34,7 @@ const EnvCreditBureauReportId = "ASAAS_CREDIT_BUREAU_REPORT_ID"
 func init() {
 	initFile()
 	initImage()
-	//initFiscalInfo()
+	initFiscalInfo()
 }
 
 func TestMain(m *testing.M) {
@@ -91,7 +91,28 @@ func initCustomer() {
 	setEnv(EnvCustomerId, resp.Id)
 }
 
-func initCreditCardCharge(authorizeOnly bool, withInstallment bool) {
+func initCustomerDeleted() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	initCustomer()
+	customerId := getEnvValue(EnvCustomerId)
+	if util.IsBlank(&customerId) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	customerAsaas := NewCustomer(EnvSandbox, accessToken)
+	resp, err := customerAsaas.DeleteById(ctx, customerId)
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvCustomerDeletedId, resp.Id)
+}
+
+func initCreditCardCharge(capture bool, withInstallment bool) {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
 		return
@@ -105,7 +126,7 @@ func initCreditCardCharge(authorizeOnly bool, withInstallment bool) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	now := time.Now()
-	cReq := &CreateChargeRequest{
+	req := CreateChargeRequest{
 		Customer:    customerId,
 		BillingType: BillingTypeCreditCard,
 		Value:       100,
@@ -127,15 +148,15 @@ func initCreditCardCharge(authorizeOnly bool, withInstallment bool) {
 			PostalCode:    "89223-005",
 			AddressNumber: "277",
 		},
-		AuthorizeOnly: authorizeOnly,
+		AuthorizeOnly: !capture,
 		RemoteIp:      "191.253.125.194",
 	}
 	if withInstallment {
-		cReq.InstallmentCount = 2
-		cReq.InstallmentValue = cReq.Value / float64(cReq.InstallmentCount)
+		req.InstallmentCount = 2
+		req.InstallmentValue = req.Value / float64(req.InstallmentCount)
 	}
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
-	resp, err := chargeAsaas.Create(ctx, *cReq)
+	resp, err := chargeAsaas.Create(ctx, req)
 	if err != nil || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
@@ -144,7 +165,9 @@ func initCreditCardCharge(authorizeOnly bool, withInstallment bool) {
 	if !success {
 		return
 	}
-	setEnv(EnvChargeInstallmentId, resp.Installment)
+	if withInstallment {
+		setEnv(EnvChargeInstallmentId, resp.Installment)
+	}
 }
 
 func initPixCharge() {
@@ -185,7 +208,7 @@ func initPixCharge() {
 	setEnv(EnvChargePixQrCodePayload, pixQrCodeResp.Payload)
 }
 
-func initBankSlipCharge() {
+func initBankSlipCharge(withInstallment bool) {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
 
@@ -200,13 +223,18 @@ func initBankSlipCharge() {
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	now := time.Now()
-	chargeAsaas := NewCharge(EnvSandbox, accessToken)
-	resp, err := chargeAsaas.Create(ctx, CreateChargeRequest{
+	req := CreateChargeRequest{
 		BillingType: BillingTypeBankSlip,
 		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
 		Value:       100,
 		Description: "Cobrança via teste unitário em Golang",
-	})
+	}
+	if withInstallment {
+		req.InstallmentCount = 2
+		req.InstallmentValue = req.Value / float64(req.InstallmentCount)
+	}
+	chargeAsaas := NewCharge(EnvSandbox, accessToken)
+	resp, err := chargeAsaas.Create(ctx, req)
 	if err != nil || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
@@ -221,6 +249,9 @@ func initBankSlipCharge() {
 		return
 	}
 	setEnv(EnvChargeIdentificationField, identificationFieldResp.IdentificationField)
+	if withInstallment {
+		setEnv(EnvChargeInstallmentId, resp.Installment)
+	}
 }
 
 func initUndefinedCharge() {
@@ -360,7 +391,7 @@ func initBillPayment() {
 		return
 	}
 	clearBillPaymentId()
-	initBankSlipCharge()
+	initBankSlipCharge(false)
 	chargeId := getEnvValue(EnvBankSlipChargeId)
 	if util.IsBlank(&chargeId) {
 		return
@@ -426,6 +457,38 @@ func initCreditBureauReport() {
 		return
 	}
 	setEnv(EnvCreditBureauReportId, resp.Id)
+}
+
+func initFiscalInfo() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
+	resp, err := nFiscalInfo.Save(ctx, SaveFiscalInfoRequest{
+		Email:                    "test@gmail.com",
+		MunicipalInscription:     Pointer("15.54.74"),
+		SimplesNacional:          Pointer(true),
+		CulturalProjectsPromoter: nil,
+		Cnae:                     Pointer("6201501"),
+		SpecialTaxRegime:         nil,
+		ServiceListItem:          nil,
+		RpsSerie:                 nil,
+		RpsNumber:                Pointer(21),
+		LoteNumber:               nil,
+		Username:                 nil,
+		Password:                 Pointer("test"),
+		AccessToken:              nil,
+		CertificateFile:          nil,
+		CertificatePassword:      nil,
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
 }
 
 func clearCustomerId() {

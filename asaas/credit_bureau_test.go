@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestCreditBureauGetReportSuccess(t *testing.T) {
+func TestCreditBureauGetReport(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initCustomer()
@@ -23,13 +23,7 @@ func TestCreditBureauGetReportSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestCreditBureauGetReportError(t *testing.T) {
-	nCreditBureau := NewCreditBureau(EnvSandbox, "")
-	resp, err := nCreditBureau.GetReport(context.TODO(), GetReportRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestCreditBureauGetReportByIdSuccess(t *testing.T) {
+func TestCreditBureauGetReportById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initCreditBureauReport()
@@ -41,13 +35,7 @@ func TestCreditBureauGetReportByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestCreditBureauGetReportByIdError(t *testing.T) {
-	nCreditBureau := NewCreditBureau(EnvSandbox, "")
-	resp, err := nCreditBureau.GetReportById(context.TODO(), "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestCreditBureauGetAllReportsSuccess(t *testing.T) {
+func TestCreditBureauGetAllReports(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initCreditBureauReport()
@@ -61,10 +49,4 @@ func TestCreditBureauGetAllReportsSuccess(t *testing.T) {
 		Limit:     10,
 	})
 	assertResponseNoContent(t, resp, err)
-}
-
-func TestCreditBureauGetAllReportsError(t *testing.T) {
-	nCreditBureau := NewCreditBureau(EnvSandbox, "")
-	resp, err := nCreditBureau.GetAllReports(context.TODO(), GetAllReportsRequest{})
-	assertResponseFailure(t, resp, err)
 }

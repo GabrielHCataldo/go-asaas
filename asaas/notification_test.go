@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestNotificationGetAllByCustomerSuccess(t *testing.T) {
+func TestNotificationGetAllByCustomer(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)

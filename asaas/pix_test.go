@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestPixGetAllKeysSuccess(t *testing.T) {
+func TestPixGetAllKeys(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)

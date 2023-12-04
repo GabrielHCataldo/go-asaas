@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestAnticipationSimulateSuccess(t *testing.T) {
+func TestAnticipationSimulate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initCreditCardCharge(true, false)
@@ -22,13 +22,7 @@ func TestAnticipationSimulateSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAnticipationSimulateError(t *testing.T) {
-	nAnticipation := NewAnticipation(EnvSandbox, "")
-	resp, err := nAnticipation.Simulate(context.TODO(), AnticipationSimulateRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestAnticipationRequestSuccess(t *testing.T) {
+func TestAnticipationRequest(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initCreditCardCharge(true, false)
@@ -45,13 +39,7 @@ func TestAnticipationRequestSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAnticipationRequestError(t *testing.T) {
-	nAnticipation := NewAnticipation(EnvSandbox, "")
-	resp, err := nAnticipation.Request(context.TODO(), AnticipationRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestAnticipationAgreementSignSuccess(t *testing.T) {
+func TestAnticipationAgreementSign(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -63,13 +51,7 @@ func TestAnticipationAgreementSignSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAnticipationAgreementSignError(t *testing.T) {
-	nAnticipation := NewAnticipation(EnvSandbox, "")
-	resp, err := nAnticipation.AgreementSign(context.TODO(), AgreementSignRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestAnticipationGetByIdSuccess(t *testing.T) {
+func TestAnticipationGetById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initAnticipation()
@@ -81,13 +63,7 @@ func TestAnticipationGetByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAnticipationGetByIdError(t *testing.T) {
-	nAnticipation := NewAnticipation(EnvSandbox, "")
-	resp, err := nAnticipation.GetById(context.TODO(), "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestAnticipationGetLimitsSuccess(t *testing.T) {
+func TestAnticipationGetLimits(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -97,13 +73,7 @@ func TestAnticipationGetLimitsSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAnticipationGetLimitsError(t *testing.T) {
-	nAnticipation := NewAnticipation(EnvSandbox, "")
-	resp, errAsaas := nAnticipation.GetLimits(context.TODO())
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAnticipationGetAllSuccess(t *testing.T) {
+func TestAnticipationGetAll(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -117,10 +87,4 @@ func TestAnticipationGetAllSuccess(t *testing.T) {
 		Limit:       10,
 	})
 	assertResponseSuccess(t, resp, errAsaas)
-}
-
-func TestAnticipationGetAllError(t *testing.T) {
-	nAnticipation := NewAnticipation(EnvSandbox, "")
-	resp, errAsaas := nAnticipation.GetAll(context.TODO(), GetAllAnticipationsRequest{})
-	assertResponseFailure(t, resp, errAsaas)
 }

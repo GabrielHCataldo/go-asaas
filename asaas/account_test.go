@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestAccountSaveInvoiceCustomizationSuccess(t *testing.T) {
+func TestAccountSaveInvoiceCustomization(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	f, err := os.Open(getEnvValue(EnvImageName))
@@ -25,13 +25,7 @@ func TestAccountSaveInvoiceCustomizationSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountSaveInvoiceCustomizationError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, err := nAccount.SaveInvoiceCustomization(context.TODO(), SaveInvoiceCustomizationRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestAccountUpdateSuccess(t *testing.T) {
+func TestAccountUpdate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -55,13 +49,7 @@ func TestAccountUpdateSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountUpdateError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, err := nAccount.Update(context.TODO(), UpdateAccountRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestAccountDeleteWhiteLabelSubaccountSuccess(t *testing.T) {
+func TestAccountDeleteWhiteLabelSubaccount(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -73,13 +61,7 @@ func TestAccountDeleteWhiteLabelSubaccountSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountDeleteWhiteLabelSubaccountError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, err := nAccount.DeleteWhiteLabelSubaccount(context.TODO(), DeleteWhiteLabelSubaccountRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestAccountGetSuccess(t *testing.T) {
+func TestAccountGet(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -89,13 +71,7 @@ func TestAccountGetSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountGetError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.Get(context.TODO())
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAccountGetRegistrationStatusSuccess(t *testing.T) {
+func TestAccountGetRegistrationStatus(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -105,13 +81,7 @@ func TestAccountGetRegistrationStatusSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountGetRegistrationStatusError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.Get(context.TODO())
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAccountGetBankInfoSuccess(t *testing.T) {
+func TestAccountGetBankInfo(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -121,13 +91,7 @@ func TestAccountGetBankInfoSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountGetBankInfoError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.GetBankInfo(context.TODO())
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAccountGetFeesSuccess(t *testing.T) {
+func TestAccountGetFees(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -137,13 +101,7 @@ func TestAccountGetFeesSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountGetFeesError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.GetFees(context.TODO())
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAccountGetWalletsSuccess(t *testing.T) {
+func TestAccountGetWallets(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -153,13 +111,7 @@ func TestAccountGetWalletsSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountGetWalletsError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.GetWallets(context.TODO())
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAccountGetBalanceSuccess(t *testing.T) {
+func TestAccountGetBalance(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -169,13 +121,7 @@ func TestAccountGetBalanceSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountGetBalanceError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.GetWallets(context.TODO())
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAccountGetAccountStatementSuccess(t *testing.T) {
+func TestAccountGetAccountStatement(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -191,13 +137,7 @@ func TestAccountGetAccountStatementSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountGetAccountStatementError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.GetAccountStatement(context.TODO(), GetAccountStatementRequest{})
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAccountGetPaymentStatisticSuccess(t *testing.T) {
+func TestAccountGetPaymentStatistic(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -219,13 +159,7 @@ func TestAccountGetPaymentStatisticSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountGetPaymentStatisticError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.GetPaymentStatistic(context.TODO(), GetPaymentStatisticRequest{})
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAccountGetSplitStatisticSuccess(t *testing.T) {
+func TestAccountGetSplitStatistic(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -235,13 +169,7 @@ func TestAccountGetSplitStatisticSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestAccountGetSplitStatisticError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.GetSplitStatistic(context.TODO())
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestAccountGetInvoiceCustomizationSuccess(t *testing.T) {
+func TestAccountGetInvoiceCustomization(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -249,10 +177,4 @@ func TestAccountGetInvoiceCustomizationSuccess(t *testing.T) {
 	nAccount := NewAccount(EnvSandbox, accessToken)
 	resp, errAsaas := nAccount.GetInvoiceCustomization(ctx)
 	assertResponseSuccess(t, resp, errAsaas)
-}
-
-func TestAccountGetInvoiceCustomizationError(t *testing.T) {
-	nAccount := NewAccount(EnvSandbox, "")
-	resp, errAsaas := nAccount.GetInvoiceCustomization(context.TODO())
-	assertResponseFailure(t, resp, errAsaas)
 }

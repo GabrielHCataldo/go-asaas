@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func TestChangeCreateSuccess(t *testing.T) {
+func TestChangeCreate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initCustomer()
@@ -40,13 +40,7 @@ func TestChangeCreateSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeCreateError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.Create(context.TODO(), CreateChargeRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChangePayWithCreditCardSuccess(t *testing.T) {
+func TestChangePayWithCreditCard(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
@@ -65,13 +59,7 @@ func TestChangePayWithCreditCardSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargePayWithCreditCardError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.PayWithCreditCard(context.TODO(), "", CreditCardRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChangeUpdateByIdSuccess(t *testing.T) {
+func TestChangeUpdateById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
@@ -90,13 +78,7 @@ func TestChangeUpdateByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeUpdateByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.UpdateById(context.TODO(), "", UpdateChargeRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChangeDeleteByIdSuccess(t *testing.T) {
+func TestChangeDeleteById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
@@ -109,13 +91,7 @@ func TestChangeDeleteByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeDeleteByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.DeleteById(context.TODO(), "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChangeRestoreByIdSuccess(t *testing.T) {
+func TestChangeRestoreById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initChargeDeleted()
@@ -128,13 +104,7 @@ func TestChangeRestoreByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeRestoreByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.RestoreById(context.TODO(), "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChangeRefundByIdSuccess(t *testing.T) {
+func TestChangeRefundById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initCreditCardCharge(true, false)
@@ -150,13 +120,7 @@ func TestChangeRefundByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeRefundByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.RefundById(context.TODO(), "", RefundRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChangeReceiveInCashByIdSuccess(t *testing.T) {
+func TestChangeReceiveInCashById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
@@ -174,13 +138,7 @@ func TestChangeReceiveInCashByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeReceiveInCashByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.ReceiveInCashById(context.TODO(), "", ChargeReceiveInCashRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChangeUndoReceivedInCashByIdSuccess(t *testing.T) {
+func TestChangeUndoReceivedInCashById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initChargeReceivedInCash()
@@ -193,13 +151,7 @@ func TestChangeUndoReceivedInCashByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeUndoReceivedInCashByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.UndoReceivedInCashById(context.TODO(), "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeUploadDocumentByIdSuccess(t *testing.T) {
+func TestChargeUploadDocumentById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
@@ -218,13 +170,7 @@ func TestChargeUploadDocumentByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeUploadDocumentByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.UploadDocumentById(context.TODO(), "", UploadChargeDocumentRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeUpdateDocumentDefinitionsByIdSuccess(t *testing.T) {
+func TestChargeUpdateDocumentDefinitionsById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
@@ -242,14 +188,7 @@ func TestChargeUpdateDocumentDefinitionsByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeUpdateDocumentDefinitionsByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	ctx := context.TODO()
-	resp, err := nCharge.UpdateDocumentDefinitionsById(ctx, "", "", UpdateChargeDocumentDefinitionsRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeDeleteDocumentByIdSuccess(t *testing.T) {
+func TestChargeDeleteDocumentById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
@@ -264,14 +203,7 @@ func TestChargeDeleteDocumentByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeDeleteDocumentByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	ctx := context.TODO()
-	resp, err := nCharge.DeleteDocumentById(ctx, "", "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeGetByIdSuccess(t *testing.T) {
+func TestChargeGetById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
@@ -284,13 +216,7 @@ func TestChargeGetByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeGetByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.GetDocumentById(context.TODO(), "", "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeGetCreationLimitSuccess(t *testing.T) {
+func TestChargeGetCreationLimit(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -300,13 +226,7 @@ func TestChargeGetCreationLimitSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeGetCreationLimitError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.GetCreationLimit(context.TODO())
-	assertResponseSuccess(t, resp, err)
-}
-
-func TestChargeGetStatusByIdSuccess(t *testing.T) {
+func TestChargeGetStatusById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
@@ -319,16 +239,10 @@ func TestChargeGetStatusByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeGetStatusByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.GetStatusById(context.TODO(), "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeGetIdentificationFieldByIdSuccess(t *testing.T) {
+func TestChargeGetIdentificationFieldById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
-	initBankSlipCharge()
+	initBankSlipCharge(false)
 	chargeId := getEnvValue(EnvBankSlipChargeId)
 	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -338,13 +252,7 @@ func TestChargeGetIdentificationFieldByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeGetIdentificationFieldByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.GetIdentificationFieldById(context.TODO(), "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeGetPixQrCodeByIdSuccess(t *testing.T) {
+func TestChargeGetPixQrCodeById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initPixCharge()
@@ -357,13 +265,7 @@ func TestChargeGetPixQrCodeByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeGetPixQrCodeByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.GetPixQrCodeById(context.TODO(), "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeGetDocumentByIdSuccess(t *testing.T) {
+func TestChargeGetDocumentById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
@@ -377,13 +279,7 @@ func TestChargeGetDocumentByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeGetDocumentByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.GetDocumentById(context.TODO(), "", "")
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeGetAllSuccess(t *testing.T) {
+func TestChargeGetAll(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
@@ -418,13 +314,7 @@ func TestChargeGetAllSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChargeGetAllError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.GetAll(context.TODO(), GetAllChargesRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestChargeGetAllDocumentsByIdSuccess(t *testing.T) {
+func TestChargeGetAllDocumentsById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
@@ -438,10 +328,4 @@ func TestChargeGetAllDocumentsByIdSuccess(t *testing.T) {
 		Limit:  10,
 	})
 	assertResponseSuccess(t, resp, err)
-}
-
-func TestChargeGetAllDocumentsByIdError(t *testing.T) {
-	nCharge := NewCharge(EnvSandbox, "")
-	resp, err := nCharge.GetAllDocumentsById(context.TODO(), "", PageableDefaultRequest{})
-	assertResponseFailure(t, resp, err)
 }

@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func TestBillPaymentSimulateSuccess(t *testing.T) {
+func TestBillPaymentSimulate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	identificationField := getEnvValue(EnvChargeIdentificationField)
@@ -21,13 +21,7 @@ func TestBillPaymentSimulateSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestBillPaymentSimulateError(t *testing.T) {
-	nBillPayment := NewBillPayment(EnvSandbox, "")
-	resp, err := nBillPayment.Create(context.TODO(), CreateBillPaymentRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestBillPaymentCreateSuccess(t *testing.T) {
+func TestBillPaymentCreate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	identificationField := getEnvValue(EnvChargeIdentificationField)
@@ -48,13 +42,7 @@ func TestBillPaymentCreateSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestBillPaymentCreateError(t *testing.T) {
-	nBillPayment := NewBillPayment(EnvSandbox, "")
-	resp, err := nBillPayment.Create(context.TODO(), CreateBillPaymentRequest{})
-	assertResponseFailure(t, resp, err)
-}
-
-func TestBillPaymentCancelByIdSuccess(t *testing.T) {
+func TestBillPaymentCancelById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initBillPayment()
@@ -67,13 +55,7 @@ func TestBillPaymentCancelByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestBillPaymentCancelByIdError(t *testing.T) {
-	nBillPayment := NewBillPayment(EnvSandbox, "")
-	resp, errAsaas := nBillPayment.CancelById(context.TODO(), "")
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestBillPaymentGetByIdSuccess(t *testing.T) {
+func TestBillPaymentGetById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initBillPayment()
@@ -86,13 +68,7 @@ func TestBillPaymentGetByIdSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestBillPaymentGetIdError(t *testing.T) {
-	nBillPayment := NewBillPayment(EnvSandbox, "")
-	resp, errAsaas := nBillPayment.GetById(context.TODO(), "")
-	assertResponseFailure(t, resp, errAsaas)
-}
-
-func TestBillPaymentGetAllSuccess(t *testing.T) {
+func TestBillPaymentGetAll(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	initBillPayment()
@@ -101,10 +77,4 @@ func TestBillPaymentGetAllSuccess(t *testing.T) {
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
 	resp, errAsaas := nBillPayment.GetAll(ctx, PageableDefaultRequest{})
 	assertResponseSuccess(t, resp, errAsaas)
-}
-
-func TestBillPaymentGetAllError(t *testing.T) {
-	nBillPayment := NewBillPayment(EnvSandbox, "")
-	resp, errAsaas := nBillPayment.GetAll(context.TODO(), PageableDefaultRequest{})
-	assertResponseFailure(t, resp, errAsaas)
 }

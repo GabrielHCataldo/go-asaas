@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func TestTransferTransferToBankSuccess(t *testing.T) {
+func TestTransferTransferToBank(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
