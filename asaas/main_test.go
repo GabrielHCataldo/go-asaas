@@ -34,6 +34,9 @@ const EnvInvoiceId = "ASAAS_INVOICE_ID"
 const EnvMobilePhoneRechargeId = "ASAAS_MOBILE_PHONE_RECHARGE_ID"
 const EnvNegativityId = "ASAAS_NEGATIVITY_ID"
 const EnvNotificationId = "ASAAS_NOTIFICATION_ID"
+const EnvPaymentLinkId = "ASAAS_PAYMENT_LINK_ID"
+const EnvPaymentLinkDeletedId = "ASAAS_PAYMENT_LINK_DELETED_ID"
+const EnvPaymentLinkImageId = "ASAAS_PAYMENT_LINK_IMAGE_ID"
 
 func init() {
 	initFile()
@@ -53,6 +56,7 @@ func TestMain(m *testing.M) {
 	clearInvoiceId()
 	clearMobilePhoneRechargeId()
 	clearNegativityId()
+	clearPaymentLinkId()
 	logInfo(EnvSandbox, "clean all envs successfully")
 	os.Exit(code)
 }
@@ -598,6 +602,77 @@ func initNotification() {
 	setEnv(EnvNotificationId, resp.Data[0].Id)
 }
 
+func initPaymentLink() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	clearPaymentLinkId()
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
+	resp, err := nPaymentLink.Create(ctx, CreatePaymentLinkRequest{
+		Name:        "Unit test go",
+		BillingType: BillingTypeUndefined,
+		ChargeType:  ChargeTypeDetached,
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvPaymentLinkId, resp.Id)
+}
+
+func initPaymentLinkDeleted() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	initPaymentLink()
+	paymentLinkId := getEnvValue(EnvPaymentLinkId)
+	if util.IsBlank(&paymentLinkId) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
+	resp, err := nPaymentLink.DeleteById(ctx, paymentLinkId)
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvPaymentLinkDeletedId, resp.Id)
+}
+
+func initPaymentLinkImage() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	initPaymentLink()
+	paymentLinkId := getEnvValue(EnvPaymentLinkId)
+	if util.IsBlank(&paymentLinkId) {
+		return
+	}
+	f, err := os.Open(getEnvValue(EnvImageName))
+	if err != nil {
+		logError("error open image:", err)
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
+	resp, err := nPaymentLink.SendImageById(ctx, paymentLinkId, SendImagePaymentLinksRequest{
+		Main:  false,
+		Image: f,
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvPaymentLinkImageId, resp.Id)
+}
+
 func clearCustomerId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
@@ -752,6 +827,22 @@ func clearNegativityId() {
 	negativityAsaas := NewNegativity(EnvSandbox, accessToken)
 	_, _ = negativityAsaas.CancelById(ctx, negativityId)
 	_ = os.Unsetenv(EnvNegativityId)
+}
+
+func clearPaymentLinkId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	paymentLinkId := getEnvValueWithoutLogger(EnvPaymentLinkId)
+	if util.IsBlank(&paymentLinkId) {
+		return
+	}
+	paymentLinkAsaas := NewPaymentLink(EnvSandbox, accessToken)
+	_, _ = paymentLinkAsaas.DeleteById(ctx, paymentLinkId)
+	_ = os.Unsetenv(EnvPaymentLinkId)
 }
 
 func removeFileTest(fileName string) {

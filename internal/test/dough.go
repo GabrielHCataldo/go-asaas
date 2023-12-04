@@ -7,10 +7,6 @@ import (
 	"time"
 )
 
-func GetPaymentLinkIdDefault() string {
-	return "le5jqxz8as7pgwn9"
-}
-
 func GetSimpleFile() (*os.File, error) {
 	randomKey := strconv.FormatInt(time.Now().Unix()+int64(time.Now().Nanosecond()), 10)
 	nameFile := "test " + randomKey + ".txt"
