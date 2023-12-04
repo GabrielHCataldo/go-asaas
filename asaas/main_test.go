@@ -41,6 +41,7 @@ const EnvPixKeyId = "ASAAS_PIX_KEY_ID"
 const EnvPixTransactionId = "ASAAS_PIX_TRANSACTION_ID"
 const EnvSubaccountId = "ASAAS_SUBACCOUNT_ID"
 const EnvSubaccountDocumentSentId = "ASAAS_SUBACCOUNT_DOCUMENT_SENT_ID"
+const EnvTransferId = "ASAAS_TRANSFER_ID"
 
 func init() {
 	initFile()
@@ -63,6 +64,7 @@ func TestMain(m *testing.M) {
 	clearPaymentLinkId()
 	clearPixTransactionId()
 	clearSubaccountDocumentSentId()
+	clearTransferBankId()
 	logInfo(EnvSandbox, "clean all envs successfully")
 	os.Exit(code)
 }
@@ -782,6 +784,30 @@ func initSubaccountDocument() {
 	setEnv(EnvSubaccountDocumentSentId, resp.Id)
 }
 
+func initTransfer() {
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	clearTransferBankId()
+	walletId := getEnvValue(EnvWalletIdSecondary)
+	if util.IsBlank(&walletId) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nTransfer := NewTransfer(EnvSandbox, accessToken)
+	resp, err := nTransfer.TransferToAsaas(ctx, TransferToAssasRequest{
+		Value:    10,
+		WalletId: walletId,
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvTransferId, resp.Id)
+}
+
 func clearCustomerId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
@@ -1000,6 +1026,22 @@ func clearSubaccountDocumentSentId() {
 	subaccountAsaas := NewSubaccount(EnvSandbox, accessToken)
 	_, _ = subaccountAsaas.DeleteWhiteLabelDocumentSentById(ctx, documentSentId)
 	_ = os.Unsetenv(EnvSubaccountDocumentSentId)
+}
+
+func clearTransferBankId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessTokenSecondary)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	transferId := getEnvValueWithoutLogger(EnvTransferId)
+	if util.IsBlank(&transferId) {
+		return
+	}
+	transferAsaas := NewTransfer(EnvSandbox, accessToken)
+	_, _ = transferAsaas.CancelById(ctx, transferId)
+	_ = os.Unsetenv(EnvTransferId)
 }
 
 func removeFileTest(fileName string) {
