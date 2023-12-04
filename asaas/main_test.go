@@ -37,6 +37,8 @@ const EnvNotificationId = "ASAAS_NOTIFICATION_ID"
 const EnvPaymentLinkId = "ASAAS_PAYMENT_LINK_ID"
 const EnvPaymentLinkDeletedId = "ASAAS_PAYMENT_LINK_DELETED_ID"
 const EnvPaymentLinkImageId = "ASAAS_PAYMENT_LINK_IMAGE_ID"
+const EnvPixKeyId = "ASAAS_PIX_KEY_ID"
+const EnvPixTransactionId = "ASAAS_PIX_TRANSACTION_ID"
 
 func init() {
 	initFile()
@@ -57,6 +59,7 @@ func TestMain(m *testing.M) {
 	clearMobilePhoneRechargeId()
 	clearNegativityId()
 	clearPaymentLinkId()
+	clearPixTransactionId()
 	logInfo(EnvSandbox, "clean all envs successfully")
 	os.Exit(code)
 }
@@ -673,6 +676,53 @@ func initPaymentLinkImage() {
 	setEnv(EnvPaymentLinkImageId, resp.Id)
 }
 
+func initPixKey() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	clearPixKeyId()
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nPix := NewPix(EnvSandbox, accessToken)
+	resp, err := nPix.CreateKey(ctx)
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvPixKeyId, resp.Id)
+}
+
+func initPixTransaction() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	clearPixTransactionId()
+	initPixCharge()
+	pixQrCodePayload := getEnvValue(EnvChargePixQrCodePayload)
+	if util.IsBlank(&pixQrCodePayload) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nPix := NewPix(EnvSandbox, accessToken)
+	resp, err := nPix.PayQrCode(ctx, PayPixQrCodeRequest{
+		QrCode: PixQrCodeRequest{
+			Payload:     pixQrCodePayload,
+			ChangeValue: 0,
+		},
+		Value:        100,
+		Description:  "",
+		ScheduleDate: Date{},
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvPixTransactionId, resp.Id)
+}
+
 func clearCustomerId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
@@ -843,6 +893,38 @@ func clearPaymentLinkId() {
 	paymentLinkAsaas := NewPaymentLink(EnvSandbox, accessToken)
 	_, _ = paymentLinkAsaas.DeleteById(ctx, paymentLinkId)
 	_ = os.Unsetenv(EnvPaymentLinkId)
+}
+
+func clearPixTransactionId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	pixTransactionId := getEnvValueWithoutLogger(EnvPixTransactionId)
+	if util.IsBlank(&pixTransactionId) {
+		return
+	}
+	pixAsaas := NewPix(EnvSandbox, accessToken)
+	_, _ = pixAsaas.CancelTransactionById(ctx, pixTransactionId)
+	_ = os.Unsetenv(EnvPixTransactionId)
+}
+
+func clearPixKeyId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	pixKeyId := getEnvValueWithoutLogger(EnvPixKeyId)
+	if util.IsBlank(&pixKeyId) {
+		return
+	}
+	pixAsaas := NewPix(EnvSandbox, accessToken)
+	_, _ = pixAsaas.DeleteKeyById(ctx, pixKeyId)
+	_ = os.Unsetenv(EnvPixKeyId)
 }
 
 func removeFileTest(fileName string) {

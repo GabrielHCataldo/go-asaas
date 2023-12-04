@@ -39,8 +39,13 @@ func (d Datetime) Time() time.Time {
 	return time.Time(d)
 }
 
-func NewDateTime(year int, month time.Month, day, hour, min, sec, nSec int, loc *time.Location) Date {
-	return Date(time.Date(year, month, day, hour, min, sec, nSec, loc))
+func NewDatetime(year int, month time.Month, day, hour, min, sec, nSec int, loc *time.Location) Datetime {
+	return Datetime(time.Date(year, month, day, hour, min, sec, nSec, loc))
+}
+
+func NewDatetimePointer(year int, month time.Month, day, hour, min, sec, nSec int, loc *time.Location) Datetime {
+	v := NewDatetime(year, month, day, hour, min, sec, nSec, loc)
+	return v
 }
 
 func (d Datetime) Year() int {

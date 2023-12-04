@@ -57,6 +57,19 @@ type GetAllPixKeysRequest struct {
 	Limit int `json:"limit,omitempty"`
 }
 
+type GetAllPixTransactionsRequest struct {
+	// Status da transação
+	Status PixTransactionStatus `json:"status,omitempty"`
+	// Tipo da transação
+	Type PixTransactionType `json:"type,omitempty"`
+	// Tipo da transação
+	EndToEndIdentifier string `json:"endToEndIdentifier,omitempty"`
+	// Elemento inicial da lista
+	Offset int `json:"offset,omitempty"`
+	// Número de elementos da lista (max: 100)
+	Limit int `json:"limit,omitempty"`
+}
+
 type PixKeyResponse struct {
 	Id                    string                `json:"id,omitempty"`
 	Key                   string                `json:"key,omitempty"`
@@ -610,7 +623,7 @@ type Pix interface {
 	// # DOCS
 	//
 	// Listar transações: https://docs.asaas.com/reference/listar-transacoes
-	GetAllTransactions(ctx context.Context) (*Pageable[PixTransactionResponse], error)
+	GetAllTransactions(ctx context.Context, filter GetAllPixTransactionsRequest) (*Pageable[PixTransactionResponse], error)
 	// GetAllKeys (Listar chaves)
 	//
 	// Podemos listar todas as chaves cadastradas na nossa conta ou somente as que estão em um determinado status.
@@ -709,9 +722,10 @@ func (p pix) GetKeyById(ctx context.Context, pixKeyId string) (*PixKeyResponse, 
 	return req.make(http.MethodGet, fmt.Sprintf("/v3/pix/addressKeys/%s", pixKeyId), nil)
 }
 
-func (p pix) GetAllTransactions(ctx context.Context) (*Pageable[PixTransactionResponse], error) {
+func (p pix) GetAllTransactions(ctx context.Context, filter GetAllPixTransactionsRequest) (
+	*Pageable[PixTransactionResponse], error) {
 	req := NewRequest[Pageable[PixTransactionResponse]](ctx, p.env, p.accessToken)
-	return req.make(http.MethodGet, "/v3/pix/transactions", nil)
+	return req.make(http.MethodGet, "/v3/pix/transactions", filter)
 }
 
 func (p pix) GetAllKeys(ctx context.Context, filter GetAllPixKeysRequest) (*Pageable[PixKeyResponse], error) {
