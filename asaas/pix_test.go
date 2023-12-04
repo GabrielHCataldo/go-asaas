@@ -8,7 +8,7 @@ import (
 
 func TestPixGetAllKeysSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)

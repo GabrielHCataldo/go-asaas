@@ -11,7 +11,7 @@ import (
 
 func TestNegativityCreateSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	f, err := os.Open(getEnvValue(EnvFileName))
 	assertFatalErrorNonnull(t, err)
 	v, err := os.ReadFile(f.Name())
@@ -33,7 +33,7 @@ func TestNegativityCreateSuccess(t *testing.T) {
 
 func TestNegativityGetChargesAvailableForDunning(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)

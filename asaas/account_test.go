@@ -8,8 +8,8 @@ import (
 )
 
 func TestAccountSaveInvoiceCustomizationSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	f, err := os.Open(getEnvValue(EnvImageName))
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -27,19 +27,13 @@ func TestAccountSaveInvoiceCustomizationSuccess(t *testing.T) {
 
 func TestAccountSaveInvoiceCustomizationError(t *testing.T) {
 	nAccount := NewAccount(EnvSandbox, "")
-	_, errAsaas := nAccount.SaveInvoiceCustomization(context.TODO(), SaveInvoiceCustomizationRequest{
-		LogoBackgroundColor: "",
-		InfoBackgroundColor: "",
-		FontColor:           "",
-		Enabled:             false,
-		LogoFile:            nil,
-	})
-	assertSuccessNonnull(t, errAsaas)
+	resp, err := nAccount.SaveInvoiceCustomization(context.TODO(), SaveInvoiceCustomizationRequest{})
+	assertResponseFailure(t, resp, err)
 }
 
 func TestAccountUpdateSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -63,13 +57,13 @@ func TestAccountUpdateSuccess(t *testing.T) {
 
 func TestAccountUpdateError(t *testing.T) {
 	nAccount := NewAccount(EnvSandbox, "")
-	_, errAsaas := nAccount.Update(context.TODO(), UpdateAccountRequest{})
-	assertSuccessNonnull(t, errAsaas)
+	resp, err := nAccount.Update(context.TODO(), UpdateAccountRequest{})
+	assertResponseFailure(t, resp, err)
 }
 
 func TestAccountDeleteWhiteLabelSubaccountSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -81,15 +75,13 @@ func TestAccountDeleteWhiteLabelSubaccountSuccess(t *testing.T) {
 
 func TestAccountDeleteWhiteLabelSubaccountError(t *testing.T) {
 	nAccount := NewAccount(EnvSandbox, "")
-	_, errAsaas := nAccount.DeleteWhiteLabelSubaccount(context.TODO(), DeleteWhiteLabelSubaccountRequest{
-		RemoveReason: "",
-	})
-	assertSuccessNonnull(t, errAsaas)
+	resp, err := nAccount.DeleteWhiteLabelSubaccount(context.TODO(), DeleteWhiteLabelSubaccountRequest{})
+	assertResponseFailure(t, resp, err)
 }
 
 func TestAccountGetSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -104,8 +96,8 @@ func TestAccountGetError(t *testing.T) {
 }
 
 func TestAccountGetRegistrationStatusSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -120,8 +112,8 @@ func TestAccountGetRegistrationStatusError(t *testing.T) {
 }
 
 func TestAccountGetBankInfoSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -136,8 +128,8 @@ func TestAccountGetBankInfoError(t *testing.T) {
 }
 
 func TestAccountGetFeesSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -152,8 +144,8 @@ func TestAccountGetFeesError(t *testing.T) {
 }
 
 func TestAccountGetWalletsSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -168,8 +160,8 @@ func TestAccountGetWalletsError(t *testing.T) {
 }
 
 func TestAccountGetBalanceSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -184,8 +176,8 @@ func TestAccountGetBalanceError(t *testing.T) {
 }
 
 func TestAccountGetAccountStatementSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -206,8 +198,8 @@ func TestAccountGetAccountStatementError(t *testing.T) {
 }
 
 func TestAccountGetPaymentStatisticSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -234,8 +226,8 @@ func TestAccountGetPaymentStatisticError(t *testing.T) {
 }
 
 func TestAccountGetSplitStatisticSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
@@ -250,8 +242,8 @@ func TestAccountGetSplitStatisticError(t *testing.T) {
 }
 
 func TestAccountGetInvoiceCustomizationSuccess(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)

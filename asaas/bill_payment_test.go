@@ -8,9 +8,9 @@ import (
 
 func TestBillPaymentSimulateSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	identificationField := getEnvValue(EnvChargeIdentificationField)
-	assertFatalIsBlank(t, identificationField)
+	assertFatalStringBlank(t, identificationField)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
@@ -23,15 +23,15 @@ func TestBillPaymentSimulateSuccess(t *testing.T) {
 
 func TestBillPaymentSimulateError(t *testing.T) {
 	nBillPayment := NewBillPayment(EnvSandbox, "")
-	_, errAsaas := nBillPayment.Create(context.TODO(), CreateBillPaymentRequest{})
-	assertSuccessNonnull(t, errAsaas)
+	resp, err := nBillPayment.Create(context.TODO(), CreateBillPaymentRequest{})
+	assertResponseFailure(t, resp, err)
 }
 
 func TestBillPaymentCreateSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	identificationField := getEnvValue(EnvChargeIdentificationField)
-	assertFatalIsBlank(t, identificationField)
+	assertFatalStringBlank(t, identificationField)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
@@ -50,16 +50,16 @@ func TestBillPaymentCreateSuccess(t *testing.T) {
 
 func TestBillPaymentCreateError(t *testing.T) {
 	nBillPayment := NewBillPayment(EnvSandbox, "")
-	_, errAsaas := nBillPayment.Create(context.TODO(), CreateBillPaymentRequest{})
-	assertSuccessNonnull(t, errAsaas)
+	resp, err := nBillPayment.Create(context.TODO(), CreateBillPaymentRequest{})
+	assertResponseFailure(t, resp, err)
 }
 
 func TestBillPaymentCancelByIdSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	initBillPayment()
 	billPaymentId := getEnvValue(EnvBillPaymentId)
-	assertFatalIsBlank(t, billPaymentId)
+	assertFatalStringBlank(t, billPaymentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
@@ -69,16 +69,16 @@ func TestBillPaymentCancelByIdSuccess(t *testing.T) {
 
 func TestBillPaymentCancelByIdError(t *testing.T) {
 	nBillPayment := NewBillPayment(EnvSandbox, "")
-	resp, errAsaas := nBillPayment.CancelById(context.TODO(), "test")
+	resp, errAsaas := nBillPayment.CancelById(context.TODO(), "")
 	assertResponseFailure(t, resp, errAsaas)
 }
 
 func TestBillPaymentGetByIdSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	initBillPayment()
 	billPaymentId := getEnvValue(EnvBillPaymentId)
-	assertFatalIsBlank(t, billPaymentId)
+	assertFatalStringBlank(t, billPaymentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
@@ -87,16 +87,14 @@ func TestBillPaymentGetByIdSuccess(t *testing.T) {
 }
 
 func TestBillPaymentGetIdError(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
-	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, "")
-	resp, errAsaas := nBillPayment.GetById(ctx, "test")
+	resp, errAsaas := nBillPayment.GetById(context.TODO(), "")
 	assertResponseFailure(t, resp, errAsaas)
 }
 
 func TestBillPaymentGetAllSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	initBillPayment()
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -106,9 +104,7 @@ func TestBillPaymentGetAllSuccess(t *testing.T) {
 }
 
 func TestBillPaymentGetAllError(t *testing.T) {
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
-	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, "")
-	resp, errAsaas := nBillPayment.GetAll(ctx, PageableDefaultRequest{})
+	resp, errAsaas := nBillPayment.GetAll(context.TODO(), PageableDefaultRequest{})
 	assertResponseFailure(t, resp, errAsaas)
 }

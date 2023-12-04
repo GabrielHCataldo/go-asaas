@@ -101,14 +101,12 @@ func (r request[T]) createHttpRequest(ctx context.Context, method string, path s
 			for i := 0; i < rPayload.NumField(); i++ {
 				f := rPayload.Field(i)
 				ft := rtPayload.Field(i)
-				if f.IsNil() || f.IsZero() || !f.IsValid() {
+				k := util.GetJsonFieldNameByReflect(ft)
+				v := util.GetValueByReflect(f)
+				if util.IsBlank(&k) || v == nil {
 					continue
 				}
-				k := strings.Split(ft.Tag.Get("json"), ",")
-				if len(k) > 0 {
-					v := f.Elem().Interface()
-					params.Add(k[0], fmt.Sprintf(`%s`, v))
-				}
+				params.Add(k, fmt.Sprintf(`%s`, v))
 			}
 			encode := params.Encode()
 			if util.IsNotBlank(&encode) {
@@ -215,22 +213,23 @@ func (r request[T]) readResponse(res *http.Response, result *T) error {
 func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader, error) {
 	rPayload := reflect.ValueOf(payload)
 	rtPayload := reflect.TypeOf(payload)
-
 	multipartPayload := map[string][]io.Reader{}
 	for i := 0; i < rPayload.NumField(); i++ {
-		field := rPayload.Field(i)
-		fieldType := rtPayload.Field(i)
-		if field.IsNil() || field.IsZero() || !field.IsValid() {
+		fd := rPayload.Field(i)
+		ft := rtPayload.Field(i)
+		if fd.IsZero() || !fd.IsValid() {
 			continue
 		}
-		sk := strings.Split(fieldType.Tag.Get("json"), ",")
-		if len(sk) == 0 {
+		k := util.GetJsonFieldNameByReflect(ft)
+		vf := util.GetValueByReflect(fd)
+		if util.IsBlank(&k) || vf == nil {
 			continue
 		}
-		k := sk[0]
-		vf := field.Elem().Interface()
 		var b bool
 		var s string
+		var in int
+		var in32 int32
+		var in64 int64
 		var f *os.File
 		var fs []*os.File
 		var ok bool
@@ -238,6 +237,12 @@ func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader
 			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.FormatBool(b))}
 		} else if s, ok = vf.(string); ok {
 			multipartPayload[k] = []io.Reader{strings.NewReader(s)}
+		} else if in, ok = vf.(int); ok {
+			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.Itoa(in))}
+		} else if in32, ok = vf.(int32); ok {
+			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.Itoa(int(in32)))}
+		} else if in64, ok = vf.(int64); ok {
+			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.Itoa(int(in64)))}
 		} else if f, ok = vf.(*os.File); ok && f != nil {
 			multipartPayload[k] = []io.Reader{f}
 		} else if fs, ok = vf.([]*os.File); ok && fs != nil {
@@ -249,8 +254,6 @@ func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader
 				files = append(files, file)
 			}
 			multipartPayload[k] = files
-		} else {
-			multipartPayload[k] = []io.Reader{strings.NewReader(fmt.Sprintf(`%s`, vf))}
 		}
 	}
 	return multipartPayload, nil

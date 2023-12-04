@@ -6,6 +6,7 @@ import (
 	"github.com/nyaruka/phonenumbers"
 	"os"
 	"path"
+	"reflect"
 	"regexp"
 	"runtime"
 	"strconv"
@@ -102,4 +103,25 @@ func GetSystemInfo(skipCaller int) (fileName string, line string, funcName strin
 		nameFunc = strings.Replace(nameFunc, splitFunc[0]+".", "", 1)
 	}
 	return fileBase, strconv.Itoa(lineInt), nameFunc
+}
+
+func GetValueByReflect(f reflect.Value) any {
+	if f.IsZero() || !f.IsValid() {
+		return nil
+	}
+	v := f.Interface()
+	if x, ok := v.(*os.File); ok {
+		v = x
+	} else if f.Kind() == reflect.Pointer {
+		v = f.Elem().Interface()
+	}
+	return v
+}
+
+func GetJsonFieldNameByReflect(f reflect.StructField) string {
+	sk := strings.Split(f.Tag.Get("json"), ",")
+	if len(sk) > 0 && !IsBlank(&sk[0]) && sk[0] != "-" {
+		return sk[0]
+	}
+	return ""
 }

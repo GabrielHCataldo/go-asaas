@@ -14,28 +14,18 @@ func assertFatalErrorNonnull(t *testing.T, err error) {
 	}
 }
 
-func assertFatalIsBlank(t *testing.T, v string) {
+func assertFatalStringBlank(t *testing.T, v string) {
 	if util.IsBlank(&v) {
 		logErrorSkipCaller(4, "value is blank")
 		t.Fatal()
 	}
 }
 
-func assertSuccessNonnull(t *testing.T, v any) {
-	if v != nil || !reflect.ValueOf(v).IsNil() {
-		vJson, _ := json.Marshal(v)
-		logDebugSkipCaller(4, "success: object nonnull", string(vJson))
-	}
-	t.Fail()
-}
-
-func assertResponseSuccess(t *testing.T, resp any, err any) {
+func assertResponseSuccess(t *testing.T, resp any, err error) {
 	r := reflect.ValueOf(resp)
-	e := reflect.ValueOf(err)
 	iResp, ok := resp.(response)
-	if !e.IsNil() {
-		vJson, _ := json.Marshal(err)
-		logErrorSkipCaller(4, "unexpect: err asaas is not nil:", string(vJson))
+	if err != nil {
+		logErrorSkipCaller(4, "unexpect: error is not nil:", err)
 		t.Fail()
 	} else if r.IsNil() || !ok {
 		logErrorSkipCaller(4, "unexpect: resp is nil or not response interface implemented")
@@ -51,13 +41,11 @@ func assertResponseSuccess(t *testing.T, resp any, err any) {
 	}
 }
 
-func assertResponseFailure(t *testing.T, resp any, err any) {
+func assertResponseFailure(t *testing.T, resp any, err error) {
 	r := reflect.ValueOf(resp)
-	e := reflect.ValueOf(err)
 	iResp, ok := resp.(response)
-	if !e.IsNil() {
-		vJson, _ := json.Marshal(err)
-		logErrorSkipCaller(4, "unexpect: err asaas is not nil:", string(vJson))
+	if err != nil {
+		logErrorSkipCaller(4, "unexpect: error is not nil:", err)
 		t.Fail()
 	} else if r.IsNil() || !ok {
 		logErrorSkipCaller(4, "unexpect: resp is nil or not response interface implemented")
@@ -73,13 +61,12 @@ func assertResponseFailure(t *testing.T, resp any, err any) {
 	}
 }
 
-func assertResponseNoContent(t *testing.T, resp any, err any) {
+func assertResponseNoContent(t *testing.T, resp any, err error) {
 	r := reflect.ValueOf(resp)
-	e := reflect.ValueOf(err)
 	iResp, ok := resp.(response)
-	if !e.IsNil() {
+	if err != nil {
 		vJson, _ := json.Marshal(err)
-		logErrorSkipCaller(4, "unexpect: err asaas is not nil:", string(vJson))
+		logErrorSkipCaller(4, "unexpect: error is not nil:", string(vJson))
 		t.Fail()
 		return
 	} else if r.IsNil() || !ok {

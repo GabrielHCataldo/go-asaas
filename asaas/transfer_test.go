@@ -10,7 +10,7 @@ import (
 
 func TestTransferTransferToBankSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &TransferToBankRequest{}
@@ -23,13 +23,13 @@ func TestTransferTransferToBankSuccess(t *testing.T) {
 
 func TestTransferTransferToBankFailure(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &TransferToBankRequest{}
 	err := json.Unmarshal(test.GetTransferToBankFailureRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
-	_, errAsaas := nTransfer.TransferToBank(ctx, *req)
-	assertSuccessNonnull(t, errAsaas)
+	resp, err := nTransfer.TransferToBank(ctx, *req)
+	assertResponseFailure(t, resp, err)
 }

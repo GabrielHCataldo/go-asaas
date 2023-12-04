@@ -10,7 +10,7 @@ import (
 
 func TestPaymentLinkSendImageById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	f, err := os.Open(getEnvValue(EnvFileName))
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -25,7 +25,7 @@ func TestPaymentLinkSendImageById(t *testing.T) {
 
 func TestPaymentLinkGetById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -34,7 +34,7 @@ func TestPaymentLinkGetById(t *testing.T) {
 }
 func TestPaymentLinkGetAll(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)

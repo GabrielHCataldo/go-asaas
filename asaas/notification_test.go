@@ -9,7 +9,7 @@ import (
 
 func TestNotificationGetAllByCustomerSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)
@@ -19,10 +19,10 @@ func TestNotificationGetAllByCustomerSuccess(t *testing.T) {
 
 func TestNotificationGetAllByCustomerNoContent(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)
-	resp, errAsaas := nNotification.GetAllByCustomer(ctx, "test")
+	resp, errAsaas := nNotification.GetAllByCustomer(ctx, "")
 	assertResponseNoContent(t, resp, errAsaas)
 }

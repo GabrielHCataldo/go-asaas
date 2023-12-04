@@ -2,7 +2,6 @@ package asaas
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/GabrielHCataldo/go-asaas/internal/test"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"github.com/mvrilo/go-cpf"
@@ -16,7 +15,8 @@ const EnvAccessTokenSecondary = "ASAAS_ACCESS_TOKEN_SECONDARY"
 const EnvFileName = "ASAAS_FILE_NAME"
 const EnvImageName = "ASAAS_IMAGE_NAME"
 const EnvCustomerId = "ASAAS_CUSTOMER_ID"
-const EnvCustomerDeletedId = "ASAAS_CUSTOMER_DELETED_ID"
+
+// const EnvCustomerDeletedId = "ASAAS_CUSTOMER_DELETED_ID"
 const EnvCreditCardChargeId = "ASAAS_CREDIT_CARD_CHARGE_ID"
 const EnvPixChargeId = "ASAAS_PIX_CHARGE_ID"
 const EnvBankSlipChargeId = "ASAAS_BANK_SLIP_CHARGE_ID"
@@ -29,6 +29,7 @@ const EnvChargeReceivedInCashId = "ASAAS_CHARGE_RECEIVED_IN_CASH_ID"
 const EnvChargeDocumentId = "ASAAS_CHARGE_DOCUMENT_ID"
 const EnvAnticipationId = "ASAAS_ANTICIPATION_ID"
 const EnvBillPaymentId = "ASAAS_BILL_PAYMENT_ID"
+const EnvCreditBureauReportId = "ASAAS_CREDIT_BUREAU_REPORT_ID"
 
 func init() {
 	initFile()
@@ -38,6 +39,7 @@ func init() {
 
 func TestMain(m *testing.M) {
 	code := m.Run()
+	logInfo(EnvSandbox, "cleaning all envs")
 	clearCustomerId()
 	clearCreditCardChargeId()
 	clearPixChargeId()
@@ -53,6 +55,10 @@ func getEnvValue(env string) string {
 		logError("error getEnvValue:", env, " is required env")
 	}
 	return v
+}
+
+func getEnvValueWithoutLogger(env string) string {
+	return os.Getenv(env)
 }
 
 func setEnv(env, v string) bool {
@@ -98,14 +104,32 @@ func initCreditCardCharge(authorizeOnly bool, withInstallment bool) {
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	cReq := &CreateChargeRequest{}
-	err := json.Unmarshal(test.GetCreateCreditCardChargeRequestDefault(), cReq)
-	if err != nil {
-		logError("error json.Unmarshal:", err)
-		return
+	now := time.Now()
+	cReq := &CreateChargeRequest{
+		Customer:    customerId,
+		BillingType: BillingTypeCreditCard,
+		Value:       100,
+		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
+		Description: "Cobrança via teste unitário em Golang",
+		CreditCard: &CreditCardRequest{
+			HolderName:  "unit test go",
+			Number:      "4000000000000010",
+			ExpiryMonth: "05",
+			ExpiryYear:  "2035",
+			Ccv:         "318",
+		},
+		CreditCardHolderInfo: &CreditCardHolderInfoRequest{
+			Name:          "Unit Test Go",
+			CpfCnpj:       "24971563792",
+			Email:         "unittest@gmail.com",
+			Phone:         "4738010919",
+			MobilePhone:   "47998781877",
+			PostalCode:    "89223-005",
+			AddressNumber: "277",
+		},
+		AuthorizeOnly: authorizeOnly,
+		RemoteIp:      "191.253.125.194",
 	}
-	cReq.Customer = customerId
-	cReq.AuthorizeOnly = authorizeOnly
 	if withInstallment {
 		cReq.InstallmentCount = 2
 		cReq.InstallmentValue = cReq.Value / float64(cReq.InstallmentCount)
@@ -137,15 +161,14 @@ func initPixCharge() {
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	cReq := &CreateChargeRequest{}
-	err := json.Unmarshal(test.GetCreatePixChargeRequestDefault(), cReq)
-	if err != nil {
-		logError("error json.Unmarshal:", err)
-		return
-	}
-	cReq.Customer = customerId
+	now := time.Now()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
-	resp, err := chargeAsaas.Create(ctx, *cReq)
+	resp, err := chargeAsaas.Create(ctx, CreateChargeRequest{
+		BillingType: BillingTypePix,
+		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
+		Value:       100,
+		Description: "Cobrança via teste unitário em Golang",
+	})
 	if err != nil || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
@@ -176,15 +199,14 @@ func initBankSlipCharge() {
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	cReq := &CreateChargeRequest{}
-	err := json.Unmarshal(test.GetCreateBankSlipChargeRequestDefault(), cReq)
-	if err != nil {
-		logError("error json.Unmarshal:", err)
-		return
-	}
-	cReq.Customer = customerId
+	now := time.Now()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
-	resp, err := chargeAsaas.Create(ctx, *cReq)
+	resp, err := chargeAsaas.Create(ctx, CreateChargeRequest{
+		BillingType: BillingTypeBankSlip,
+		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
+		Value:       100,
+		Description: "Cobrança via teste unitário em Golang",
+	})
 	if err != nil || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
@@ -215,15 +237,15 @@ func initUndefinedCharge() {
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	cReq := &CreateChargeRequest{}
-	err := json.Unmarshal(test.GetCreateUndefinedChargeRequestDefault(), cReq)
-	if err != nil {
-		logError("error json.Unmarshal:", err)
-		return
-	}
-	cReq.Customer = customerId
+	now := time.Now()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
-	resp, err := chargeAsaas.Create(ctx, *cReq)
+	resp, err := chargeAsaas.Create(ctx, CreateChargeRequest{
+		Customer:    customerId,
+		BillingType: BillingTypeUndefined,
+		Value:       100,
+		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
+		Description: "Cobrança via teste unitário em Golang",
+	})
 	if err != nil || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
@@ -380,15 +402,41 @@ func initImage() {
 	setEnv(EnvImageName, f.Name())
 }
 
-func clearCustomerId() {
+func initCreditBureauReport() {
 	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+
+		return
+	}
+	initCustomer()
+	customerId := getEnvValue(EnvCustomerId)
+	if util.IsBlank(&customerId) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nCreditBureau := NewCreditBureau(EnvSandbox, accessToken)
+	resp, err := nCreditBureau.GetReport(ctx, GetReportRequest{
+		Customer: customerId,
+		CpfCnpj:  "",
+		State:    "SP",
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvCreditBureauReportId, resp.Id)
+}
+
+func clearCustomerId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
 
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	customerId := getEnvValue(EnvCustomerId)
+	customerId := getEnvValueWithoutLogger(EnvCustomerId)
 	if util.IsBlank(&customerId) {
 		return
 	}
@@ -398,14 +446,14 @@ func clearCustomerId() {
 }
 
 func clearCreditCardChargeId() {
-	accessToken := getEnvValue(EnvAccessToken)
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
 
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	chargeId := getEnvValue(EnvCreditCardChargeId)
+	chargeId := getEnvValueWithoutLogger(EnvCreditCardChargeId)
 	if util.IsBlank(&chargeId) {
 		return
 	}
@@ -418,14 +466,14 @@ func clearCreditCardChargeId() {
 }
 
 func clearPixChargeId() {
-	accessToken := getEnvValue(EnvAccessToken)
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
 
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	chargeId := getEnvValue(EnvCreditCardChargeId)
+	chargeId := getEnvValueWithoutLogger(EnvCreditCardChargeId)
 	if util.IsBlank(&chargeId) {
 		return
 	}
@@ -435,14 +483,14 @@ func clearPixChargeId() {
 }
 
 func clearBankSlipChargeId() {
-	accessToken := getEnvValue(EnvAccessToken)
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
 
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	chargeId := getEnvValue(EnvBankSlipChargeId)
+	chargeId := getEnvValueWithoutLogger(EnvBankSlipChargeId)
 	if util.IsBlank(&chargeId) {
 		return
 	}
@@ -452,14 +500,14 @@ func clearBankSlipChargeId() {
 }
 
 func clearUndefinedChargeId() {
-	accessToken := getEnvValue(EnvAccessToken)
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
 
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	chargeId := getEnvValue(EnvBankSlipChargeId)
+	chargeId := getEnvValueWithoutLogger(EnvBankSlipChargeId)
 	if util.IsBlank(&chargeId) {
 		return
 	}
@@ -469,14 +517,14 @@ func clearUndefinedChargeId() {
 }
 
 func clearBillPaymentId() {
-	accessToken := getEnvValue(EnvAccessToken)
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
 
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	billPaymentId := getEnvValue(EnvBillPaymentId)
+	billPaymentId := getEnvValueWithoutLogger(EnvBillPaymentId)
 	if util.IsBlank(&billPaymentId) {
 		return
 	}
@@ -486,7 +534,7 @@ func clearBillPaymentId() {
 }
 
 func clearFileName() {
-	fileName := getEnvValue(EnvFileName)
+	fileName := getEnvValueWithoutLogger(EnvFileName)
 	if util.IsBlank(&fileName) {
 		return
 	}

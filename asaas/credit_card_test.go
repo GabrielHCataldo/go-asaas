@@ -10,7 +10,7 @@ import (
 
 func TestCreditCardTokenizeSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &CreditCardTokenizeRequest{}
@@ -23,7 +23,7 @@ func TestCreditCardTokenizeSuccess(t *testing.T) {
 
 func TestCreditCardTokenizeFailure(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &CreditCardTokenizeRequest{}

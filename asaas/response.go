@@ -493,7 +493,7 @@ func (i InvoiceSettingResponse) IsFailure() bool {
 func (i InvoiceSettingResponse) IsNoContent() bool {
 	return util.IsBlank(&i.MunicipalServiceId) && util.IsBlank(&i.MunicipalServiceCode) &&
 		util.IsBlank(&i.MunicipalServiceName) && util.IsBlank(&i.InvoiceCreationPeriod) &&
-		util.IsBlank(&i.Observations) && i.Deductions == 0 && !i.DaysBeforeDueDate.IsEnumValid() &&
+		util.IsBlank(&i.Observations) && i.Deductions == 0 && i.DaysBeforeDueDate == 0 &&
 		!i.ReceivedOnly && i.Taxes == nil && len(i.Errors) == 0
 }
 

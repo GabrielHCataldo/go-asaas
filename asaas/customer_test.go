@@ -10,7 +10,7 @@ import (
 
 func TestCustomerCreateSuccess(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
+	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &CreateCustomerRequest{}
@@ -21,12 +21,8 @@ func TestCustomerCreateSuccess(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
-func TestCustomerCreateFailure(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalIsBlank(t, accessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
-	defer cancel()
-	nCustomer := NewCustomer(EnvSandbox, accessToken)
-	_, errAsaas := nCustomer.Create(ctx, CreateCustomerRequest{})
-	assertSuccessNonnull(t, errAsaas)
+func TestCustomerCreateError(t *testing.T) {
+	nCustomer := NewCustomer(EnvSandbox, "")
+	resp, err := nCustomer.Create(context.TODO(), CreateCustomerRequest{})
+	assertResponseFailure(t, resp, err)
 }
