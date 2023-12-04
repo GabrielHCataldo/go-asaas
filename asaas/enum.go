@@ -60,11 +60,11 @@ const (
 	ChargeTypeInstallment ChargeType = "INSTALLMENT"
 )
 const (
-	AccountDocumentTypeIdentification          SubaccountDocumentType = "IDENTIFICATION"
-	AccountDocumentTypeSocialContract          SubaccountDocumentType = "SOCIAL_CONTRACT"
-	AccountDocumentTypeEntrepreneurRequirement SubaccountDocumentType = "ENTREPRENEUR_REQUIREMENT"
-	AccountDocumentTypeMinutesOfElection       SubaccountDocumentType = "MINUTES_OF_ELECTION"
-	AccountDocumentTypeCustom                  SubaccountDocumentType = "CUSTOM"
+	SubaccountDocumentTypeIdentification          SubaccountDocumentType = "IDENTIFICATION"
+	SubaccountDocumentTypeSocialContract          SubaccountDocumentType = "SOCIAL_CONTRACT"
+	SubaccountDocumentTypeEntrepreneurRequirement SubaccountDocumentType = "ENTREPRENEUR_REQUIREMENT"
+	SubaccountDocumentTypeMinutesOfElection       SubaccountDocumentType = "MINUTES_OF_ELECTION"
+	SubaccountDocumentTypeCustom                  SubaccountDocumentType = "CUSTOM"
 )
 const (
 	SubaccountDocumentStatusNotSent  SubaccountDocumentStatus = "NOT_SENT"
@@ -498,8 +498,8 @@ func (c ChargeType) IsEnumValid() bool {
 
 func (s SubaccountDocumentType) IsEnumValid() bool {
 	switch s {
-	case AccountDocumentTypeIdentification, AccountDocumentTypeSocialContract, AccountDocumentTypeEntrepreneurRequirement,
-		AccountDocumentTypeMinutesOfElection, AccountDocumentTypeCustom:
+	case SubaccountDocumentTypeIdentification, SubaccountDocumentTypeSocialContract, SubaccountDocumentTypeEntrepreneurRequirement,
+		SubaccountDocumentTypeMinutesOfElection, SubaccountDocumentTypeCustom:
 		return true
 	}
 	return false

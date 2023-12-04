@@ -39,6 +39,8 @@ const EnvPaymentLinkDeletedId = "ASAAS_PAYMENT_LINK_DELETED_ID"
 const EnvPaymentLinkImageId = "ASAAS_PAYMENT_LINK_IMAGE_ID"
 const EnvPixKeyId = "ASAAS_PIX_KEY_ID"
 const EnvPixTransactionId = "ASAAS_PIX_TRANSACTION_ID"
+const EnvSubaccountId = "ASAAS_SUBACCOUNT_ID"
+const EnvSubaccountDocumentSentId = "ASAAS_SUBACCOUNT_DOCUMENT_SENT_ID"
 
 func init() {
 	initFile()
@@ -60,6 +62,7 @@ func TestMain(m *testing.M) {
 	clearNegativityId()
 	clearPaymentLinkId()
 	clearPixTransactionId()
+	clearSubaccountDocumentSentId()
 	logInfo(EnvSandbox, "clean all envs successfully")
 	os.Exit(code)
 }
@@ -723,6 +726,62 @@ func initPixTransaction() {
 	setEnv(EnvPixTransactionId, resp.Id)
 }
 
+func initSubaccount() {
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
+	resp, err := nSubaccount.Create(ctx, CreateSubaccountRequest{
+		Name:          "Unit test go",
+		Email:         "unittestgo@gmail.com",
+		CpfCnpj:       cpf.Generate(),
+		BirthDate:     NewDate(1999, 1, 21, time.Local),
+		MobilePhone:   "47997576131",
+		Address:       "Rua Maria de Souza Maba",
+		AddressNumber: "123",
+		Province:      "Fortaleza",
+		PostalCode:    "89056-220",
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvSubaccountId, resp.Id)
+}
+
+func initSubaccountDocument() {
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	clearSubaccountDocumentSentId()
+	initSubaccount()
+	subaccountId := getEnvValue(EnvSubaccountId)
+	if util.IsBlank(&subaccountId) {
+		return
+	}
+	f, err := os.Open(getEnvValue(EnvFileName))
+	if err != nil {
+		logError("error open file:", err)
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
+	resp, err := nSubaccount.SendWhiteLabelDocument(ctx, subaccountId, SubaccountSendDocumentRequest{
+		Type:         SubaccountDocumentTypeCustom,
+		DocumentFile: f,
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvSubaccountDocumentSentId, resp.Id)
+}
+
 func clearCustomerId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
@@ -925,6 +984,22 @@ func clearPixKeyId() {
 	pixAsaas := NewPix(EnvSandbox, accessToken)
 	_, _ = pixAsaas.DeleteKeyById(ctx, pixKeyId)
 	_ = os.Unsetenv(EnvPixKeyId)
+}
+
+func clearSubaccountDocumentSentId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessTokenSecondary)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	documentSentId := getEnvValueWithoutLogger(EnvSubaccountDocumentSentId)
+	if util.IsBlank(&documentSentId) {
+		return
+	}
+	subaccountAsaas := NewSubaccount(EnvSandbox, accessToken)
+	_, _ = subaccountAsaas.DeleteWhiteLabelDocumentSentById(ctx, documentSentId)
+	_ = os.Unsetenv(EnvSubaccountDocumentSentId)
 }
 
 func removeFileTest(fileName string) {

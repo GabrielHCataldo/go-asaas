@@ -72,7 +72,7 @@ type CreateSubaccountWebhookRequest struct {
 	Type WebhookType `json:"type,omitempty"`
 }
 
-type SendWhiteLabelDocumentRequest struct {
+type SubaccountSendDocumentRequest struct {
 	// Tipo de documento (REQUIRED)
 	Type SubaccountDocumentType `json:"type,omitempty"`
 	// Arquivo (REQUIRED)
@@ -233,7 +233,7 @@ type Subaccount interface {
 	// # DOCS
 	//
 	// Enviar documentos via API: https://docs.asaas.com/reference/enviar-documentos-via-api
-	SendWhiteLabelDocument(ctx context.Context, accountId string, body SendWhiteLabelDocumentRequest) (
+	SendWhiteLabelDocument(ctx context.Context, subaccountId string, body SubaccountSendDocumentRequest) (
 		*SubaccountDocumentSentResponse, error)
 	// UpdateWhiteLabelDocumentSentById (Atualizar documento enviado)
 	//
@@ -545,10 +545,10 @@ func (s subaccount) Create(ctx context.Context, body CreateSubaccountRequest) (*
 	return req.make(http.MethodPost, "/v3/accounts", body)
 }
 
-func (s subaccount) SendWhiteLabelDocument(ctx context.Context, accountId string, body SendWhiteLabelDocumentRequest) (
+func (s subaccount) SendWhiteLabelDocument(ctx context.Context, subaccountId string, body SubaccountSendDocumentRequest) (
 	*SubaccountDocumentSentResponse, error) {
 	req := NewRequest[SubaccountDocumentSentResponse](ctx, s.env, s.accessToken)
-	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/myAccount/documents/%s", accountId), body)
+	return req.makeMultipartForm(http.MethodPost, fmt.Sprintf("/v3/myAccount/documents/%s", subaccountId), body)
 }
 
 func (s subaccount) UpdateWhiteLabelDocumentSentById(
