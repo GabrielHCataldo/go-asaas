@@ -50,7 +50,7 @@ type UpdateManyNotificationRequest struct {
 	// Habilita/desabilita a mensagem de WhatsApp para seu cliente
 	WhatsappEnabledForCustomer *bool `json:"whatsappEnabledForCustomer,omitempty"`
 	// Especifica quantos dias antes do vencimento a notificação deve se enviada. Válido somente para o evento PAYMENT_DUEDATE_WARNING
-	ScheduleOffset int `json:"scheduleOffset,omitempty"`
+	ScheduleOffset *int `json:"scheduleOffset,omitempty"`
 }
 
 type NotificationResponse struct {

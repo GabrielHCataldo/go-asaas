@@ -7,10 +7,6 @@ import (
 	"time"
 )
 
-func GetCustomerIdDefault() string {
-	return "cus_000005791749"
-}
-
 func GetPaymentLinkIdDefault() string {
 	return "le5jqxz8as7pgwn9"
 }
@@ -76,23 +72,6 @@ func GetTransferToBankFailureRequestDefault() []byte {
 				"bankAccountType": "CONTA_CORRENTE"
 			},
 			"description": "Test via Postman"
-		}
-`)
-}
-
-func GetCreateNegativitySuccess() []byte {
-	return []byte(`
-		{
-			"payment": "pay_8129071930338672",
-			"type": "CREDIT_BUREAU",
-			"description": "Unit test Golang",
-			"customerName": "Marcelo Almeida",
-			"customerCpfCnpj": "24971563792",
-			"customerPrimaryPhone": "47999376637",
-			"customerPostalCode": "01310-000",
-			"customerAddress": "Av. Paulista",
-			"customerAddressNumber": "150",
-			"customerProvince": "Centro"
 		}
 `)
 }

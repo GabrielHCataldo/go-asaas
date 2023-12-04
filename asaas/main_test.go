@@ -30,6 +30,10 @@ const EnvChargeDocumentId = "ASAAS_CHARGE_DOCUMENT_ID"
 const EnvAnticipationId = "ASAAS_ANTICIPATION_ID"
 const EnvBillPaymentId = "ASAAS_BILL_PAYMENT_ID"
 const EnvCreditBureauReportId = "ASAAS_CREDIT_BUREAU_REPORT_ID"
+const EnvInvoiceId = "ASAAS_INVOICE_ID"
+const EnvMobilePhoneRechargeId = "ASAAS_MOBILE_PHONE_RECHARGE_ID"
+const EnvNegativityId = "ASAAS_NEGATIVITY_ID"
+const EnvNotificationId = "ASAAS_NOTIFICATION_ID"
 
 func init() {
 	initFile()
@@ -46,6 +50,10 @@ func TestMain(m *testing.M) {
 	clearUndefinedChargeId()
 	clearBillPaymentId()
 	clearFileName()
+	clearInvoiceId()
+	clearMobilePhoneRechargeId()
+	clearNegativityId()
+	logInfo(EnvSandbox, "clean all envs successfully")
 	os.Exit(code)
 }
 
@@ -173,7 +181,6 @@ func initCreditCardCharge(capture bool, withInstallment bool) {
 func initPixCharge() {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	clearPixChargeId()
@@ -211,7 +218,6 @@ func initPixCharge() {
 func initBankSlipCharge(withInstallment bool) {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	clearBankSlipChargeId()
@@ -257,7 +263,6 @@ func initBankSlipCharge(withInstallment bool) {
 func initUndefinedCharge() {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	clearUndefinedChargeId()
@@ -287,7 +292,6 @@ func initUndefinedCharge() {
 func initChargeDeleted() {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	initUndefinedCharge()
@@ -309,7 +313,6 @@ func initChargeDeleted() {
 func initChargeReceivedInCash() {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	initUndefinedCharge()
@@ -363,7 +366,6 @@ func initChargeDocumentId() {
 func initAnticipation() {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	initCreditCardCharge(true, false)
@@ -387,7 +389,6 @@ func initAnticipation() {
 func initBillPayment() {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	clearBillPaymentId()
@@ -436,7 +437,6 @@ func initImage() {
 func initCreditBureauReport() {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	initCustomer()
@@ -462,7 +462,6 @@ func initCreditBureauReport() {
 func initFiscalInfo() {
 	accessToken := getEnvValue(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -491,10 +490,117 @@ func initFiscalInfo() {
 	}
 }
 
+func initInvoice() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	clearInvoiceId()
+	initCreditCardCharge(true, false)
+	chargeId := getEnvValue(EnvCreditCardChargeId)
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nInvoice := NewInvoice(EnvSandbox, accessToken)
+	resp, err := nInvoice.Schedule(ctx, ScheduleInvoiceRequest{
+		Payment:              chargeId,
+		Installment:          "",
+		Customer:             "",
+		ServiceDescription:   "Unit test go",
+		Observations:         "Unit test go",
+		ExternalReference:    "",
+		Value:                100,
+		Deductions:           0,
+		EffectiveDate:        Date{},
+		MunicipalServiceId:   "",
+		MunicipalServiceCode: "",
+		MunicipalServiceName: "",
+		UpdatePayment:        false,
+		Taxes:                InvoiceTaxesRequest{},
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvInvoiceId, resp.Id)
+}
+
+func initMobilePhoneRecharge() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	clearMobilePhoneRechargeId()
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nMobilePhone := NewMobilePhone(EnvSandbox, accessToken)
+	resp, err := nMobilePhone.Recharge(ctx, MobilePhoneRechargeRequest{
+		PhoneNumber: "47997576130",
+		Value:       20,
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvMobilePhoneRechargeId, resp.Id)
+}
+
+func initNegativity() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	clearNegativityId()
+	initBankSlipCharge(false)
+	chargeId := getEnvValue(EnvBankSlipChargeId)
+	if util.IsBlank(&chargeId) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nNegativity := NewNegativity(EnvSandbox, accessToken)
+	resp, err := nNegativity.Create(ctx, CreateNegativityRequest{
+		Payment:               chargeId,
+		Type:                  NegativityTypeCreditBureau,
+		Description:           "Unit test golang",
+		CustomerName:          "Unit test golang",
+		CustomerCpfCnpj:       "24971563792",
+		CustomerPrimaryPhone:  "47999376637",
+		CustomerPostalCode:    "01310-000",
+		CustomerAddress:       "Av. Paulista",
+		CustomerAddressNumber: "150",
+		CustomerProvince:      "Centro",
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvNegativityId, resp.Id)
+}
+
+func initNotification() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	initCreditCardCharge(false, false)
+	customerId := getEnvValue(EnvCustomerId)
+	if util.IsBlank(&customerId) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nNotification := NewNotification(EnvSandbox, accessToken)
+	resp, err := nNotification.GetAllByCustomer(ctx, customerId)
+	if err != nil || resp.IsFailure() || resp.IsNoContent() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvNotificationId, resp.Data[0].Id)
+}
+
 func clearCustomerId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -511,7 +617,6 @@ func clearCustomerId() {
 func clearCreditCardChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -531,7 +636,6 @@ func clearCreditCardChargeId() {
 func clearPixChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -548,7 +652,6 @@ func clearPixChargeId() {
 func clearBankSlipChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -565,7 +668,6 @@ func clearBankSlipChargeId() {
 func clearUndefinedChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -582,7 +684,6 @@ func clearUndefinedChargeId() {
 func clearBillPaymentId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	if util.IsBlank(&accessToken) {
-
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -603,6 +704,54 @@ func clearFileName() {
 	}
 	removeFileTest(fileName)
 	_ = os.Unsetenv(EnvFileName)
+}
+
+func clearInvoiceId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	invoiceId := getEnvValueWithoutLogger(EnvInvoiceId)
+	if util.IsBlank(&invoiceId) {
+		return
+	}
+	invoiceAsaas := NewInvoice(EnvSandbox, accessToken)
+	_, _ = invoiceAsaas.CancelById(ctx, invoiceId)
+	_ = os.Unsetenv(EnvInvoiceId)
+}
+
+func clearMobilePhoneRechargeId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	rechargeId := getEnvValueWithoutLogger(EnvMobilePhoneRechargeId)
+	if util.IsBlank(&rechargeId) {
+		return
+	}
+	mobilePhoneAsaas := NewMobilePhone(EnvSandbox, accessToken)
+	_, _ = mobilePhoneAsaas.CancelRechargeById(ctx, rechargeId)
+	_ = os.Unsetenv(EnvMobilePhoneRechargeId)
+}
+
+func clearNegativityId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	negativityId := getEnvValueWithoutLogger(EnvNegativityId)
+	if util.IsBlank(&negativityId) {
+		return
+	}
+	negativityAsaas := NewNegativity(EnvSandbox, accessToken)
+	_, _ = negativityAsaas.CancelById(ctx, negativityId)
+	_ = os.Unsetenv(EnvNegativityId)
 }
 
 func removeFileTest(fileName string) {
