@@ -9,27 +9,27 @@ import (
 )
 
 func TestCreditCardTokenizeSuccess(t *testing.T) {
-	accessToken, err := test.GetAccessTokenByEnv()
+	accessToken, err := getAccessToken()
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &CreditCardTokenizeRequest{}
 	err = json.Unmarshal(test.GetCreditCardRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
-	nCreditCard := NewCreditCard(EnvSandbox, *accessToken)
+	nCreditCard := NewCreditCard(EnvSandbox, accessToken)
 	resp, errAsaas := nCreditCard.Tokenize(ctx, *req)
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
 func TestCreditCardTokenizeFailure(t *testing.T) {
-	accessToken, err := test.GetAccessTokenByEnv()
+	accessToken, err := getAccessToken()
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &CreditCardTokenizeRequest{}
 	err = json.Unmarshal(test.GetCreditCardFailureRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
-	nCreditCard := NewCreditCard(EnvSandbox, *accessToken)
+	nCreditCard := NewCreditCard(EnvSandbox, accessToken)
 	resp, errAsaas := nCreditCard.Tokenize(ctx, *req)
 	assertResponseFailure(t, resp, errAsaas)
 }

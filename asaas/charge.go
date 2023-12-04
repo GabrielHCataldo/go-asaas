@@ -163,6 +163,7 @@ type CallbackRequest struct {
 type ChargeResponse struct {
 	Id                    string              `json:"id,omitempty"`
 	Customer              string              `json:"customer,omitempty"`
+	Installment           string              `json:"installment,omitempty"`
 	Status                ChargeStatus        `json:"status,omitempty"`
 	PaymentLink           string              `json:"paymentLink,omitempty"`
 	DueDate               Date                `json:"dueDate,omitempty"`

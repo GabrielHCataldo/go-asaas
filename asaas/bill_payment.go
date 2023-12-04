@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type BillPaymentRequest struct {
+type CreateBillPaymentRequest struct {
 	// Linha digitável do boleto (REQUIRED)
 	IdentificationField string `json:"identificationField,omitempty"`
 	// Data de agendamento do pagamento
@@ -89,7 +89,7 @@ type BillPayment interface {
 	//
 	// Permite criar um pagamento de conta por meio da linha digitável do boleto.
 	//
-	// Para agendar seu pagamento de conta, informe o campo BillPaymentRequest.ScheduleDate com a data desejada para pagamento.
+	// Para agendar seu pagamento de conta, informe o campo CreateBillPaymentRequest.ScheduleDate com a data desejada para pagamento.
 	// Ao escolher um dia não útil, o pagamento será realizado no próximo dia útil. Caso não informado, o pagamento
 	// irá ocorrer no dia de vencimento do boleto.
 	//
@@ -134,7 +134,7 @@ type BillPayment interface {
 	// # DOCS
 	//
 	// Criar um pagamento de conta: https://docs.asaas.com/reference/criar-um-pagamento-de-conta
-	Create(ctx context.Context, body BillPaymentRequest) (*BillPaymentResponse, error)
+	Create(ctx context.Context, body CreateBillPaymentRequest) (*BillPaymentResponse, error)
 	// Simulate (Simular um pagamento de conta)
 	//
 	// Permite a simulação de um pagamento de conta por meio da linha digitável ou código de barras do boleto.
@@ -335,7 +335,7 @@ func NewBillPayment(env Env, accessToken string) BillPayment {
 	}
 }
 
-func (b billPayment) Create(ctx context.Context, body BillPaymentRequest) (*BillPaymentResponse, error) {
+func (b billPayment) Create(ctx context.Context, body CreateBillPaymentRequest) (*BillPaymentResponse, error) {
 	req := NewRequest[BillPaymentResponse](ctx, b.env, b.accessToken)
 	return req.make(http.MethodPost, "/v3/bill", body)
 }

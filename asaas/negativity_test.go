@@ -10,7 +10,7 @@ import (
 )
 
 func TestNegativityCreateSuccess(t *testing.T) {
-	accessToken, err := test.GetAccessTokenByEnv()
+	accessToken, err := getAccessToken()
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -25,17 +25,17 @@ func TestNegativityCreateSuccess(t *testing.T) {
 		Mime: FileMimeTypeText,
 		Data: v,
 	}
-	nNegativity := NewNegativity(EnvSandbox, *accessToken)
+	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, errAsaas := nNegativity.Create(ctx, *req)
 	assertResponseSuccess(t, resp, errAsaas)
 }
 
 func TestNegativityGetChargesAvailableForDunning(t *testing.T) {
-	accessToken, err := test.GetAccessTokenByEnv()
+	accessToken, err := getAccessToken()
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nNegativity := NewNegativity(EnvSandbox, *accessToken)
+	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, errAsaas := nNegativity.GetChargesAvailableForDunning(ctx, PageableDefaultRequest{})
 	assertResponseSuccess(t, resp, errAsaas)
 }
