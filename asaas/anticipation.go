@@ -25,7 +25,7 @@ type AnticipationSimulateRequest struct {
 
 type AgreementSignRequest struct {
 	// Determina se concorda ou discorda
-	Agreed bool `json:"agreed,omitempty"`
+	Agreed bool `json:"agreed"`
 }
 
 type GetAllAnticipationsRequest struct {

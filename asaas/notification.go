@@ -8,21 +8,21 @@ import (
 
 type UpdateNotificationRequest struct {
 	// Habilita/desabilita a notificação
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled *bool `json:"enabled,omitempty"`
 	// Habilita/desabilita o email enviado para você
-	EmailEnabledForProvider bool `json:"emailEnabledForProvider,omitempty"`
+	EmailEnabledForProvider *bool `json:"emailEnabledForProvider,omitempty"`
 	// Habilita/desabilita o SMS enviado para você
-	SmsEnabledForProvider bool `json:"smsEnabledForProvider,omitempty"`
+	SmsEnabledForProvider *bool `json:"smsEnabledForProvider,omitempty"`
 	// Habilita/desabilita o email enviado para o seu cliente
-	EmailEnabledForCustomer bool `json:"emailEnabledForCustomer,omitempty"`
+	EmailEnabledForCustomer *bool `json:"emailEnabledForCustomer,omitempty"`
 	// Habilita/desabilita o SMS enviado para o seu cliente
-	SmsEnabledForCustomer bool `json:"smsEnabledForCustomer,omitempty"`
+	SmsEnabledForCustomer *bool `json:"smsEnabledForCustomer,omitempty"`
 	// Habilita/desabilita a notificação por voz enviada para o seu cliente
-	PhoneCallEnabledForCustomer bool `json:"phoneCallEnabledForCustomer,omitempty"`
+	PhoneCallEnabledForCustomer *bool `json:"phoneCallEnabledForCustomer,omitempty"`
 	// Habilita/desabilita a mensagem de WhatsApp para seu cliente
-	WhatsappEnabledForCustomer bool `json:"whatsappEnabledForCustomer,omitempty"`
+	WhatsappEnabledForCustomer *bool `json:"whatsappEnabledForCustomer,omitempty"`
 	// Especifica quantos dias antes do vencimento a notificação deve se enviada. Válido somente para o evento PAYMENT_DUEDATE_WARNING
-	ScheduleOffset int `json:"scheduleOffset,omitempty"`
+	ScheduleOffset *int `json:"scheduleOffset,omitempty"`
 }
 
 type UpdateManyNotificationsRequest struct {
@@ -36,19 +36,19 @@ type UpdateManyNotificationRequest struct {
 	// Identificador único da notificação (REQUIRED)
 	Id string `json:"id,omitempty"`
 	// Habilita/desabilita a notificação
-	Enabled bool `json:"enabled,omitempty"`
+	Enabled *bool `json:"enabled,omitempty"`
 	// Habilita/desabilita o email enviado para você
-	EmailEnabledForProvider bool `json:"emailEnabledForProvider,omitempty"`
+	EmailEnabledForProvider *bool `json:"emailEnabledForProvider,omitempty"`
 	// Habilita/desabilita o SMS enviado para você
-	SmsEnabledForProvider bool `json:"smsEnabledForProvider,omitempty"`
+	SmsEnabledForProvider *bool `json:"smsEnabledForProvider,omitempty"`
 	// Habilita/desabilita o email enviado para o seu cliente
-	EmailEnabledForCustomer bool `json:"emailEnabledForCustomer,omitempty"`
+	EmailEnabledForCustomer *bool `json:"emailEnabledForCustomer,omitempty"`
 	// Habilita/desabilita o SMS enviado para o seu cliente
-	SmsEnabledForCustomer bool `json:"smsEnabledForCustomer,omitempty"`
+	SmsEnabledForCustomer *bool `json:"smsEnabledForCustomer,omitempty"`
 	// Habilita/desabilita a notificação por voz enviada para o seu cliente
-	PhoneCallEnabledForCustomer bool `json:"phoneCallEnabledForCustomer,omitempty"`
+	PhoneCallEnabledForCustomer *bool `json:"phoneCallEnabledForCustomer,omitempty"`
 	// Habilita/desabilita a mensagem de WhatsApp para seu cliente
-	WhatsappEnabledForCustomer bool `json:"whatsappEnabledForCustomer,omitempty"`
+	WhatsappEnabledForCustomer *bool `json:"whatsappEnabledForCustomer,omitempty"`
 	// Especifica quantos dias antes do vencimento a notificação deve se enviada. Válido somente para o evento PAYMENT_DUEDATE_WARNING
 	ScheduleOffset int `json:"scheduleOffset,omitempty"`
 }

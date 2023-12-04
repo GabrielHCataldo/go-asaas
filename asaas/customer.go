@@ -6,7 +6,7 @@ import (
 	"net/http"
 )
 
-type CustomerRequest struct {
+type CreateCustomerRequest struct {
 	// Nome do cliente (REQUIRED)
 	Name string `json:"name,omitempty"`
 	// CPF ou CNPJ do cliente (REQUIRED)
@@ -43,6 +43,45 @@ type CustomerRequest struct {
 	GroupName string `json:"groupName,omitempty"`
 	// Empresa
 	Company string `json:"company,omitempty"`
+}
+
+type UpdateCustomerRequest struct {
+	// Nome do cliente
+	Name string `json:"name,omitempty"`
+	// CPF ou CNPJ do cliente
+	CpfCnpj *string `json:"cpfCnpj,omitempty"`
+	// Email do cliente
+	Email *string `json:"email,omitempty"`
+	// Fone fixo
+	Phone *string `json:"phone,omitempty"`
+	// Fone celular
+	MobilePhone *string `json:"mobilePhone,omitempty"`
+	// Logradouro
+	Address *string `json:"address,omitempty"`
+	// Número do endereço
+	AddressNumber *string `json:"addressNumber,omitempty"`
+	// Complemento do endereço
+	Complement *string `json:"complement,omitempty"`
+	// Bairro
+	Province *string `json:"province,omitempty"`
+	// CEP do endereço
+	PostalCode *string `json:"postalCode,omitempty"`
+	// Identificador do cliente no seu sistema
+	ExternalReference *string `json:"externalReference,omitempty"`
+	// True para desabilitar o envio de notificações de cobrança
+	NotificationDisabled *bool `json:"notificationDisabled,omitempty"`
+	// Emails adicionais para envio de notificações de cobrança separados por ","
+	AdditionalEmails *string `json:"additionalEmails,omitempty"`
+	// Inscrição municipal do cliente
+	MunicipalInscription *string `json:"municipalInscription,omitempty"`
+	// Inscrição estadual do cliente
+	StateInscription *string `json:"stateInscription,omitempty"`
+	// Observações adicionais
+	Observations *string `json:"observations,omitempty"`
+	// Nome do grupo ao qual o cliente pertence
+	GroupName *string `json:"groupName,omitempty"`
+	// Empresa
+	Company *string `json:"company,omitempty"`
 }
 
 type GetAllCustomersRequest struct {
@@ -143,7 +182,7 @@ type Customer interface {
 	// # DOCS
 	//
 	// Criar novo cliente: https://docs.asaas.com/reference/criar-novo-cliente
-	Create(ctx context.Context, body CustomerRequest) (*CustomerResponse, error)
+	Create(ctx context.Context, body CreateCustomerRequest) (*CustomerResponse, error)
 	// UpdateById (Atualizar cliente existente)
 	//
 	// Permite atualizar as informações de um cliente já existente.
@@ -196,7 +235,7 @@ type Customer interface {
 	// # DOCS
 	//
 	// Atualizar cliente existente: https://docs.asaas.com/reference/atualizar-cliente-existente
-	UpdateById(ctx context.Context, customerId string, body CustomerRequest) (*CustomerResponse, error)
+	UpdateById(ctx context.Context, customerId string, body UpdateCustomerRequest) (*CustomerResponse, error)
 	// DeleteById (Remover cliente)
 	//
 	// Ao remover um cliente, as assinaturas e cobranças aguardando pagamento ou vencidas pertencentes a ela também
@@ -412,12 +451,12 @@ func NewCustomer(env Env, accessToken string) Customer {
 	}
 }
 
-func (c customer) Create(ctx context.Context, body CustomerRequest) (*CustomerResponse, error) {
+func (c customer) Create(ctx context.Context, body CreateCustomerRequest) (*CustomerResponse, error) {
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, "/v3/customers", body)
 }
 
-func (c customer) UpdateById(ctx context.Context, customerId string, body CustomerRequest) (*CustomerResponse, error) {
+func (c customer) UpdateById(ctx context.Context, customerId string, body UpdateCustomerRequest) (*CustomerResponse, error) {
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerId), body)
 }

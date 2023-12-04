@@ -24,7 +24,7 @@ type CreatePaymentLinkRequest struct {
 	DueDateLimitDays int `json:"dueDateLimitDays,omitempty"`
 	// Periodicidade da cobrança (REQUIRED se ChargeType = ChargeTypeRecurrent)
 	SubscriptionCycle SubscriptionCycle `json:"subscriptionCycle,omitempty"`
-	// Quantidade máxima de parcelas que seu cliente poderá parcelar o valor do link de pagamentos (REQUIRED se ChargeType = ChargeTypeInstallment se caso não informado o valor padrão será de 1 parcela)
+	// Quantidade máxima de parcelas que seu cliente poderá parcelar o valor do link de pagamentos (REQUIRED se ChargeType = ChargeTypeInstallment)
 	MaxInstallmentCount int `json:"maxInstallmentCount,omitempty"`
 	// Define se os clientes cadastrados pelo link de pagamentos terão as notificações habilitadas. Caso não seja informado o valor padrão será true
 	NotificationEnabled bool `json:"notificationEnabled,omitempty"`
@@ -36,7 +36,7 @@ type UpdatePaymentLinkRequest struct {
 	// Nome do link de pagamentos
 	Name string `json:"name,omitempty"`
 	// Descrição do link de pagamentos
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Forma de pagamento
 	BillingType BillingType `json:"billingType,omitempty"`
 	// Forma de cobrança
@@ -44,15 +44,15 @@ type UpdatePaymentLinkRequest struct {
 	// Data de encerramento, a partir desta data o seu link de pagamentos será desativado automaticamente
 	EndDate Date `json:"endDate,omitempty"`
 	// Valor do link de pagamentos, caso não informado o pagador poderá informar o quanto deseja pagar
-	Value float64 `json:"value,omitempty"`
+	Value *float64 `json:"value,omitempty"`
 	// Caso seja possível o pagamento via boleto bancário, define a quantidade de dias úteis que o seu cliente poderá pagar o boleto após gerado
 	DueDateLimitDays int `json:"dueDateLimitDays,omitempty"`
 	// Periodicidade da cobrança (REQUIRED se ChargeType = ChargeTypeRecurrent)
-	SubscriptionCycle SubscriptionCycle `json:"subscriptionCycle,omitempty"`
-	// Quantidade máxima de parcelas que seu cliente poderá parcelar o valor do link de pagamentos (REQUIRED se ChargeType = ChargeTypeInstallment se caso não informado o valor padrão será de 1 parcela)
+	SubscriptionCycle *SubscriptionCycle `json:"subscriptionCycle,omitempty"`
+	// Quantidade máxima de parcelas que seu cliente poderá parcelar o valor do link de pagamentos (REQUIRED se ChargeType = ChargeTypeInstallment)
 	MaxInstallmentCount int `json:"maxInstallmentCount,omitempty"`
 	// Define se os clientes cadastrados pelo link de pagamentos terão as notificações habilitadas. Caso não seja informado o valor padrão será true
-	NotificationEnabled bool `json:"notificationEnabled,omitempty"`
+	NotificationEnabled *bool `json:"notificationEnabled,omitempty"`
 	// Informações de redirecionamento automático após pagamento do link de pagamento
 	Callback *CallbackRequest `json:"callback,omitempty"`
 }
@@ -61,9 +61,9 @@ type GetAllPaymentLinksRequest struct {
 	// Filtrar pelo nome do link de pagamento
 	Name string `json:"name,omitempty"`
 	// Filtrar por link de pagamentos ativos ou desativados
-	Active bool `json:"active,omitempty"`
+	Active *bool `json:"active,omitempty"`
 	// True para recuperar também os links de pagamento removidos
-	IncludeDeleted bool `json:"includeDeleted,omitempty"`
+	IncludeDeleted *bool `json:"includeDeleted,omitempty"`
 	// Elemento inicial da lista
 	Offset int `json:"offset,omitempty"`
 	// Número de elementos da lista (max: 100)

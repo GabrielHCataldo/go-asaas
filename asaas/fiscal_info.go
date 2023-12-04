@@ -10,33 +10,33 @@ type SaveFiscalInfoRequest struct {
 	// Email para notificações de notas fiscais (REQUIRED)
 	Email string `json:"email,omitempty"`
 	// Inscrição municipal da empresa
-	MunicipalInscription string `json:"municipalInscription,omitempty"`
+	MunicipalInscription *string `json:"municipalInscription,omitempty"`
 	// Indica se a empresa é optante pelo simples nacional
-	SimplesNacional bool `json:"simplesNacional"`
+	SimplesNacional *bool `json:"simplesNacional,omitempty"`
 	// Identifica se a empresa é classificada como incentivador cultural
-	CulturalProjectsPromoter bool `json:"culturalProjectsPromoter,omitempty"`
+	CulturalProjectsPromoter *bool `json:"culturalProjectsPromoter,omitempty"`
 	// Código CNAE
-	Cnae string `json:"cnae,omitempty"`
+	Cnae *string `json:"cnae,omitempty"`
 	// Identificador do regime especial de tributação. Empresas do simples nacional geralmente optam pelo Microempresa Municipal
-	SpecialTaxRegime string `json:"specialTaxRegime,omitempty"`
+	SpecialTaxRegime *string `json:"specialTaxRegime,omitempty"`
 	// Item da lista de serviço, conforme http://www.planalto.gov.br/ccivil_03/leis/LCP/Lcp116.htm
-	ServiceListItem string `json:"serviceListItem,omitempty"`
+	ServiceListItem *string `json:"serviceListItem,omitempty"`
 	// Número de Série utilizado pela sua empresa para emissão de notas fiscais. Na maioria das cidades o número de série utilizado é '1' ou 'E'
-	RpsSerie string `json:"rpsSerie,omitempty"`
+	RpsSerie *string `json:"rpsSerie,omitempty"`
 	// Número do RPS utilizado na última nota fiscal emitida pela sua empresa. Se a sua última NF emitida tem RPS igual a '100', esse campo deve ser preenchido com '101'. Se você nunca emitiu notas fiscais pelo site da sua prefeitura, informe '1' nesse campo
-	RpsNumber int `json:"rpsNumber,omitempty"`
+	RpsNumber *int `json:"rpsNumber,omitempty"`
 	// Número do Lote utilizado na última nota fiscal emitida pela sua empresa. Se o último lote utilizado na sua prefeitura for '25', esse campo deve ser preenchido com '26'. Informe esse campo apenas se sua prefeitura exigir a utilização de lotes
-	LoteNumber int `json:"loteNumber,omitempty"`
+	LoteNumber *int `json:"loteNumber,omitempty"`
 	// Usuário para acesso ao site da prefeitura da sua cidade
-	Username string `json:"username,omitempty"`
+	Username *string `json:"username,omitempty"`
 	// Senha para acesso ao site da prefeitura
-	Password string `json:"password,omitempty"`
+	Password *string `json:"password,omitempty"`
 	// Token de acesso ao site da prefeitura (Caso o acesso ao site da sua prefeitura seja através por Token)
-	AccessToken string `json:"accessToken,omitempty"`
+	AccessToken *string `json:"accessToken,omitempty"`
 	// Arquivo (.pfx ou .p12) do certificado digital da empresa (Caso o acesso ao site da sua prefeitura via certificado digital)
 	CertificateFile *os.File `json:"certificateFile,omitempty"`
 	// Senha do certificado digital enviado (Caso o acesso ao site da sua prefeitura via certificado digital)
-	CertificatePassword string `json:"certificatePassword,omitempty"`
+	CertificatePassword *string `json:"certificatePassword,omitempty"`
 }
 
 type GetAllServicesRequest struct {

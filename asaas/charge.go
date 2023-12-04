@@ -58,9 +58,9 @@ type UpdateChargeRequest struct {
 	// Data de vencimento da cobrança
 	DueDate Date `json:"dueDate,omitempty"`
 	// Descrição da cobrança (máx. 500 caracteres)
-	Description string `json:"description,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Campo livre para busca
-	ExternalReference string `json:"externalReference,omitempty"`
+	ExternalReference *string `json:"externalReference,omitempty"`
 	// Informações de desconto
 	Discount *DiscountRequest `json:"discount,omitempty"`
 	// Informações de juros para pagamento após o vencimento
@@ -68,7 +68,7 @@ type UpdateChargeRequest struct {
 	// Informações de multa para pagamento após o vencimento
 	Fine *FineRequest `json:"fine,omitempty"`
 	// Define se a cobrança será enviada via Correios
-	PostalService bool `json:"postalService,omitempty"`
+	PostalService *bool `json:"postalService,omitempty"`
 	// Configurações do split
 	Split []SplitRequest `json:"split,omitempty"`
 	// Informações de redirecionamento automático após pagamento na tela de fatura
@@ -101,7 +101,7 @@ type GetAllChargesRequest struct {
 	// Filtrar recebimentos originados de um QrCode estático utilizando o id gerado na hora da criação do QrCode.
 	PixQrCodeId string `json:"pixQrCodeId,omitempty"`
 	// Filtrar registros antecipados ou não
-	Anticipated bool `json:"anticipated,omitempty"`
+	Anticipated *bool `json:"anticipated,omitempty"`
 	// Filtrar pela data de pagamento
 	PaymentDate Date `json:"paymentDate,omitempty"`
 	// Filtrar a partir da data de criação inicial
@@ -157,7 +157,7 @@ type CallbackRequest struct {
 	// URL que o cliente será redirecionado após o pagamento com sucesso da fatura ou link de pagamento (REQUIRED)
 	SuccessUrl string `json:"successUrl,omitempty"`
 	// Definir se o cliente será redirecionado automaticamente ou será apenas informado com um botão para retornar ao site. O padrão é true, caso queira desativar informar false
-	AutoRedirect bool `json:"autoRedirect,omitempty"`
+	AutoRedirect *bool `json:"autoRedirect,omitempty"`
 }
 
 type ChargeResponse struct {

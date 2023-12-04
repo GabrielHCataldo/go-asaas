@@ -61,13 +61,7 @@ type UpdateSubscriptionRequest struct {
 	// Periodicidade da cobrança
 	Cycle SubscriptionCycle `json:"cycle,omitempty"`
 	// Descrição da assinatura (máx. 500 caracteres)
-	Description string `json:"description,omitempty"`
-	// Informações do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
-	CreditCard *CreditCardRequest `json:"creditCard,omitempty"`
-	// Informações do titular do cartão de crédito (REQUIRED se BillingType = BillingTypeCreditCard e se CreditCardToken não for informado)
-	CreditCardHolderInfo *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
-	// Token do cartão de crédito para uso da funcionalidade de tokenização de cartão de crédito
-	CreditCardToken string `json:"creditCardToken,omitempty"`
+	Description *string `json:"description,omitempty"`
 	// Data de validade da assinatura
 	EndDate Date `json:"endDate,omitempty"`
 	// True para atualizar mensalidades já existentes com o novo valor ou forma de pagamento
@@ -125,9 +119,9 @@ type GetAllChargesBySubscriptionRequest struct {
 
 type SubscriptionPaymentBookRequest struct {
 	// Mês final para geração do carnê (REQUIRED)
-	Month int `json:"month,omitempty"`
+	Month int `json:"month"`
 	// Ano final para geração do carnê (REQUIRED)
-	Year int `json:"year,omitempty"`
+	Year int `json:"year"`
 	// Filtrar pelo nome da coluna
 	Sort SortPaymentBookField `json:"sort,omitempty"`
 	// Ordenação da coluna
@@ -256,7 +250,7 @@ type Subscription interface {
 	// # DOCS
 	//
 	// Criar configuração para emissão de Notas Fiscais: https://docs.asaas.com/reference/criar-configuracao-para-emissao-de-notas-fiscais
-	CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
+	CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body CreateInvoiceSettingRequest) (
 		*InvoiceSettingResponse, error)
 	// UpdateById (Atualizar assinatura existente)
 	//
@@ -802,7 +796,7 @@ func (s subscription) Create(ctx context.Context, body CreateSubscriptionRequest
 	return req.make(http.MethodPost, "/v3/subscriptions", body)
 }
 
-func (s subscription) CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body SaveInvoiceSettingRequest) (
+func (s subscription) CreateInvoiceSettingById(ctx context.Context, subscriptionId string, body CreateInvoiceSettingRequest) (
 	*InvoiceSettingResponse, error) {
 	req := NewRequest[InvoiceSettingResponse](ctx, s.env, s.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/subscriptions/%s/invoiceSettings", subscriptionId), body)

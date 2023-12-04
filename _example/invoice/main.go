@@ -33,7 +33,7 @@ func scheduleInvoice() {
 		MunicipalServiceCode: "",
 		MunicipalServiceName: "",
 		UpdatePayment:        false,
-		Taxes:                nil,
+		Taxes:                asaas.InvoiceTaxesRequest{},
 	})
 	if err != nil {
 		fmt.Println("error:", err)
@@ -85,8 +85,8 @@ func getInvoiceById() {
 
 func getAllInvoices() {
 	resp, err := invoiceAsaas.GetAll(context.TODO(), asaas.GetAllInvoicesRequest{
-		EffectiveDateGE:   nil,
-		EffectiveDateLE:   nil,
+		EffectiveDateGE:   asaas.Date{},
+		EffectiveDateLE:   asaas.Date{},
 		Payment:           "",
 		Installment:       "",
 		Customer:          "",

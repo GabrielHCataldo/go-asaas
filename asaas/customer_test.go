@@ -13,7 +13,7 @@ func TestCustomerCreateSuccess(t *testing.T) {
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	req := &CustomerRequest{}
+	req := &CreateCustomerRequest{}
 	err = json.Unmarshal(test.GetCreateCustomerRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
 	nCustomer := NewCustomer(EnvSandbox, *accessToken)
@@ -27,6 +27,6 @@ func TestCustomerCreateFailure(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, *accessToken)
-	_, errAsaas := nCustomer.Create(ctx, CustomerRequest{})
+	_, errAsaas := nCustomer.Create(ctx, CreateCustomerRequest{})
 	assertSuccessNonnull(t, errAsaas)
 }

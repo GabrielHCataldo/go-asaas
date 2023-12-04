@@ -21,11 +21,11 @@ type CreatePixKeyStaticRequest struct {
 	// Formato do QrCode
 	Format QrCodeFormat `json:"format,omitempty"`
 	// Data/Hora de expiração do QrCode, após desta data todos os pagamentos serão recusados.
-	ExpirationDate *Datetime `json:"expirationDate,omitempty"`
+	ExpirationDate Datetime `json:"expirationDate,omitempty"`
 	// Determina a data de expiração em segundos.
 	ExpirationSeconds int `json:"expirationSeconds,omitempty"`
 	// Define se o QrCode pode ser pago múltiplas vezes, caso não informado o valor padrão é true.
-	AllowsMultiplePayments bool `json:"allowsMultiplePayments"`
+	AllowsMultiplePayments *bool `json:"allowsMultiplePayments"`
 }
 
 type PayPixQrCodeRequest struct {

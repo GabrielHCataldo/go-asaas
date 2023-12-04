@@ -10,17 +10,24 @@ type TransferToBankRequest struct {
 	// Valor a ser transferido (REQUIRED)
 	Value float64 `json:"value,omitempty"`
 	// Informe os dados da conta caso seja uma transferência para conta bancária (REQUIRED)
-	BankAccount       BackAccountRequest    `json:"bankAccount,omitempty"`
-	OperationType     TransferOperationType `json:"operationType,omitempty"`
-	PixAddressKey     string                `json:"pixAddressKey,omitempty"`
-	PixAddressKeyType PixKeyType            `json:"pixAddressKeyType,omitempty"`
-	Description       string                `json:"description,omitempty"`
-	ScheduleDate      Date                  `json:"scheduleDate,omitempty"`
+	BankAccount BackAccountRequest `json:"bankAccount,omitempty"`
+	// Modalidade da transferência. Caso não informado e a instituição recebedora seja participante do pix, a transferência é via pix. Do contrário via TED.
+	OperationType TransferOperationType `json:"operationType,omitempty"`
+	// Informe a chave pix caso seja uma transferência TransferOperationTypePix
+	PixAddressKey string `json:"pixAddressKey,omitempty"`
+	// Informe o tipo de chave caso seja uma transferência TransferOperationTypePix
+	PixAddressKeyType PixKeyType `json:"pixAddressKeyType,omitempty"`
+	// Transferência TransferOperationTypePix permitem descrição
+	Description string `json:"description,omitempty"`
+	// Para transferências agendadas, caso não informado o pagamento é instantâneo
+	ScheduleDate Date `json:"scheduleDate,omitempty"`
 }
 
 type TransferToAssasRequest struct {
-	Value    float64 `json:"value,omitempty"`
-	WalletId string  `json:"walletId,omitempty"`
+	// Valor a ser transferido (REQUIRED)
+	Value float64 `json:"value,omitempty"`
+	// WalletId da conta de destino
+	WalletId string `json:"walletId,omitempty"`
 }
 
 type BackAccountRequest struct {

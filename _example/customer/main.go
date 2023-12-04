@@ -19,7 +19,7 @@ func main() {
 }
 
 func createCustomer() {
-	resp, err := customerAsaas.Create(context.TODO(), asaas.CustomerRequest{
+	resp, err := customerAsaas.Create(context.TODO(), asaas.CreateCustomerRequest{
 		Name:                 "Go Asaas Test",
 		CpfCnpj:              "85185238003",
 		Email:                "",
@@ -49,25 +49,25 @@ func createCustomer() {
 }
 
 func updateCustomerById() {
-	resp, err := customerAsaas.UpdateById(context.TODO(), "cus_000005799255", asaas.CustomerRequest{
+	resp, err := customerAsaas.UpdateById(context.TODO(), "cus_000005799255", asaas.UpdateCustomerRequest{
 		Name:                 "",
-		CpfCnpj:              "",
-		Email:                "test@test.com",
-		Phone:                "",
-		MobilePhone:          "48997576131",
-		Address:              "",
-		AddressNumber:        "",
-		Complement:           "",
-		Province:             "",
-		PostalCode:           "",
-		ExternalReference:    "",
-		NotificationDisabled: false,
-		AdditionalEmails:     "",
-		MunicipalInscription: "",
-		StateInscription:     "",
-		Observations:         "",
-		GroupName:            "",
-		Company:              "",
+		CpfCnpj:              nil,
+		Email:                nil,
+		Phone:                nil,
+		MobilePhone:          nil,
+		Address:              nil,
+		AddressNumber:        nil,
+		Complement:           nil,
+		Province:             nil,
+		PostalCode:           nil,
+		ExternalReference:    nil,
+		NotificationDisabled: nil,
+		AdditionalEmails:     nil,
+		MunicipalInscription: nil,
+		StateInscription:     nil,
+		Observations:         nil,
+		GroupName:            nil,
+		Company:              nil,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
