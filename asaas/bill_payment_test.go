@@ -7,10 +7,10 @@ import (
 )
 
 func TestBillPaymentSimulateSuccess(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
-	identificationField, err := getChargeIdentificationField()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
+	identificationField := getEnvValue(EnvChargeIdentificationField)
+	assertFatalIsBlank(t, identificationField)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
@@ -28,10 +28,10 @@ func TestBillPaymentSimulateError(t *testing.T) {
 }
 
 func TestBillPaymentCreateSuccess(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
-	identificationField, err := getChargeIdentificationField()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
+	identificationField := getEnvValue(EnvChargeIdentificationField)
+	assertFatalIsBlank(t, identificationField)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
@@ -55,11 +55,11 @@ func TestBillPaymentCreateError(t *testing.T) {
 }
 
 func TestBillPaymentCancelByIdSuccess(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
 	initBillPayment()
-	billPaymentId, err := getBillPaymentId()
-	assertFatalErrorNonnull(t, err)
+	billPaymentId := getEnvValue(EnvBillPaymentId)
+	assertFatalIsBlank(t, billPaymentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
@@ -74,11 +74,11 @@ func TestBillPaymentCancelByIdError(t *testing.T) {
 }
 
 func TestBillPaymentGetByIdSuccess(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
 	initBillPayment()
-	billPaymentId, err := getBillPaymentId()
-	assertFatalErrorNonnull(t, err)
+	billPaymentId := getEnvValue(EnvBillPaymentId)
+	assertFatalIsBlank(t, billPaymentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
@@ -95,8 +95,8 @@ func TestBillPaymentGetIdError(t *testing.T) {
 }
 
 func TestBillPaymentGetAllSuccess(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
 	initBillPayment()
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()

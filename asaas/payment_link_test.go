@@ -3,17 +3,18 @@ package asaas
 import (
 	"context"
 	"github.com/GabrielHCataldo/go-asaas/internal/test"
+	"os"
 	"testing"
 	"time"
 )
 
 func TestPaymentLinkSendImageById(t *testing.T) {
-	accessToken, err := getAccessToken()
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
+	f, err := os.Open(getEnvValue(EnvFileName))
 	assertFatalErrorNonnull(t, err)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	f, err := test.GetSimpleFile()
-	assertFatalErrorNonnull(t, err)
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
 	resp, errAsaas := nPaymentLink.SendImageById(ctx, test.GetPaymentLinkIdDefault(), SendImagePaymentLinksRequest{
 		Main:  true,
@@ -23,8 +24,8 @@ func TestPaymentLinkSendImageById(t *testing.T) {
 }
 
 func TestPaymentLinkGetById(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -32,8 +33,8 @@ func TestPaymentLinkGetById(t *testing.T) {
 	assertResponseSuccess(t, resp, errAsaas)
 }
 func TestPaymentLinkGetAll(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)

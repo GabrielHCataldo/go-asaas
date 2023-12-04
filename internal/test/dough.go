@@ -15,10 +15,6 @@ func GetChargeIdDefault() string {
 	return "pay_9162542863222410"
 }
 
-func GetDocumentIdDefault() string {
-	return "1864d2cb-5420-4e95-85b8-57ddeda30225"
-}
-
 func GetPaymentLinkIdDefault() string {
 	return "le5jqxz8as7pgwn9"
 }
@@ -102,7 +98,6 @@ func GetCreateCreditCardChargeRequestDefault() []byte {
 func GetCreateCreditCardChargeFailureRequestDefault() []byte {
 	return []byte(`
 		{
-			"customer": "cus_000005791749",
 			"billingType": "CREDIT_CARD",
 			"value": 10.0,
 			"dueDate": "2099-11-28",
@@ -131,7 +126,6 @@ func GetCreateCreditCardChargeFailureRequestDefault() []byte {
 func GetCreditCardFailureRequestDefault() []byte {
 	return []byte(`
 		{
-			"customer": "cus_000005791749",
 			"creditCard": {
 				"holderName": "unit test go",
 				"number": "5184019740373151",
@@ -155,7 +149,6 @@ func GetCreditCardFailureRequestDefault() []byte {
 func GetCreditCardRequestDefault() []byte {
 	return []byte(`
 		{
-			"customer": "cus_000005791749",
 			"creditCard": {
 				"holderName": "unit test go",
 				"number": "4000000000000010",

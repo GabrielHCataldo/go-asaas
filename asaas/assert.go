@@ -2,6 +2,7 @@ package asaas
 
 import (
 	"encoding/json"
+	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"reflect"
 	"testing"
 )
@@ -9,6 +10,13 @@ import (
 func assertFatalErrorNonnull(t *testing.T, err error) {
 	if err != nil {
 		logErrorSkipCaller(4, err)
+		t.Fatal()
+	}
+}
+
+func assertFatalIsBlank(t *testing.T, v string) {
+	if util.IsBlank(&v) {
+		logErrorSkipCaller(4, "value is blank")
 		t.Fatal()
 	}
 }

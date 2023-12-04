@@ -7,8 +7,8 @@ import (
 )
 
 func TestWebhookGetSettingNoContent(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nWebhook := NewWebhook(EnvSandbox, accessToken)

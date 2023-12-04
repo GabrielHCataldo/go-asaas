@@ -9,12 +9,12 @@ import (
 )
 
 func TestTransferTransferToBankSuccess(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &TransferToBankRequest{}
-	err = json.Unmarshal(test.GetTransferToBankRequestDefault(), req)
+	err := json.Unmarshal(test.GetTransferToBankRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
 	resp, errAsaas := nTransfer.TransferToBank(ctx, *req)
@@ -22,12 +22,12 @@ func TestTransferTransferToBankSuccess(t *testing.T) {
 }
 
 func TestTransferTransferToBankFailure(t *testing.T) {
-	accessToken, err := getAccessToken()
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessToken)
+	assertFatalIsBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	req := &TransferToBankRequest{}
-	err = json.Unmarshal(test.GetTransferToBankFailureRequestDefault(), req)
+	err := json.Unmarshal(test.GetTransferToBankFailureRequestDefault(), req)
 	assertFatalErrorNonnull(t, err)
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
 	_, errAsaas := nTransfer.TransferToBank(ctx, *req)

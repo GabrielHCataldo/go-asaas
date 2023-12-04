@@ -12,6 +12,13 @@ var lWarning = log.New(os.Stdout, "[ASAAS \u001b[33mWARNING: \u001B[0m", log.Lst
 var lError = log.New(os.Stdout, "[ASAAS \u001b[31mERROR: \u001b[0m", log.LstdFlags)
 var lDebug = log.New(os.Stdout, "[ASAAS \u001b[36mDEBUG: \u001B[0m", log.LstdFlags)
 
+func logInfo(env Env, v ...any) {
+	if env == EnvProduction {
+		return
+	}
+	lInfo.Print(getSystemMessageDefault(3), fmt.Sprintln(v...))
+}
+
 func logInfoSkipCaller(skipCaller int, env Env, v ...any) {
 	if env == EnvProduction {
 		return
