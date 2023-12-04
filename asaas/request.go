@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
-	"github.com/fatih/structs"
 	"io"
 	"mime/multipart"
 	"net/http"
@@ -96,14 +95,20 @@ func (r request[T]) createHttpRequest(ctx context.Context, method string, path s
 	if payload != nil {
 		switch method {
 		case http.MethodGet, http.MethodDelete:
-			fields := structs.Fields(payload)
+			rPayload := reflect.ValueOf(payload)
+			rtPayload := reflect.TypeOf(payload)
 			params := url.Values{}
-			for _, f := range fields {
-				if f.Value() == nil || f.IsZero() {
+			for i := 0; i < rPayload.NumField(); i++ {
+				f := rPayload.Field(i)
+				ft := rtPayload.Field(i)
+				if f.IsNil() || f.IsZero() || !f.IsValid() {
 					continue
 				}
-				k := strings.Replace(f.Tag("json"), ",omitempty", "", 1)
-				params.Add(k, fmt.Sprintf(`%s`, f.Value()))
+				k := strings.Split(ft.Tag.Get("json"), ",")
+				if len(k) > 0 {
+					v := f.Elem().Interface()
+					params.Add(k[0], fmt.Sprintf(`%s`, v))
+				}
 			}
 			encode := params.Encode()
 			if util.IsNotBlank(&encode) {
@@ -208,10 +213,22 @@ func (r request[T]) readResponse(res *http.Response, result *T) error {
 }
 
 func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader, error) {
+	rPayload := reflect.ValueOf(payload)
+	rtPayload := reflect.TypeOf(payload)
+
 	multipartPayload := map[string][]io.Reader{}
-	for _, field := range structs.Fields(payload) {
-		k := strings.Replace(field.Tag("json"), ",omitempty", "", 1)
-		vf := field.Value()
+	for i := 0; i < rPayload.NumField(); i++ {
+		field := rPayload.Field(i)
+		fieldType := rtPayload.Field(i)
+		if field.IsNil() || field.IsZero() || !field.IsValid() {
+			continue
+		}
+		sk := strings.Split(fieldType.Tag.Get("json"), ",")
+		if len(sk) == 0 {
+			continue
+		}
+		k := sk[0]
+		vf := field.Elem().Interface()
 		var b bool
 		var s string
 		var f *os.File
