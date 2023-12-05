@@ -3,6 +3,7 @@ package asaas
 import (
 	"context"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
+	"github.com/mvrilo/go-cpf"
 	"os"
 	"testing"
 	"time"
@@ -17,9 +18,9 @@ func TestSubaccountCreate(t *testing.T) {
 		Name:          "Unit test go",
 		Email:         util.GenerateEmail(),
 		LoginEmail:    "",
-		CpfCnpj:       "81452811000125",
+		CpfCnpj:       cpf.Generate(),
 		BirthDate:     NewDate(1999, 6, 12, time.Local),
-		CompanyType:   CompanyTypeLimited,
+		CompanyType:   "",
 		Phone:         "",
 		MobilePhone:   util.GenerateMobilePhone(),
 		Site:          "",

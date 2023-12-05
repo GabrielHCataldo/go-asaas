@@ -17,7 +17,7 @@ func TestSubscriptionCreate(t *testing.T) {
 	resp, err := nSubscription.Create(ctx, CreateSubscriptionRequest{
 		Customer:             customerId,
 		BillingType:          BillingTypeBankSlip,
-		Value:                100,
+		Value:                5,
 		NextDueDate:          NewDate(now.Year(), now.Month()+1, now.Day(), now.Location()),
 		Discount:             nil,
 		Interest:             nil,

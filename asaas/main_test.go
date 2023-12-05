@@ -58,7 +58,6 @@ func TestMain(m *testing.M) {
 	code := m.Run()
 	logInfo(EnvSandbox, "cleaning all envs")
 	clearCustomerId()
-	clearCreditCardChargeId()
 	clearPixChargeId()
 	clearUndefinedChargeId()
 	clearBillPaymentId()
@@ -138,7 +137,6 @@ func initCustomerDeleted() {
 
 func initCreditCardCharge(withInstallment bool) {
 	initCustomer()
-	clearCreditCardChargeId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -147,7 +145,7 @@ func initCreditCardCharge(withInstallment bool) {
 	req := CreateChargeRequest{
 		Customer:    customerId,
 		BillingType: BillingTypeCreditCard,
-		Value:       100,
+		Value:       500,
 		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
 		Description: "Cobrança via teste unitário em Golang",
 		CreditCard: &CreditCardRequest{
@@ -196,7 +194,7 @@ func initPixCharge() {
 		Customer:    customerId,
 		BillingType: BillingTypePix,
 		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
-		Value:       100,
+		Value:       5,
 		Description: "Cobrança via teste unitário em Golang",
 	})
 	if err != nil || resp.IsNoContent() || resp.IsFailure() {
@@ -224,7 +222,7 @@ func initBankSlipCharge(withInstallment bool) {
 		Customer:    customerId,
 		BillingType: BillingTypeBankSlip,
 		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
-		Value:       100,
+		Value:       5,
 		Description: "Cobrança via teste unitário em Golang",
 	}
 	if withInstallment {
@@ -259,7 +257,7 @@ func initUndefinedCharge() {
 	resp, err := chargeAsaas.Create(ctx, CreateChargeRequest{
 		Customer:    customerId,
 		BillingType: BillingTypeUndefined,
-		Value:       100,
+		Value:       5,
 		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
 		Description: "Cobrança via teste unitário em Golang",
 	})
@@ -295,7 +293,7 @@ func initChargeReceivedInCash() {
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
 	resp, err := chargeAsaas.ReceiveInCashById(ctx, chargeId, ChargeReceiveInCashRequest{
 		PaymentDate: NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
-		Value:       100,
+		Value:       5,
 	})
 	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
@@ -440,7 +438,7 @@ func initInvoice() {
 		ServiceDescription:   "Unit test go",
 		Observations:         "Unit test go",
 		ExternalReference:    "",
-		Value:                100,
+		Value:                5,
 		Deductions:           0,
 		EffectiveDate:        Date{},
 		MunicipalServiceId:   "",
@@ -594,7 +592,7 @@ func initPixTransaction() {
 			Payload:     pixQrCodePayload,
 			ChangeValue: 0,
 		},
-		Value:        100,
+		Value:        5,
 		Description:  "",
 		ScheduleDate: Date{},
 	})
@@ -726,7 +724,7 @@ func initSubscription() {
 	resp, err := nSubscription.Create(ctx, CreateSubscriptionRequest{
 		Customer:    customerId,
 		BillingType: BillingTypeBankSlip,
-		Value:       100,
+		Value:       5,
 		NextDueDate: NewDate(now.Year(), now.Month()+1, now.Day(), now.Location()),
 		Cycle:       SubscriptionCycleMonthly,
 		Description: "Unit test go",
@@ -769,26 +767,11 @@ func clearCustomerId() {
 	_ = os.Unsetenv(EnvCustomerId)
 }
 
-func clearCreditCardChargeId() {
-	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
-	defer cancel()
-	chargeId := getEnvValueWithoutLogger(EnvCreditCardChargeId)
-	if util.IsBlank(&chargeId) {
-		return
-	}
-	chargeAsaas := NewCharge(EnvSandbox, accessToken)
-	_, _ = chargeAsaas.RefundById(ctx, chargeId, RefundRequest{
-		Description: "unit test golang",
-	})
-	_ = os.Unsetenv(EnvCreditCardChargeId)
-}
-
 func clearPixChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
-	chargeId := getEnvValueWithoutLogger(EnvCreditCardChargeId)
+	chargeId := getEnvValueWithoutLogger(EnvPixChargeId)
 	if util.IsBlank(&chargeId) {
 		return
 	}

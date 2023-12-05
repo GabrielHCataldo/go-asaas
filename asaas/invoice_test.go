@@ -20,7 +20,7 @@ func TestInvoiceSchedule(t *testing.T) {
 		ServiceDescription:   "Unit test go",
 		Observations:         "Unit test go",
 		ExternalReference:    "",
-		Value:                100,
+		Value:                5,
 		Deductions:           0,
 		EffectiveDate:        Date{},
 		MunicipalServiceId:   "",

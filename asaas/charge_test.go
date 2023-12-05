@@ -130,7 +130,7 @@ func TestChargeReceiveInCashById(t *testing.T) {
 	now := DateNow()
 	resp, err := nCharge.ReceiveInCashById(ctx, chargeId, ChargeReceiveInCashRequest{
 		PaymentDate:    NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
-		Value:          100,
+		Value:          5,
 		NotifyCustomer: false,
 	})
 	assertResponseSuccess(t, resp, err)

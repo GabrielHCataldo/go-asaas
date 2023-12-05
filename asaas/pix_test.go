@@ -18,7 +18,7 @@ func TestPixPayQrCode(t *testing.T) {
 			Payload:     pixQrCodePayload,
 			ChangeValue: 0,
 		},
-		Value:        100,
+		Value:        5,
 		Description:  "",
 		ScheduleDate: Date{},
 	})

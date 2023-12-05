@@ -9,7 +9,6 @@ on:
 
 jobs:
   build:
-
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
@@ -21,13 +20,19 @@ jobs:
         run: go version
       - name: Install dependencies
         run: |
-          go get .
-          go get github.com/mattn/goveralls
-      - name: Build
-        run: go build -v ./...
-#      - name: Import Goveralls
-#        run: go get github.com/mattn/goveralls
-#      - name: Test Covarage
-#        run: go test -v -covermode=count -coverprofile=coverage.out ./asaas/...
-#      - name: Export Covarage
-#        run: $GOPATH/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken=$COVERALLS_TOKEN
+          go mod download
+      - name: Run Unit tests
+        env:
+          ASAAS_ACCESS_TOKEN: ${{ secrets.ASAAS_ACCESS_TOKEN }}
+          ASAAS_ACCESS_TOKEN_SECONDARY: ${{ secrets.ASAAS_ACCESS_TOKEN_SECONDARY }}
+          ASAAS_WALLET_ID: ${{ secrets.ASAAS_WALLET_ID }}
+          ASAAS_WALLET_ID_SECONDARY: ${{ secrets.ASAAS_WALLET_ID_SECONDARY }}
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+        run: |
+          go test -race -covermode atomic -coverprofile=covprofile ./asaas/...
+      - name: Install goveralls
+        run: go install github.com/mattn/goveralls@latest
+      - name: Send coverage
+        env:
+          COVERALLS_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
+        run: goveralls -coverprofile=covprofile -service=github
