@@ -43,6 +43,7 @@ const EnvPixTransactionId = "ASAAS_PIX_TRANSACTION_ID"
 const EnvSubaccountId = "ASAAS_SUBACCOUNT_ID"
 const EnvSubaccountDocumentSentId = "ASAAS_SUBACCOUNT_DOCUMENT_SENT_ID"
 const EnvTransferId = "ASAAS_TRANSFER_ID"
+const EnvSubscriptionId = "ASAAS_SUBSCRIPTION_ID"
 
 func init() {
 	initFile()
@@ -65,7 +66,9 @@ func TestMain(m *testing.M) {
 	clearPaymentLinkId()
 	clearPixTransactionId()
 	clearSubaccountDocumentSentId()
-	clearTransferBankId()
+	clearSubaccount()
+	clearTransferId()
+	clearSubscriptionId()
 	logInfo(EnvSandbox, "clean all envs successfully")
 	os.Exit(code)
 }
@@ -102,8 +105,13 @@ func initCustomer() {
 	defer cancel()
 	customerAsaas := NewCustomer(EnvSandbox, accessToken)
 	resp, err := customerAsaas.Create(ctx, CreateCustomerRequest{
-		Name:    "Unit test go",
-		CpfCnpj: cpf.Generate(),
+		Name:          "Unit test go",
+		CpfCnpj:       cpf.Generate(),
+		Email:         "unittestgo@gmail.com",
+		MobilePhone:   "47997576130",
+		PostalCode:    "89041-001",
+		Address:       "Rua General Osório",
+		AddressNumber: "1500",
 	})
 	if err != nil || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
@@ -734,6 +742,7 @@ func initSubaccount() {
 	if util.IsBlank(&accessToken) {
 		return
 	}
+	clearSubaccount()
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
@@ -790,7 +799,7 @@ func initTransfer() {
 	if util.IsBlank(&accessToken) {
 		return
 	}
-	clearTransferBankId()
+	clearTransferId()
 	walletId := getEnvValue(EnvWalletIdSecondary)
 	if util.IsBlank(&walletId) {
 		return
@@ -824,6 +833,61 @@ func initWebhook() {
 		Enabled:     Pointer(false),
 		Interrupted: Pointer(false),
 		AuthToken:   "",
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+}
+
+func initSubscription() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	clearSubscriptionId()
+	initCustomer()
+	customerId := getEnvValue(EnvCustomerId)
+	if util.IsBlank(&customerId) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	now := time.Now()
+	nSubscription := NewSubscription(EnvSandbox, accessToken)
+	resp, err := nSubscription.Create(ctx, CreateSubscriptionRequest{
+		Customer:    customerId,
+		BillingType: BillingTypeBankSlip,
+		Value:       100,
+		NextDueDate: NewDate(now.Year(), now.Month()+1, now.Day(), now.Location()),
+		Cycle:       SubscriptionCycleMonthly,
+		Description: "Unit test go",
+	})
+	if err != nil || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	setEnv(EnvSubscriptionId, resp.Id)
+}
+
+func initSubscriptionInvoiceSetting() {
+	accessToken := getEnvValue(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	initSubscription()
+	subscriptionId := getEnvValue(EnvSubscriptionId)
+	if util.IsBlank(&subscriptionId) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nSubscription := NewSubscription(EnvSandbox, accessToken)
+	resp, err := nSubscription.CreateInvoiceSettingById(ctx, subscriptionId, CreateInvoiceSettingRequest{
+		MunicipalServiceCode: "123",
+		MunicipalServiceName: "Unit test go",
+		EffectiveDatePeriod:  EffectiveDatePeriodOnNextMonth,
+		Observations:         "Unit test go",
 	})
 	if err != nil || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
@@ -1035,6 +1099,24 @@ func clearPixKeyId() {
 	_ = os.Unsetenv(EnvPixKeyId)
 }
 
+func clearSubaccount() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessTokenSecondary)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	subaccountId := getEnvValueWithoutLogger(EnvSubaccountId)
+	if util.IsBlank(&subaccountId) {
+		return
+	}
+	accountAsaas := NewAccount(EnvSandbox, accessToken)
+	_, _ = accountAsaas.DeleteWhiteLabelSubaccount(ctx, DeleteWhiteLabelSubaccountRequest{
+		RemoveReason: "Unit test go",
+	})
+	_ = os.Unsetenv(EnvSubaccountId)
+}
+
 func clearSubaccountDocumentSentId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessTokenSecondary)
 	if util.IsBlank(&accessToken) {
@@ -1051,7 +1133,7 @@ func clearSubaccountDocumentSentId() {
 	_ = os.Unsetenv(EnvSubaccountDocumentSentId)
 }
 
-func clearTransferBankId() {
+func clearTransferId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessTokenSecondary)
 	if util.IsBlank(&accessToken) {
 		return
@@ -1065,6 +1147,22 @@ func clearTransferBankId() {
 	transferAsaas := NewTransfer(EnvSandbox, accessToken)
 	_, _ = transferAsaas.CancelById(ctx, transferId)
 	_ = os.Unsetenv(EnvTransferId)
+}
+
+func clearSubscriptionId() {
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
+	if util.IsBlank(&accessToken) {
+		return
+	}
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	subscriptionId := getEnvValueWithoutLogger(EnvSubscriptionId)
+	if util.IsBlank(&subscriptionId) {
+		return
+	}
+	subscriptionAsaas := NewSubscription(EnvSandbox, accessToken)
+	_, _ = subscriptionAsaas.DeleteById(ctx, subscriptionId)
+	_ = os.Unsetenv(EnvSubscriptionId)
 }
 
 func getTestFile() (*os.File, error) {

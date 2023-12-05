@@ -23,7 +23,7 @@ type SubscriptionStatus string
 type Order string
 type SortSubscriptionField string
 type InvoiceStatus string
-type InvoiceDatePeriod string
+type EffectiveDatePeriod string
 type InvoiceDaysBeforeDueDate int
 type PixKeyStatus string
 type PixKeyType string
@@ -338,11 +338,11 @@ const (
 	InvoiceDaysBeforeDuedateSixty   InvoiceDaysBeforeDueDate = 60
 )
 const (
-	InvoiceDatePeriodOnPaymentConfirmation InvoiceDatePeriod = "ON_PAYMENT_CONFIRMATION"
-	InvoiceDatePeriodOnPaymentDueDate      InvoiceDatePeriod = "ON_PAYMENT_DUE_DATE"
-	InvoiceDatePeriodBeforePaymentDueDate  InvoiceDatePeriod = "BEFORE_PAYMENT_DUE_DATE"
-	InvoiceDatePeriodOnDueDateMonth        InvoiceDatePeriod = "ON_DUE_DATE_MONTH"
-	InvoiceDatePeriodOnNextMonth           InvoiceDatePeriod = "ON_NEXT_MONTH"
+	EffectiveDatePeriodOnPaymentConfirmation EffectiveDatePeriod = "ON_PAYMENT_CONFIRMATION"
+	EffectiveDatePeriodOnPaymentDueDate      EffectiveDatePeriod = "ON_PAYMENT_DUE_DATE"
+	EffectiveDatePeriodBeforePaymentDueDate  EffectiveDatePeriod = "BEFORE_PAYMENT_DUE_DATE"
+	EffectiveDatePeriodOnDueDateMonth        EffectiveDatePeriod = "ON_DUE_DATE_MONTH"
+	EffectiveDatePeriodOnNextMonth           EffectiveDatePeriod = "ON_NEXT_MONTH"
 )
 const (
 	InvoiceStatusScheduled              InvoiceStatus = "SCHEDULED"
@@ -729,11 +729,11 @@ func (i InvoiceStatus) IsEnumValid() bool {
 	return false
 }
 
-func (i InvoiceDatePeriod) IsEnumValid() bool {
+func (i EffectiveDatePeriod) IsEnumValid() bool {
 	switch i {
-	case InvoiceDatePeriodOnPaymentConfirmation, InvoiceDatePeriodOnPaymentDueDate,
-		InvoiceDatePeriodBeforePaymentDueDate, InvoiceDatePeriodOnDueDateMonth,
-		InvoiceDatePeriodOnNextMonth:
+	case EffectiveDatePeriodOnPaymentConfirmation, EffectiveDatePeriodOnPaymentDueDate,
+		EffectiveDatePeriodBeforePaymentDueDate, EffectiveDatePeriodOnDueDateMonth,
+		EffectiveDatePeriodOnNextMonth:
 		return true
 	}
 	return false

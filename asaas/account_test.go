@@ -32,7 +32,7 @@ func TestAccountUpdate(t *testing.T) {
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)
 	resp, errAsaas := nAccount.Update(ctx, UpdateAccountRequest{
-		PersonType:    "",
+		PersonType:    PersonTypeJuridical,
 		CpfCnpj:       "",
 		BirthDate:     Date{},
 		CompanyType:   nil,
@@ -52,6 +52,7 @@ func TestAccountUpdate(t *testing.T) {
 func TestAccountDeleteWhiteLabelSubaccount(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	assertFatalStringBlank(t, accessToken)
+	initSubaccountDocument()
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAccount := NewAccount(EnvSandbox, accessToken)

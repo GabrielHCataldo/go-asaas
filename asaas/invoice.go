@@ -9,16 +9,16 @@ import (
 type CreateInvoiceSettingRequest struct {
 	// Identificador único do serviço municipal.
 	MunicipalServiceId string `json:"municipalServiceId,omitempty"`
-	// Código de serviço municipal.
+	// Código de serviço municipal. (REQUIRED)
 	MunicipalServiceCode string `json:"municipalServiceCode,omitempty"`
-	// Nome do serviço municipal. Se não for informado, será utilizado o código do serviço municipal como nome para identificação.
+	// Nome do serviço municipal. Se não for informado, será utilizado o MunicipalServiceCode como nome para identificação.
 	MunicipalServiceName string `json:"municipalServiceName,omitempty"`
 	// Atualizar o valor da cobrança com os impostos da nota já descontados.
 	UpdatePayment bool `json:"updatePayment,omitempty"`
 	// Deduções. As deduções não alteram o valor total da nota fiscal, mas alteram a base de cálculo do ISS.
 	Deductions float64 `json:"deductions,omitempty"`
-	// Quando a nota fiscal será emitida.
-	EffectiveDatePeriod InvoiceDatePeriod `json:"effectiveDatePeriod,omitempty"`
+	// Quando a nota fiscal será emitida. (REQUIRED)
+	EffectiveDatePeriod EffectiveDatePeriod `json:"effectiveDatePeriod,omitempty"`
 	// Emitir apenas para cobranças pagas.
 	ReceivedOnly bool `json:"receivedOnly,omitempty"`
 	// Quantidade de dias antes do vencimento da cobrança.
@@ -26,7 +26,7 @@ type CreateInvoiceSettingRequest struct {
 	// Observações adicionais da nota fiscal.
 	Observations string `json:"observations,omitempty"`
 	// Impostos da nota fiscal.
-	Taxes *InvoiceTaxesRequest `json:"taxes,omitempty"`
+	Taxes InvoiceTaxesRequest `json:"taxes,omitempty"`
 }
 
 type ScheduleInvoiceRequest struct {
@@ -89,7 +89,7 @@ type UpdateInvoiceSettingRequest struct {
 	// Deduções. As deduções não alteram o valor total da nota fiscal, mas alteram a base de cálculo do ISS.
 	Deductions *float64 `json:"deductions,omitempty"`
 	// Quando a nota fiscal será emitida.
-	EffectiveDatePeriod InvoiceDatePeriod `json:"effectiveDatePeriod,omitempty"`
+	EffectiveDatePeriod EffectiveDatePeriod `json:"effectiveDatePeriod,omitempty"`
 	// Emitir apenas para cobranças pagas.
 	ReceivedOnly *bool `json:"receivedOnly,omitempty"`
 	// Quantidade de dias antes do vencimento da cobrança.

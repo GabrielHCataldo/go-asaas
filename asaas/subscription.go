@@ -11,9 +11,9 @@ type CreateSubscriptionRequest struct {
 	Customer string `json:"customer,omitempty"`
 	// Forma de pagamento (Default: BillingTypeUndefined)
 	BillingType BillingType `json:"billingType,omitempty"`
-	// Valor da assinatura
+	// Valor da assinatura (REQUIRED)
 	Value float64 `json:"value,omitempty"`
-	// Vencimento da primeira mensalidade
+	// Vencimento da primeira mensalidade (REQUIRED)
 	NextDueDate Date `json:"nextDueDate,omitempty"`
 	// Informações de desconto
 	Discount *DiscountRequest `json:"discount,omitempty"`
