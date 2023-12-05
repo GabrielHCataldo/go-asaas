@@ -1,25 +1,11 @@
 #file: noinspection SpellCheckingInspection
-language: go
+name: Go
 
-sudo: required
-dist: bionic
-
-go:
-  - 1.21.3
-
-env:
-  - GO111MODULE=on
-
-addons:
-  apt:
-    update: true
-    packages:
-      - "python3"
-      - "python3-pip"
-      - "python3-setuptools"
-
-git:
-  depth: 1
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 stages:
   - name: test
@@ -33,6 +19,18 @@ before_install:
 
 jobs:
   include:
+    - build:
+      runs-on: self-hosted
+      steps:
+        - uses: actions/checkout@v4
+        - name: Set up Go
+          uses: actions/setup-go@v4
+          with:
+            go-version: '1.21.x'
+        - name: Build
+          run: go build -v ./...
+        - name: Test
+          run: go test -v ./...
     - stage: test
       script:
         - go get github.com/mattn/goveralls
