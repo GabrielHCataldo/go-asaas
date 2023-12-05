@@ -7,34 +7,27 @@ on:
   pull_request:
     branches: [ "main" ]
 
-stages:
-  - name: test
-  - name: push
-    if: fork = false
-  - name: manifest
-    if: fork = false AND tag IS present
-
-before_install:
-  - go get github.com/mattn/goveralls
-
 jobs:
-  include:
-    - stage: build
-      build:
-        runs-on: self-hosted
-        steps:
-          - uses: actions/checkout@v4
-          - name: Set up Go
-            uses: actions/setup-go@v4
-            with:
-              go-version: '1.21.x'
-          - name: Build
-            run: go build -v ./...
-          - name: Test
-            run: go test -v ./...
-    - stage: test
-      script:
-        - go get github.com/mattn/goveralls
-        - go get -u github.com/rakyll/gotest
-        - gotest -v -covermode=count -coverprofile=coverage.out ./pkg/controller/... ./pkg/providers/... ./pkg/resources/... ./pkg/apis/integreatly/v1alpha1/types/...
-        - $GOPATH/bin/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken=$COVERALLS_TOKEN
+  build:
+
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.x'
+      - name: Display Go version
+        run: go version
+      - name: Install dependencies
+        run: |
+          go get .
+          go get github.com/mattn/goveralls
+      - name: Build
+        run: go build -v ./...
+      - name: Import Goveralls
+        run: go get github.com/mattn/goveralls
+      - name: Test Covarage
+        run: go test -v -covermode=count -coverprofile=coverage.out ./asaas/...
+      - name: Export Covarage
+        run: $GOPATH/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken=$COVERALLS_TOKEN
