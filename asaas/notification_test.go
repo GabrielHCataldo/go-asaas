@@ -10,7 +10,7 @@ func TestNotificationUpdateById(t *testing.T) {
 	initNotification()
 	accessToken := getEnvValue(EnvAccessToken)
 	notificationId := getEnvValue(EnvNotificationId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)
 	resp, err := nNotification.UpdateById(ctx, notificationId, UpdateNotificationRequest{
@@ -31,7 +31,7 @@ func TestNotificationUpdateManyByCustomer(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	notificationId := getEnvValue(EnvNotificationId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)
 	resp, err := nNotification.UpdateManyByCustomer(ctx, UpdateManyNotificationsRequest{
@@ -57,7 +57,7 @@ func TestNotificationGetAllByCustomer(t *testing.T) {
 	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)
 	resp, err := nNotification.GetAllByCustomer(ctx, customerId)

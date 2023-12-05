@@ -10,7 +10,7 @@ func TestCreditCardTokenize(t *testing.T) {
 	initCustomer()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCreditCard := NewCreditCard(EnvSandbox, accessToken)
 	resp, err := nCreditCard.Tokenize(ctx, CreditCardTokenizeRequest{

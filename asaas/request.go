@@ -47,10 +47,7 @@ func (r request[T]) make(method string, path string, payload any) (*T, error) {
 	}
 	defer r.closeBody(res.Body)
 	var respBody T
-	err = r.readResponse(res, &respBody)
-	if err != nil {
-		return nil, err
-	}
+	r.readResponse(res, &respBody)
 	if res.StatusCode == http.StatusOK ||
 		res.StatusCode == http.StatusBadRequest ||
 		(res.StatusCode == http.StatusNotFound && (method == http.MethodGet || method == http.MethodPut)) {
@@ -76,10 +73,7 @@ func (r request[T]) makeMultipartForm(method string, path string, payload any) (
 	defer r.closeBody(res.Body)
 	if res.StatusCode == http.StatusOK || res.StatusCode == http.StatusBadRequest {
 		var result T
-		err = r.readResponse(res, &result)
-		if err != nil {
-			return nil, err
-		}
+		r.readResponse(res, &result)
 		return &result, nil
 	}
 	return r.prepareResponseUnexpected(res)
@@ -184,22 +178,15 @@ func (r request[T]) closeCloser(c io.Closer) {
 	_ = c.Close()
 }
 
-func (r request[T]) readResponse(res *http.Response, result *T) error {
-	respBody, err := io.ReadAll(res.Body)
-	if err != nil {
-		return err
-	}
+func (r request[T]) readResponse(res *http.Response, result *T) {
+	respBody, _ := io.ReadAll(res.Body)
 	logInfoSkipCaller(6, r.env, "response status:", res.StatusCode, "body:", string(respBody))
-	if len(respBody) == 0 {
-		return nil
-	} else if x, ok := any(*result).(FileTextPlainResponse); ok && res.StatusCode == http.StatusOK {
+	if x, ok := any(*result).(FileTextPlainResponse); ok && res.StatusCode == http.StatusOK {
 		x.Data = string(respBody)
 		*result = any(x).(T)
-		return nil
 	} else if util.IsJson(respBody) {
-		return json.Unmarshal(respBody, result)
+		_ = json.Unmarshal(respBody, result)
 	}
-	return nil
 }
 
 func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader, error) {

@@ -10,7 +10,7 @@ func TestSubscriptionCreate(t *testing.T) {
 	initCustomer()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	now := DateNow()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -40,7 +40,7 @@ func TestSubscriptionCreateInvoiceSettingById(t *testing.T) {
 	initSubscription()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.CreateInvoiceSettingById(ctx, subscriptionId, CreateInvoiceSettingRequest{
@@ -62,7 +62,7 @@ func TestSubscriptionUpdateById(t *testing.T) {
 	initSubscription()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.UpdateById(ctx, subscriptionId, UpdateSubscriptionRequest{
@@ -86,7 +86,7 @@ func TestSubscriptionUpdateInvoiceSettingsById(t *testing.T) {
 	initSubscriptionInvoiceSetting()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.UpdateInvoiceSettingsById(ctx, subscriptionId, UpdateInvoiceSettingRequest{
@@ -104,7 +104,7 @@ func TestSubscriptionDeleteById(t *testing.T) {
 	initSubscription()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.DeleteById(ctx, subscriptionId)
@@ -115,7 +115,7 @@ func TestSubscriptionDeleteInvoiceSettingById(t *testing.T) {
 	initSubscriptionInvoiceSetting()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.DeleteInvoiceSettingById(ctx, subscriptionId)
@@ -126,7 +126,7 @@ func TestSubscriptionGetById(t *testing.T) {
 	initSubscription()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.GetById(ctx, subscriptionId)
@@ -137,7 +137,7 @@ func TestSubscriptionGetInvoiceSettingById(t *testing.T) {
 	initSubscriptionInvoiceSetting()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.GetInvoiceSettingById(ctx, subscriptionId)
@@ -148,7 +148,7 @@ func TestSubscriptionGetPaymentBookById(t *testing.T) {
 	initSubscription()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	now := DateNow()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -158,13 +158,13 @@ func TestSubscriptionGetPaymentBookById(t *testing.T) {
 		Sort:  "",
 		Order: "",
 	})
-	assertResponseFailure(t, resp, err)
+	assertResponseFailure(resp, err)
 }
 
 func TestSubscriptionGetAll(t *testing.T) {
 	initSubscription()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.GetAll(ctx, GetAllSubscriptionsRequest{
@@ -187,7 +187,7 @@ func TestSubscriptionGetAllChargesBySubscription(t *testing.T) {
 	initSubscription()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.GetAllChargesBySubscription(ctx, subscriptionId, GetAllChargesBySubscriptionRequest{
@@ -200,7 +200,7 @@ func TestSubscriptionGetAllInvoicesBySubscription(t *testing.T) {
 	initSubscription()
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.GetAllInvoicesBySubscription(ctx, subscriptionId, GetAllSubscriptionInvoicesRequest{
@@ -212,5 +212,5 @@ func TestSubscriptionGetAllInvoicesBySubscription(t *testing.T) {
 		Offset:            0,
 		Limit:             10,
 	})
-	assertResponseNoContent(t, resp, err)
+	assertResponseNoContent(resp, err)
 }

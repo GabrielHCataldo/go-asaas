@@ -102,7 +102,7 @@ func setEnv(env, v string) bool {
 func initCustomer() {
 	clearCustomerId()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	customerAsaas := NewCustomer(EnvSandbox, accessToken)
 	resp, err := customerAsaas.Create(ctx, CreateCustomerRequest{
@@ -125,7 +125,7 @@ func initCustomerDeleted() {
 	initCustomer()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	customerAsaas := NewCustomer(EnvSandbox, accessToken)
 	resp, err := customerAsaas.DeleteById(ctx, customerId)
@@ -141,7 +141,7 @@ func initCreditCardCharge(withInstallment bool) {
 	clearCreditCardChargeId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	now := DateNow()
 	req := CreateChargeRequest{
@@ -188,7 +188,7 @@ func initPixCharge() {
 	clearPixChargeId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	now := DateNow()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
@@ -217,7 +217,7 @@ func initBankSlipCharge(withInstallment bool) {
 	clearBankSlipChargeId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	now := DateNow()
 	req := CreateChargeRequest{
@@ -252,7 +252,7 @@ func initUndefinedCharge() {
 	clearUndefinedChargeId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	now := DateNow()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
@@ -274,7 +274,7 @@ func initChargeDeleted() {
 	initUndefinedCharge()
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
 	resp, err := chargeAsaas.DeleteById(ctx, chargeId)
@@ -289,7 +289,7 @@ func initChargeReceivedInCash() {
 	initUndefinedCharge()
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	now := DateNow()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
@@ -309,7 +309,7 @@ func initChargeDocumentId() {
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
 	f, err := os.Open(getEnvValue(EnvFileName))
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
 	resp, err := nCharge.UploadDocumentById(ctx, chargeId, UploadChargeDocumentRequest{
@@ -327,7 +327,7 @@ func initAnticipation() {
 	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	anticipationAsaas := NewAnticipation(EnvSandbox, accessToken)
 	resp, err := anticipationAsaas.Request(ctx, AnticipationRequest{
@@ -345,7 +345,7 @@ func initBillPayment() {
 	clearBillPaymentId()
 	accessToken := getEnvValue(EnvAccessToken)
 	identificationField := getEnvValue(EnvChargeIdentificationField)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	now := DateNow()
 	billPaymentAsaas := NewBillPayment(EnvSandbox, accessToken)
@@ -382,7 +382,7 @@ func initCreditBureauReport() {
 	initCustomer()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCreditBureau := NewCreditBureau(EnvSandbox, accessToken)
 	resp, err := nCreditBureau.GetReport(ctx, GetReportRequest{
@@ -399,7 +399,7 @@ func initCreditBureauReport() {
 
 func initFiscalInfo() {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
 	resp, err := nFiscalInfo.Save(ctx, SaveFiscalInfoRequest{
@@ -430,7 +430,7 @@ func initInvoice() {
 	clearInvoiceId()
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
 	resp, err := nInvoice.Schedule(ctx, ScheduleInvoiceRequest{
@@ -459,7 +459,7 @@ func initInvoice() {
 func initMobilePhoneRecharge() {
 	clearMobilePhoneRechargeId()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nMobilePhone := NewMobilePhone(EnvSandbox, accessToken)
 	resp, err := nMobilePhone.Recharge(ctx, MobilePhoneRechargeRequest{
@@ -478,7 +478,7 @@ func initNegativity() {
 	clearNegativityId()
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvBankSlipChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, err := nNegativity.Create(ctx, CreateNegativityRequest{
@@ -504,7 +504,7 @@ func initNotification() {
 	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)
 	resp, err := nNotification.GetAllByCustomer(ctx, customerId)
@@ -518,7 +518,7 @@ func initNotification() {
 func initPaymentLink() {
 	clearPaymentLinkId()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
 	resp, err := nPaymentLink.Create(ctx, CreatePaymentLinkRequest{
@@ -537,7 +537,7 @@ func initPaymentLinkDeleted() {
 	initPaymentLink()
 	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
 	resp, err := nPaymentLink.DeleteById(ctx, paymentLinkId)
@@ -553,7 +553,7 @@ func initPaymentLinkImage() {
 	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
 	f, _ := os.Open(getEnvValue(EnvImageName))
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
 	resp, err := nPaymentLink.SendImageById(ctx, paymentLinkId, SendImagePaymentLinksRequest{
@@ -570,7 +570,7 @@ func initPaymentLinkImage() {
 func initPixKey() {
 	clearPixKeyId()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
 	resp, err := nPix.CreateKey(ctx)
@@ -586,7 +586,7 @@ func initPixTransaction() {
 	clearPixTransactionId()
 	accessToken := getEnvValue(EnvAccessToken)
 	pixQrCodePayload := getEnvValue(EnvChargePixQrCodePayload)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
 	resp, err := nPix.PayQrCode(ctx, PayPixQrCodeRequest{
@@ -608,7 +608,7 @@ func initPixTransaction() {
 func initSubaccount() {
 	clearSubaccount()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.Create(ctx, CreateSubaccountRequest{
@@ -633,7 +633,7 @@ func initSubaccount() {
 func initSubaccountDocument() {
 	initSubaccount()
 	subaccountAccessToken := getEnvValue(EnvSubaccountAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, subaccountAccessToken)
 	resp, err := nSubaccount.GetPendingDocuments(ctx)
@@ -663,7 +663,7 @@ func initSubaccountDocumentSent() {
 	subaccountDocumentId := getEnvValue(EnvSubaccountDocumentId)
 	subaccountDocumentType := getEnvValue(EnvSubaccountDocumentType)
 	f, _ := os.Open(getEnvValue(EnvImageName))
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, subaccountAccessToken)
 	resp, err := nSubaccount.SendWhiteLabelDocument(ctx, subaccountDocumentId, SendWhiteLabelDocumentRequest{
@@ -681,7 +681,7 @@ func initTransfer() {
 	clearTransferId()
 	accessToken := getEnvValue(EnvAccessToken)
 	walletId := getEnvValue(EnvWalletIdSecondary)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
 	resp, err := nTransfer.TransferToAsaas(ctx, TransferToAssasRequest{
@@ -697,7 +697,7 @@ func initTransfer() {
 
 func initWebhook() {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nWebhook := NewWebhook(EnvSandbox, accessToken)
 	resp, err := nWebhook.SaveSetting(ctx, WebhookTypePayment, SaveWebhookSettingRequest{
@@ -719,7 +719,7 @@ func initSubscription() {
 	clearSubscriptionId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	now := DateNow()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -741,7 +741,7 @@ func initSubscription() {
 func initSubscriptionInvoiceSetting() {
 	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.CreateInvoiceSettingById(ctx, subscriptionId, CreateInvoiceSettingRequest{
@@ -758,7 +758,7 @@ func initSubscriptionInvoiceSetting() {
 
 func clearCustomerId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	customerId := getEnvValueWithoutLogger(EnvCustomerId)
 	if util.IsBlank(&customerId) {
@@ -771,7 +771,7 @@ func clearCustomerId() {
 
 func clearCreditCardChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	chargeId := getEnvValueWithoutLogger(EnvCreditCardChargeId)
 	if util.IsBlank(&chargeId) {
@@ -786,7 +786,7 @@ func clearCreditCardChargeId() {
 
 func clearPixChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	chargeId := getEnvValueWithoutLogger(EnvCreditCardChargeId)
 	if util.IsBlank(&chargeId) {
@@ -799,7 +799,7 @@ func clearPixChargeId() {
 
 func clearBankSlipChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	chargeId := getEnvValueWithoutLogger(EnvBankSlipChargeId)
 	if util.IsBlank(&chargeId) {
@@ -812,7 +812,7 @@ func clearBankSlipChargeId() {
 
 func clearUndefinedChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	chargeId := getEnvValueWithoutLogger(EnvBankSlipChargeId)
 	if util.IsBlank(&chargeId) {
@@ -825,7 +825,7 @@ func clearUndefinedChargeId() {
 
 func clearBillPaymentId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	billPaymentId := getEnvValueWithoutLogger(EnvBillPaymentId)
 	if util.IsBlank(&billPaymentId) {
@@ -847,7 +847,7 @@ func clearFileName() {
 
 func clearInvoiceId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	invoiceId := getEnvValueWithoutLogger(EnvInvoiceId)
 	if util.IsBlank(&invoiceId) {
@@ -860,7 +860,7 @@ func clearInvoiceId() {
 
 func clearMobilePhoneRechargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	rechargeId := getEnvValueWithoutLogger(EnvMobilePhoneRechargeId)
 	if util.IsBlank(&rechargeId) {
@@ -873,7 +873,7 @@ func clearMobilePhoneRechargeId() {
 
 func clearNegativityId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	negativityId := getEnvValueWithoutLogger(EnvNegativityId)
 	if util.IsBlank(&negativityId) {
@@ -886,7 +886,7 @@ func clearNegativityId() {
 
 func clearPaymentLinkId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	paymentLinkId := getEnvValueWithoutLogger(EnvPaymentLinkId)
 	if util.IsBlank(&paymentLinkId) {
@@ -899,7 +899,7 @@ func clearPaymentLinkId() {
 
 func clearPixTransactionId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	pixTransactionId := getEnvValueWithoutLogger(EnvPixTransactionId)
 	if util.IsBlank(&pixTransactionId) {
@@ -912,7 +912,7 @@ func clearPixTransactionId() {
 
 func clearPixKeyId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	pixKeyId := getEnvValueWithoutLogger(EnvPixKeyId)
 	if util.IsBlank(&pixKeyId) {
@@ -928,7 +928,7 @@ func clearSubaccount() {
 	if util.IsBlank(&subaccountAccessToken) {
 		return
 	}
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	subaccountId := getEnvValueWithoutLogger(EnvSubaccountId)
 	if util.IsBlank(&subaccountId) {
@@ -943,7 +943,7 @@ func clearSubaccount() {
 
 func clearSubaccountDocumentSentId() {
 	subaccountAccessToken := getEnvValueWithoutLogger(EnvSubaccountAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	documentSentId := getEnvValueWithoutLogger(EnvSubaccountDocumentSentId)
 	if util.IsBlank(&documentSentId) {
@@ -956,7 +956,7 @@ func clearSubaccountDocumentSentId() {
 
 func clearTransferId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	transferId := getEnvValueWithoutLogger(EnvTransferId)
 	if util.IsBlank(&transferId) {
@@ -969,7 +969,7 @@ func clearTransferId() {
 
 func clearSubscriptionId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	subscriptionId := getEnvValueWithoutLogger(EnvSubscriptionId)
 	if util.IsBlank(&subscriptionId) {

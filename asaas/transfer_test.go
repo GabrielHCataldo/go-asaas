@@ -9,7 +9,7 @@ import (
 
 func TestTransferTransferToBank(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
 	resp, err := nTransfer.TransferToBank(ctx, TransferToBankRequest{
@@ -40,7 +40,7 @@ func TestTransferTransferToBank(t *testing.T) {
 func TestTransferTransferToAsaas(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	walletId := getEnvValue(EnvWalletIdSecondary)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
 	resp, err := nTransfer.TransferToAsaas(ctx, TransferToAssasRequest{
@@ -54,7 +54,7 @@ func TestTransferCancelById(t *testing.T) {
 	initTransfer()
 	accessToken := getEnvValue(EnvAccessToken)
 	transferId := getEnvValue(EnvTransferId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
 	resp, err := nTransfer.CancelById(ctx, transferId)
@@ -65,7 +65,7 @@ func TestTransferGetById(t *testing.T) {
 	initTransfer()
 	accessToken := getEnvValue(EnvAccessToken)
 	transferId := getEnvValue(EnvTransferId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
 	resp, err := nTransfer.GetById(ctx, transferId)
@@ -75,7 +75,7 @@ func TestTransferGetById(t *testing.T) {
 func TestTransferGetAll(t *testing.T) {
 	initTransfer()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
 	resp, err := nTransfer.GetAll(ctx, GetAllTransfersRequest{

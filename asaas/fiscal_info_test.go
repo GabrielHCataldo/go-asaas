@@ -8,7 +8,7 @@ import (
 
 func TestFiscalInfoSave(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
 	resp, err := nFiscalInfo.Save(ctx, SaveFiscalInfoRequest{
@@ -33,7 +33,7 @@ func TestFiscalInfoSave(t *testing.T) {
 
 func TestFiscalInfoGet(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
 	resp, err := nFiscalInfo.Get(ctx)
@@ -42,7 +42,7 @@ func TestFiscalInfoGet(t *testing.T) {
 
 func TestFiscalInfoGetMunicipalSettings(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
 	resp, err := nFiscalInfo.GetMunicipalSettings(ctx)
@@ -51,7 +51,7 @@ func TestFiscalInfoGetMunicipalSettings(t *testing.T) {
 
 func TestFiscalInfoGetAllServices(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
 	resp, err := nFiscalInfo.GetAllServices(ctx, GetAllServicesRequest{

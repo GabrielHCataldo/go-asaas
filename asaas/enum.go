@@ -75,7 +75,7 @@ const (
 	WebhookTypeBill                   WebhookType = "BILL"
 	WebhookTypeReceivableAnticipation WebhookType = "RECEIVABLE_ANTICIPATION"
 	WebhookTypeMobilePhoneRecharge    WebhookType = "MOBILE_PHONE_RECHARGE"
-	WebhookTypeMobileAccountStatus    WebhookType = "ACCOUNT_STATUS"
+	WebhookTypeAccountStatus          WebhookType = "ACCOUNT_STATUS"
 )
 const (
 	CompanyTypeMei         CompanyType = "MEI"
@@ -484,76 +484,6 @@ const (
 	NotificationEventPaymentUpdated        NotificationEvent = "PAYMENT_UPDATED"
 )
 
-func (c ChargebackReason) String() string {
-	switch c {
-	case ChargebackReason1:
-		return "Ausência de impressão"
-	case ChargebackReason2:
-		return "Fraude em ambiente de cartão não presente"
-	case ChargebackReason3:
-		return "Transação telefônica ativada por cartão"
-	case ChargebackReason4:
-		return "Fraude em ambiente de cartão presente"
-	case ChargebackReason5:
-		return "Boletim de negativação de cartões"
-	case ChargebackReason6:
-		return "Desacordo comercial"
-	case ChargebackReason7:
-		return "Cópia não atendida"
-	case ChargebackReason8:
-		return "Erro de apresentação de crédito / débito"
-	case ChargebackReason9:
-		return "Pagamento por outros meios"
-	case ChargebackReason10:
-		return "Sem autorização do portador do cartão"
-	case ChargebackReason11:
-		return "Valor da transação é diferente"
-	case ChargebackReason12:
-		return "Moeda inválida"
-	case ChargebackReason13:
-		return "Dados inválidos"
-	case ChargebackReason14:
-		return "Apresentação tardia"
-	case ChargebackReason15:
-		return "Contestação regulatória / legal local"
-	case ChargebackReason16:
-		return "ROCs múltiplos"
-	case ChargebackReason17:
-		return "Transação de crédito original não aceita"
-	case ChargebackReason18:
-		return "Outras fraudes - Cartão ausente"
-	case ChargebackReason19:
-		return "Erro de processamento"
-	case ChargebackReason20:
-		return "Cópia atendida ilegível / incompleta"
-	case ChargebackReason21:
-		return "Recorrência cancelada"
-	case ChargebackReason22:
-		return "Autorização requerida não obtida"
-	case ChargebackReason23:
-		return "Direito de regresso integral por fraude"
-	case ChargebackReason24:
-		return "Mercadoria / serviços cancelado"
-	case ChargebackReason25:
-		return "Mercadoria / serviço com defeito ou em desacordo"
-	case ChargebackReason26:
-		return "Mercadoria / serviços não recebidos"
-	case ChargebackReason27:
-		return "Desmembramento de venda"
-	case ChargebackReason28:
-		return "Transf. de responsabilidades diversas"
-	case ChargebackReason29:
-		return "Débito de aluguel de carro não qualificado"
-	case ChargebackReason30:
-		return "Contestação do portador de cartão (EUA)"
-	case ChargebackReason31:
-		return "Programa Visa de monitoramento de fraude"
-	case ChargebackReason32:
-		return "Arquivo boletim de advertência"
-	}
-	return ""
-}
-
 func (a Env) String() string {
 	return []string{"SANDBOX", "PRODUCTION"}[a]
 }
@@ -564,39 +494,6 @@ func (f FileMimeType) String() string {
 
 func (a Env) BaseUrl() string {
 	return []string{"https://sandbox.asaas.com/api", "https://api.asaas.com"}[a]
-}
-
-func (f FileMimeType) Extension() string {
-	switch f {
-	case FileMimeTypePdf:
-		return ".pdf"
-	case FileMimeTypeText:
-		return ".txt"
-	case FileMimeTypeAvif:
-		return ".avif"
-	case FileMimeTypeCss:
-		return ".css"
-	case FileMimeTypeGif:
-		return ".gif"
-	case FileMimeTypeHtml:
-		return ".html"
-	case FileMimeTypeJpeg:
-		return ".jpeg"
-	case FileMimeTypeJs:
-		return ".js"
-	case FileMimeTypeJson:
-		return ".json"
-	case FileMimeTypePng:
-		return ".png"
-	case FileMimeTypeWasm:
-		return ".wasm"
-	case FileMimeTypeWebp:
-		return ".webp"
-	case FileMimeTypeXml:
-		return ".xml"
-	default:
-		return ""
-	}
 }
 
 func (t WebhookType) PathUrl() string {
@@ -611,7 +508,7 @@ func (t WebhookType) PathUrl() string {
 		return "/bill"
 	case WebhookTypeMobilePhoneRecharge:
 		return "/mobilePhoneRecharge"
-	case WebhookTypeMobileAccountStatus:
+	case WebhookTypeAccountStatus:
 		return "/accountStatus"
 	}
 	return "/"

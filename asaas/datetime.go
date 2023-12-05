@@ -10,17 +10,13 @@ type Datetime time.Time
 var dtLayout = "2006-01-02 15:04:05"
 
 func (d Datetime) MarshalJSON() ([]byte, error) {
-	if d.Time().IsZero() {
-		return []byte(fmt.Sprintf(``)), nil
+	if d.IsZero() {
+		return []byte(fmt.Sprintf(`null`)), nil
 	}
 	return []byte(fmt.Sprintf(`"%s"`, d.Format())), nil
 }
 
 func (d Datetime) Format() string {
-	t := d.Time()
-	if t.IsZero() {
-		return "null"
-	}
 	return d.Time().Format(dtLayout)
 }
 

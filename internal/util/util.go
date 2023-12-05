@@ -73,6 +73,9 @@ func GenerateMobilePhone() string {
 }
 
 func IsJson(v []byte) bool {
-	var data map[string]any
-	return json.Unmarshal(v, &data) == nil
+	if len(v) > 0 {
+		var data map[string]any
+		return json.Unmarshal(v, &data) == nil
+	}
+	return false
 }

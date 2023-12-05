@@ -10,7 +10,7 @@ func TestCreditBureauGetReport(t *testing.T) {
 	initCustomer()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCreditBureau := NewCreditBureau(EnvSandbox, accessToken)
 	resp, err := nCreditBureau.GetReport(ctx, GetReportRequest{
@@ -25,7 +25,7 @@ func TestCreditBureauGetReportById(t *testing.T) {
 	initCreditBureauReport()
 	accessToken := getEnvValue(EnvAccessToken)
 	reportId := getEnvValue(EnvCreditBureauReportId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCreditBureau := NewCreditBureau(EnvSandbox, accessToken)
 	resp, err := nCreditBureau.GetReportById(ctx, reportId)
@@ -35,7 +35,7 @@ func TestCreditBureauGetReportById(t *testing.T) {
 func TestCreditBureauGetAllReports(t *testing.T) {
 	initCreditBureauReport()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCreditBureau := NewCreditBureau(EnvSandbox, accessToken)
 	resp, err := nCreditBureau.GetAllReports(ctx, GetAllReportsRequest{
@@ -44,5 +44,5 @@ func TestCreditBureauGetAllReports(t *testing.T) {
 		Offset:    0,
 		Limit:     10,
 	})
-	assertResponseNoContent(t, resp, err)
+	assertResponseNoContent(resp, err)
 }

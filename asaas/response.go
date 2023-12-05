@@ -532,7 +532,7 @@ func (p Pageable[T]) IsSuccess() bool {
 }
 
 func (p Pageable[T]) IsFailure() bool {
-	return !p.IsSuccess()
+	return len(p.Errors) > 0
 }
 
 func (p Pageable[T]) IsNoContent() bool {

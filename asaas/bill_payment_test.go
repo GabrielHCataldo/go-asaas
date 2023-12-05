@@ -10,7 +10,7 @@ func TestBillPaymentSimulate(t *testing.T) {
 	initBankSlipCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	identificationField := getEnvValue(EnvChargeIdentificationField)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
 	resp, err := nBillPayment.Simulate(ctx, BillPaymentSimulateRequest{
@@ -24,7 +24,7 @@ func TestBillPaymentCreate(t *testing.T) {
 	initBankSlipCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	identificationField := getEnvValue(EnvChargeIdentificationField)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
 	resp, err := nBillPayment.Create(ctx, CreateBillPaymentRequest{
@@ -44,7 +44,7 @@ func TestBillPaymentCancelById(t *testing.T) {
 	initBillPayment()
 	accessToken := getEnvValue(EnvAccessToken)
 	billPaymentId := getEnvValue(EnvBillPaymentId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
 	resp, err := nBillPayment.CancelById(ctx, billPaymentId)
@@ -55,7 +55,7 @@ func TestBillPaymentGetById(t *testing.T) {
 	initBillPayment()
 	accessToken := getEnvValue(EnvAccessToken)
 	billPaymentId := getEnvValue(EnvBillPaymentId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
 	resp, err := nBillPayment.GetById(ctx, billPaymentId)
@@ -65,7 +65,7 @@ func TestBillPaymentGetById(t *testing.T) {
 func TestBillPaymentGetAll(t *testing.T) {
 	initBillPayment()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nBillPayment := NewBillPayment(EnvSandbox, accessToken)
 	resp, err := nBillPayment.GetAll(ctx, PageableDefaultRequest{

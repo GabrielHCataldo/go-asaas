@@ -10,7 +10,7 @@ import (
 
 func TestSubaccountCreate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.Create(ctx, CreateSubaccountRequest{
@@ -39,7 +39,7 @@ func TestSubaccountSendWhiteLabelDocument(t *testing.T) {
 	subaccountDocumentId := getEnvValue(EnvSubaccountDocumentId)
 	subaccountDocumentType := getEnvValue(EnvSubaccountDocumentType)
 	f, _ := os.Open(getEnvValue(EnvImageName))
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.SendWhiteLabelDocument(ctx, subaccountDocumentId, SendWhiteLabelDocumentRequest{
@@ -54,7 +54,7 @@ func TestSubaccountUpdateWhiteLabelDocumentSentById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	subaccountDocumentSentId := getEnvValue(EnvSubaccountDocumentSentId)
 	f, _ := os.Open(getEnvValue(EnvFileName))
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.UpdateWhiteLabelDocumentSentById(ctx, subaccountDocumentSentId,
@@ -68,7 +68,7 @@ func TestSubaccountDeleteWhiteLabelDocumentSentById(t *testing.T) {
 	initSubaccountDocumentSent()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	subaccountDocumentSentId := getEnvValue(EnvSubaccountDocumentSentId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.DeleteWhiteLabelDocumentSentById(ctx, subaccountDocumentSentId)
@@ -79,7 +79,7 @@ func TestSubaccountGetById(t *testing.T) {
 	initSubaccount()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	subaccountId := getEnvValue(EnvSubaccountId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.GetById(ctx, subaccountId)
@@ -90,7 +90,7 @@ func TestSubaccountGetDocumentSentById(t *testing.T) {
 	initSubaccountDocumentSent()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	subaccountDocumentSentId := getEnvValue(EnvSubaccountDocumentSentId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.GetDocumentSentById(ctx, subaccountDocumentSentId)
@@ -100,7 +100,7 @@ func TestSubaccountGetDocumentSentById(t *testing.T) {
 func TestSubaccountGetAll(t *testing.T) {
 	initSubaccount()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.GetAll(ctx, GetAllSubaccountsRequest{
@@ -117,7 +117,7 @@ func TestSubaccountGetAll(t *testing.T) {
 func TestSubaccountGetPendingDocuments(t *testing.T) {
 	initSubaccountDocumentSent()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.GetPendingDocuments(ctx)

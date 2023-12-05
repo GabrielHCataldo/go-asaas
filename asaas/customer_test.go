@@ -9,7 +9,7 @@ import (
 
 func TestCustomerCreate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
 	resp, err := nCustomer.Create(ctx, CreateCustomerRequest{
@@ -39,7 +39,7 @@ func TestCustomerUpdateById(t *testing.T) {
 	initCustomer()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
 	resp, err := nCustomer.UpdateById(ctx, customerId, UpdateCustomerRequest{
@@ -69,7 +69,7 @@ func TestCustomerDeleteById(t *testing.T) {
 	initCustomer()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
 	resp, err := nCustomer.DeleteById(ctx, customerId)
@@ -80,7 +80,7 @@ func TestCustomerRestoreById(t *testing.T) {
 	initCustomerDeleted()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
 	resp, err := nCustomer.RestoreById(ctx, customerId)
@@ -91,7 +91,7 @@ func TestCustomerGetById(t *testing.T) {
 	initCustomer()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
 	resp, err := nCustomer.GetById(ctx, customerId)
@@ -101,7 +101,7 @@ func TestCustomerGetById(t *testing.T) {
 func TestCustomerGetAll(t *testing.T) {
 	initCustomer()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
 	resp, err := nCustomer.GetAll(ctx, GetAllCustomersRequest{

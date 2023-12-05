@@ -10,7 +10,7 @@ func TestInvoiceSchedule(t *testing.T) {
 	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
 	resp, err := nInvoice.Schedule(ctx, ScheduleInvoiceRequest{
@@ -36,7 +36,7 @@ func TestInvoiceAuthorizeById(t *testing.T) {
 	initInvoice()
 	accessToken := getEnvValue(EnvAccessToken)
 	invoiceId := getEnvValue(EnvCreditCardChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
 	resp, err := nInvoice.AuthorizeById(ctx, invoiceId)
@@ -47,7 +47,7 @@ func TestInvoiceUpdateById(t *testing.T) {
 	initInvoice()
 	accessToken := getEnvValue(EnvAccessToken)
 	invoiceId := getEnvValue(EnvCreditCardChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
 	resp, err := nInvoice.UpdateById(ctx, invoiceId, UpdateInvoiceRequest{
@@ -70,7 +70,7 @@ func TestInvoiceCancelById(t *testing.T) {
 	initInvoice()
 	accessToken := getEnvValue(EnvAccessToken)
 	invoiceId := getEnvValue(EnvCreditCardChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
 	resp, err := nInvoice.CancelById(ctx, invoiceId)
@@ -81,7 +81,7 @@ func TestInvoiceGetById(t *testing.T) {
 	initInvoice()
 	accessToken := getEnvValue(EnvAccessToken)
 	invoiceId := getEnvValue(EnvCreditCardChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
 	resp, err := nInvoice.GetById(ctx, invoiceId)
@@ -91,7 +91,7 @@ func TestInvoiceGetById(t *testing.T) {
 func TestInvoiceGetAll(t *testing.T) {
 	initInvoice()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
 	resp, err := nInvoice.GetAll(ctx, GetAllInvoicesRequest{

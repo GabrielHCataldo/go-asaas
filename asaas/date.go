@@ -30,10 +30,6 @@ func (d Date) MarshalJSON() ([]byte, error) {
 }
 
 func (d Date) Format() string {
-	t := d.Time()
-	if t.IsZero() {
-		return "null"
-	}
 	return d.Time().Format(dLayout)
 }
 

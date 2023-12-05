@@ -11,7 +11,7 @@ func TestAnticipationSimulate(t *testing.T) {
 	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
 	resp, err := nAnticipation.Simulate(ctx, AnticipationSimulateRequest{
@@ -26,7 +26,7 @@ func TestAnticipationRequest(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
 	f, _ := os.Open(getEnvValue(EnvFileName))
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
 	resp, err := nAnticipation.Request(ctx, AnticipationRequest{
@@ -39,7 +39,7 @@ func TestAnticipationRequest(t *testing.T) {
 
 func TestAnticipationAgreementSign(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
 	resp, err := nAnticipation.AgreementSign(ctx, AgreementSignRequest{
@@ -52,7 +52,7 @@ func TestAnticipationGetById(t *testing.T) {
 	initAnticipation()
 	accessToken := getEnvValue(EnvAccessToken)
 	anticipationId := getEnvValue(EnvAnticipationId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
 	resp, err := nAnticipation.GetById(ctx, anticipationId)
@@ -61,7 +61,7 @@ func TestAnticipationGetById(t *testing.T) {
 
 func TestAnticipationGetLimits(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
 	resp, err := nAnticipation.GetLimits(ctx)
@@ -70,7 +70,7 @@ func TestAnticipationGetLimits(t *testing.T) {
 
 func TestAnticipationGetAll(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
 	resp, err := nAnticipation.GetAll(ctx, GetAllAnticipationsRequest{

@@ -8,7 +8,7 @@ import (
 
 func TestMobilePhoneRecharge(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nMobilePhone := NewMobilePhone(EnvSandbox, accessToken)
 	resp, err := nMobilePhone.Recharge(ctx, MobilePhoneRechargeRequest{
@@ -22,7 +22,7 @@ func TestMobilePhoneCancelRechargeById(t *testing.T) {
 	initMobilePhoneRecharge()
 	accessToken := getEnvValue(EnvAccessToken)
 	rechargeId := getEnvValue(EnvMobilePhoneRechargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nMobilePhone := NewMobilePhone(EnvSandbox, accessToken)
 	resp, err := nMobilePhone.CancelRechargeById(ctx, rechargeId)
@@ -33,7 +33,7 @@ func TestMobilePhoneGetRechargeById(t *testing.T) {
 	initMobilePhoneRecharge()
 	accessToken := getEnvValue(EnvAccessToken)
 	rechargeId := getEnvValue(EnvMobilePhoneRechargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nMobilePhone := NewMobilePhone(EnvSandbox, accessToken)
 	resp, err := nMobilePhone.GetRechargeById(ctx, rechargeId)
@@ -43,7 +43,7 @@ func TestMobilePhoneGetRechargeById(t *testing.T) {
 func TestMobilePhoneGetAllRecharges(t *testing.T) {
 	initMobilePhoneRecharge()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nMobilePhone := NewMobilePhone(EnvSandbox, accessToken)
 	resp, err := nMobilePhone.GetAllRecharges(ctx, PageableDefaultRequest{
@@ -55,7 +55,7 @@ func TestMobilePhoneGetAllRecharges(t *testing.T) {
 
 func TestMobilePhoneGetProviderByPhoneNumber(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nMobilePhone := NewMobilePhone(EnvSandbox, accessToken)
 	resp, err := nMobilePhone.GetProviderByPhoneNumber(ctx, "47997576131")

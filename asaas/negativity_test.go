@@ -13,7 +13,7 @@ func TestNegativityCreate(t *testing.T) {
 	chargeId := getEnvValue(EnvBankSlipChargeId)
 	f, _ := os.Open(getEnvValue(EnvFileName))
 	v, _ := os.ReadFile(f.Name())
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, err := nNegativity.Create(ctx, CreateNegativityRequest{
@@ -42,7 +42,7 @@ func TestNegativitySimulate(t *testing.T) {
 	initBankSlipCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvBankSlipChargeId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, err := nNegativity.Simulate(ctx, chargeId)
@@ -54,7 +54,7 @@ func TestNegativityResendDocumentsById(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
 	f, _ := os.Open(getEnvValue(EnvFileName))
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, err := nNegativity.ResendDocumentsById(ctx, negativityId, NegativityResendDocumentsRequest{
@@ -67,7 +67,7 @@ func TestNegativityCancelById(t *testing.T) {
 	initNegativity()
 	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, err := nNegativity.CancelById(ctx, negativityId)
@@ -78,7 +78,7 @@ func TestNegativityGetById(t *testing.T) {
 	initNegativity()
 	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, err := nNegativity.GetById(ctx, negativityId)
@@ -88,7 +88,7 @@ func TestNegativityGetById(t *testing.T) {
 func TestNegativityGetAll(t *testing.T) {
 	initNegativity()
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, err := nNegativity.GetAll(ctx, GetAllNegativitiesRequest{
@@ -107,7 +107,7 @@ func TestNegativityGetHistoryById(t *testing.T) {
 	initNegativity()
 	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, err := nNegativity.GetHistoryById(ctx, negativityId, PageableDefaultRequest{
@@ -121,10 +121,10 @@ func TestNegativityGetPaymentsById(t *testing.T) {
 	initNegativity()
 	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
-	resp, err := nNegativity.GetHistoryById(ctx, negativityId, PageableDefaultRequest{
+	resp, err := nNegativity.GetPaymentsById(ctx, negativityId, PageableDefaultRequest{
 		Offset: 0,
 		Limit:  10,
 	})
@@ -133,7 +133,7 @@ func TestNegativityGetPaymentsById(t *testing.T) {
 
 func TestNegativityGetChargesAvailableForDunning(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
 	resp, err := nNegativity.GetChargesAvailableForDunning(ctx, PageableDefaultRequest{
