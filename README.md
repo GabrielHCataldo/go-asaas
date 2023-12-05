@@ -8,7 +8,7 @@ go-asaas
 [![Coverage Status](https://coveralls.io/repos/GabrielHCataldo/go-asaas/badge.svg?branch=main&service=github)](https://coveralls.io/github/GabrielHCataldo/go-asaas?branch=main)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
 
-Projeto go-asaas contem todas as interações financeiras com a API Asaas
+Projeto go-asaas contem todas as interações financeiras com o Gateway de Pagamento Asaas
 facilitando a implementação de pagamentos no seu projeto Go.
 
 Instalação
