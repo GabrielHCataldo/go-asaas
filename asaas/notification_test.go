@@ -54,7 +54,7 @@ func TestNotificationUpdateManyByCustomer(t *testing.T) {
 }
 
 func TestNotificationGetAllByCustomer(t *testing.T) {
-	initCreditCardCharge(false)
+	initCreditCardCharge(false, true)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)

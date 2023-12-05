@@ -39,7 +39,7 @@ func TestInstallmentDeleteById(t *testing.T) {
 }
 
 func TestInstallmentRefundById(t *testing.T) {
-	initCreditCardCharge(true)
+	initCreditCardCharge(true, false)
 	accessToken := getEnvValue(EnvAccessToken)
 	installmentId := getEnvValue(EnvChargeInstallmentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)

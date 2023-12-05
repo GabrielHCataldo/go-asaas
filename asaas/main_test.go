@@ -98,20 +98,21 @@ func setEnv(env, v string) bool {
 	return err != nil
 }
 
-func initCustomer() {
+func initCustomer(enableNotification bool) {
 	clearCustomerId()
 	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	customerAsaas := NewCustomer(EnvSandbox, accessToken)
 	resp, err := customerAsaas.Create(ctx, CreateCustomerRequest{
-		Name:          "Unit test go",
-		CpfCnpj:       cpf.Generate(),
-		Email:         "unittestgo@gmail.com",
-		MobilePhone:   "47997576130",
-		PostalCode:    "89041-001",
-		Address:       "Rua General Osório",
-		AddressNumber: "1500",
+		Name:                 "Unit test go",
+		CpfCnpj:              cpf.Generate(),
+		Email:                "unittestgo@gmail.com",
+		MobilePhone:          "47997576130",
+		PostalCode:           "89041-001",
+		Address:              "Rua General Osório",
+		AddressNumber:        "1500",
+		NotificationDisabled: !enableNotification,
 	})
 	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
@@ -121,7 +122,7 @@ func initCustomer() {
 }
 
 func initCustomerDeleted() {
-	initCustomer()
+	initCustomer(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -135,8 +136,8 @@ func initCustomerDeleted() {
 	setEnv(EnvCustomerDeletedId, customerId)
 }
 
-func initCreditCardCharge(withInstallment bool) {
-	initCustomer()
+func initCreditCardCharge(withInstallment, enableCustomerNotification bool) {
+	initCustomer(enableCustomerNotification)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -182,7 +183,7 @@ func initCreditCardCharge(withInstallment bool) {
 }
 
 func initPixCharge() {
-	initCustomer()
+	initCustomer(false)
 	clearPixChargeId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
@@ -211,7 +212,7 @@ func initPixCharge() {
 }
 
 func initBankSlipCharge(withInstallment bool) {
-	initCustomer()
+	initCustomer(false)
 	clearBankSlipChargeId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
@@ -246,7 +247,7 @@ func initBankSlipCharge(withInstallment bool) {
 }
 
 func initUndefinedCharge() {
-	initCustomer()
+	initCustomer(false)
 	clearUndefinedChargeId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
@@ -322,7 +323,7 @@ func initChargeDocumentId() {
 }
 
 func initAnticipation() {
-	initCreditCardCharge(false)
+	initCreditCardCharge(false, false)
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -377,7 +378,7 @@ func initImage() {
 }
 
 func initCreditBureauReport() {
-	initCustomer()
+	initCustomer(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -424,7 +425,7 @@ func initFiscalInfo() {
 }
 
 func initInvoice() {
-	initCreditCardCharge(false)
+	initCreditCardCharge(false, false)
 	clearInvoiceId()
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
@@ -499,7 +500,7 @@ func initNegativity() {
 }
 
 func initNotification() {
-	initCreditCardCharge(false)
+	initCreditCardCharge(false, true)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -713,7 +714,7 @@ func initWebhook() {
 }
 
 func initSubscription() {
-	initCustomer()
+	initCustomer(false)
 	clearSubscriptionId()
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)

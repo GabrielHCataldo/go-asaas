@@ -7,7 +7,7 @@ import (
 )
 
 func TestCreditCardTokenize(t *testing.T) {
-	initCustomer()
+	initCustomer(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)

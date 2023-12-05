@@ -36,7 +36,7 @@ func TestCustomerCreate(t *testing.T) {
 }
 
 func TestCustomerUpdateById(t *testing.T) {
-	initCustomer()
+	initCustomer(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -66,7 +66,7 @@ func TestCustomerUpdateById(t *testing.T) {
 }
 
 func TestCustomerDeleteById(t *testing.T) {
-	initCustomer()
+	initCustomer(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -88,7 +88,7 @@ func TestCustomerRestoreById(t *testing.T) {
 }
 
 func TestCustomerGetById(t *testing.T) {
-	initCustomer()
+	initCustomer(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -99,7 +99,7 @@ func TestCustomerGetById(t *testing.T) {
 }
 
 func TestCustomerGetAll(t *testing.T) {
-	initCustomer()
+	initCustomer(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()

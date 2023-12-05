@@ -7,7 +7,7 @@ import (
 )
 
 func TestInvoiceSchedule(t *testing.T) {
-	initCreditCardCharge(false)
+	initCreditCardCharge(false, false)
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)

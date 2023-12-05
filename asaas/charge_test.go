@@ -8,7 +8,7 @@ import (
 )
 
 func TestChargeCreate(t *testing.T) {
-	initCustomer()
+	initCustomer(false)
 	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
@@ -107,7 +107,7 @@ func TestChargeRestoreById(t *testing.T) {
 }
 
 func TestChargeRefundById(t *testing.T) {
-	initCreditCardCharge(false)
+	initCreditCardCharge(false, false)
 	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
