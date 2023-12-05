@@ -118,10 +118,7 @@ func (r request[T]) createHttpRequest(ctx context.Context, method string, path s
 	if len(payloadBytes) > 0 {
 		logInfoSkipCaller(5, r.env, "request body:", string(payloadBytes))
 	}
-	req, err := http.NewRequestWithContext(ctx, method, rUrl, payloadToSend)
-	if err != nil {
-		return nil, err
-	}
+	req, _ := http.NewRequestWithContext(ctx, method, rUrl, payloadToSend)
 	var t T
 	accept := HttpContentTypeJSON
 	switch any(t).(type) {

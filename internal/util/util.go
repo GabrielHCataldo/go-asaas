@@ -56,10 +56,7 @@ func GetValueByReflect(f reflect.Value) any {
 
 func GetJsonFieldNameByReflect(f reflect.StructField) string {
 	sk := strings.Split(f.Tag.Get("json"), ",")
-	if len(sk) > 0 && !IsBlank(&sk[0]) && sk[0] != "-" {
-		return sk[0]
-	}
-	return ""
+	return sk[0]
 }
 
 func GenerateEmail() string {
