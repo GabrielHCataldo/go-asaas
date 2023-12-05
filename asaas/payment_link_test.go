@@ -9,7 +9,6 @@ import (
 
 func TestPaymentLinkCreate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -30,13 +29,10 @@ func TestPaymentLinkCreate(t *testing.T) {
 }
 
 func TestPaymentLinkSendImageById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPaymentLink()
+	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
-	assertFatalStringBlank(t, paymentLinkId)
-	f, err := os.Open(getEnvValue(EnvImageName))
-	assertFatalErrorNonnull(t, err)
+	f, _ := os.Open(getEnvValue(EnvImageName))
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -48,11 +44,9 @@ func TestPaymentLinkSendImageById(t *testing.T) {
 }
 
 func TestPaymentLinkUpdateById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPaymentLink()
+	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
-	assertFatalStringBlank(t, paymentLinkId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -73,13 +67,10 @@ func TestPaymentLinkUpdateById(t *testing.T) {
 }
 
 func TestPaymentLinkUpdateImageAsMainById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPaymentLinkImage()
+	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
-	assertFatalStringBlank(t, paymentLinkId)
 	paymentLinkImageId := getEnvValue(EnvPaymentLinkImageId)
-	assertFatalStringBlank(t, paymentLinkImageId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -88,11 +79,9 @@ func TestPaymentLinkUpdateImageAsMainById(t *testing.T) {
 }
 
 func TestPaymentLinkDeleteById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPaymentLinkImage()
+	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
-	assertFatalStringBlank(t, paymentLinkId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -101,11 +90,9 @@ func TestPaymentLinkDeleteById(t *testing.T) {
 }
 
 func TestPaymentLinkRestoreById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPaymentLinkDeleted()
+	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkDeletedId)
-	assertFatalStringBlank(t, paymentLinkId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -114,13 +101,10 @@ func TestPaymentLinkRestoreById(t *testing.T) {
 }
 
 func TestPaymentLinkDeleteImageById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPaymentLinkImage()
+	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
-	assertFatalStringBlank(t, paymentLinkId)
 	paymentLinkImageId := getEnvValue(EnvPaymentLinkImageId)
-	assertFatalStringBlank(t, paymentLinkImageId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -129,9 +113,8 @@ func TestPaymentLinkDeleteImageById(t *testing.T) {
 }
 
 func TestPaymentLinkGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPaymentLinkImage()
+	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -141,8 +124,8 @@ func TestPaymentLinkGetById(t *testing.T) {
 }
 
 func TestPaymentLinkGetImageById(t *testing.T) {
+	initPaymentLinkImage()
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
 	paymentLinkImageId := getEnvValue(EnvPaymentLinkImageId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -153,9 +136,8 @@ func TestPaymentLinkGetImageById(t *testing.T) {
 }
 
 func TestPaymentLinkGetAll(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPaymentLink()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -170,8 +152,8 @@ func TestPaymentLinkGetAll(t *testing.T) {
 }
 
 func TestPaymentLinkGetImagesById(t *testing.T) {
+	initPaymentLinkImage()
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()

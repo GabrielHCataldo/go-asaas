@@ -2,89 +2,83 @@ package asaas
 
 import (
 	"context"
+	"os"
 	"testing"
 	"time"
 )
 
 func TestAnticipationSimulate(t *testing.T) {
+	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
-	initCreditCardCharge(true, false)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
-	resp, errAsaas := nAnticipation.Simulate(ctx, AnticipationSimulateRequest{
+	resp, err := nAnticipation.Simulate(ctx, AnticipationSimulateRequest{
 		Payment:     chargeId,
 		Installment: "",
 	})
-	assertResponseSuccess(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, err)
 }
 
 func TestAnticipationRequest(t *testing.T) {
+	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
-	initCreditCardCharge(true, false)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
-	assertFatalStringBlank(t, chargeId)
+	f, _ := os.Open(getEnvValue(EnvFileName))
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
-	resp, errAsaas := nAnticipation.Request(ctx, AnticipationRequest{
+	resp, err := nAnticipation.Request(ctx, AnticipationRequest{
 		Payment:     chargeId,
 		Installment: "",
-		Documents:   nil,
+		Documents:   []*os.File{f},
 	})
-	assertResponseSuccess(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, err)
 }
 
 func TestAnticipationAgreementSign(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
-	resp, errAsaas := nAnticipation.AgreementSign(ctx, AgreementSignRequest{
+	resp, err := nAnticipation.AgreementSign(ctx, AgreementSignRequest{
 		Agreed: true,
 	})
-	assertResponseSuccess(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, err)
 }
 
 func TestAnticipationGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initAnticipation()
+	accessToken := getEnvValue(EnvAccessToken)
 	anticipationId := getEnvValue(EnvAnticipationId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
-	resp, errAsaas := nAnticipation.GetById(ctx, anticipationId)
-	assertResponseSuccess(t, resp, errAsaas)
+	resp, err := nAnticipation.GetById(ctx, anticipationId)
+	assertResponseSuccess(t, resp, err)
 }
 
 func TestAnticipationGetLimits(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
-	resp, errAsaas := nAnticipation.GetLimits(ctx)
-	assertResponseSuccess(t, resp, errAsaas)
+	resp, err := nAnticipation.GetLimits(ctx)
+	assertResponseSuccess(t, resp, err)
 }
 
 func TestAnticipationGetAll(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nAnticipation := NewAnticipation(EnvSandbox, accessToken)
-	resp, errAsaas := nAnticipation.GetAll(ctx, GetAllAnticipationsRequest{
+	resp, err := nAnticipation.GetAll(ctx, GetAllAnticipationsRequest{
 		Payment:     "",
 		Installment: "",
 		Status:      "",
 		Offset:      0,
 		Limit:       10,
 	})
-	assertResponseSuccess(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, err)
 }

@@ -2,7 +2,6 @@ package asaas
 
 import (
 	"fmt"
-	"strings"
 	"time"
 )
 
@@ -10,29 +9,19 @@ type Datetime time.Time
 
 var dtLayout = "2006-01-02 15:04:05"
 
-func (d *Datetime) UnmarshalJSON(b []byte) error {
-	s := strings.Trim(string(b), `"`)
-	if s == "null" || s == `""` {
-		return nil
-	}
-	t, err := time.Parse(dtLayout, s)
-	*d = Datetime(t)
-	return err
-}
-
 func (d Datetime) MarshalJSON() ([]byte, error) {
-	if time.Time(d).IsZero() {
+	if d.Time().IsZero() {
 		return []byte(fmt.Sprintf(``)), nil
 	}
 	return []byte(fmt.Sprintf(`"%s"`, d.Format())), nil
 }
 
 func (d Datetime) Format() string {
-	t := time.Time(d)
+	t := d.Time()
 	if t.IsZero() {
 		return "null"
 	}
-	return time.Time(d).Format(dtLayout)
+	return d.Time().Format(dtLayout)
 }
 
 func (d Datetime) Time() time.Time {
@@ -46,6 +35,10 @@ func NewDatetime(year int, month time.Month, day, hour, min, sec, nSec int, loc 
 func NewDatetimePointer(year int, month time.Month, day, hour, min, sec, nSec int, loc *time.Location) Datetime {
 	v := NewDatetime(year, month, day, hour, min, sec, nSec, loc)
 	return v
+}
+
+func DatetimeNow() Datetime {
+	return Datetime(time.Now())
 }
 
 func (d Datetime) Year() int {
@@ -63,15 +56,31 @@ func (d Datetime) Day() int {
 	return day
 }
 
+func (d Datetime) Hour() int {
+	return d.Time().Hour()
+}
+
+func (d Datetime) Minute() int {
+	return d.Time().Minute()
+}
+
+func (d Datetime) Second() int {
+	return d.Time().Second()
+}
+
+func (d Datetime) Nanosecond() int {
+	return d.Time().Nanosecond()
+}
+
 func (d Datetime) Location() *time.Location {
-	return time.Time(d).Location()
+	return d.Time().Location()
 }
 
 func (d Datetime) IsZero() bool {
-	return time.Time(d).IsZero()
+	return d.Time().IsZero()
 }
 
 func (d Datetime) date() (year int, month time.Month, day int, yDay int) {
-	t := time.Time(d)
+	t := d.Time()
 	return t.Year(), t.Month(), t.Day(), t.YearDay()
 }

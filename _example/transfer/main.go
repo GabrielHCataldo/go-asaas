@@ -26,7 +26,7 @@ func transferToBank() {
 		PixAddressKey:     "",
 		PixAddressKeyType: "",
 		Description:       "",
-		ScheduleDate:      nil,
+		ScheduleDate:      asaas.Date{},
 	})
 	if err != nil {
 		fmt.Println("error:", err)
@@ -79,10 +79,10 @@ func getTransferById() {
 
 func getAllTransfer() {
 	resp, err := transferAsaas.GetAll(context.TODO(), asaas.GetAllTransfersRequest{
-		DateCreatedGe:  nil,
-		DateCreatedLe:  nil,
-		TransferDateGe: nil,
-		TransferDateLe: nil,
+		DateCreatedGe:  asaas.Date{},
+		DateCreatedLe:  asaas.Date{},
+		TransferDateGe: asaas.Date{},
+		TransferDateLe: asaas.Date{},
 		Type:           "",
 	})
 	if err != nil {

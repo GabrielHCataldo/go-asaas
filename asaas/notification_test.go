@@ -7,11 +7,9 @@ import (
 )
 
 func TestNotificationUpdateById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initNotification()
+	accessToken := getEnvValue(EnvAccessToken)
 	notificationId := getEnvValue(EnvNotificationId)
-	assertFatalStringBlank(t, notificationId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)
@@ -29,13 +27,10 @@ func TestNotificationUpdateById(t *testing.T) {
 }
 
 func TestNotificationUpdateManyByCustomer(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initNotification()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	assertFatalStringBlank(t, customerId)
 	notificationId := getEnvValue(EnvNotificationId)
-	assertFatalStringBlank(t, notificationId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)
@@ -59,11 +54,9 @@ func TestNotificationUpdateManyByCustomer(t *testing.T) {
 }
 
 func TestNotificationGetAllByCustomer(t *testing.T) {
+	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
-	initCreditCardCharge(false, false)
 	customerId := getEnvValue(EnvCustomerId)
-	assertFatalStringBlank(t, customerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)

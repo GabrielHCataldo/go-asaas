@@ -19,7 +19,7 @@ func main() {
 
 func simulateAnticipation() {
 	resp, err := anticipationAsaas.Simulate(context.TODO(), asaas.AnticipationSimulateRequest{
-		Payment:     "pay_jxqnfvp1qt8qpf5s",
+		Payment:     "",
 		Installment: "",
 	})
 	if err != nil {
@@ -33,7 +33,7 @@ func simulateAnticipation() {
 
 func requestAnticipation() {
 	resp, err := anticipationAsaas.Request(context.TODO(), asaas.AnticipationRequest{
-		Payment:     "pay_jxqnfvp1qt8qpf5s",
+		Payment:     "",
 		Installment: "",
 		Documents:   nil,
 	})
@@ -47,7 +47,7 @@ func requestAnticipation() {
 }
 
 func getAnticipationById() {
-	resp, err := anticipationAsaas.GetById(context.TODO(), "5be2e7dd-f573-49f2-b693-bce455d6e0aa")
+	resp, err := anticipationAsaas.GetById(context.TODO(), "")
 	if err != nil {
 		fmt.Println("error:", err)
 	} else if resp.IsSuccess() {

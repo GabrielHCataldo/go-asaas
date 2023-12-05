@@ -24,7 +24,7 @@ func createPaymentLink() {
 		Description:         "",
 		BillingType:         "",
 		ChargeType:          "",
-		EndDate:             nil,
+		EndDate:             asaas.Date{},
 		Value:               0,
 		DueDateLimitDays:    0,
 		SubscriptionCycle:   "",
@@ -44,15 +44,15 @@ func createPaymentLink() {
 func updatePaymentLinkById() {
 	resp, err := paymentLinkAsaas.UpdateById(context.TODO(), "", asaas.UpdatePaymentLinkRequest{
 		Name:                "",
-		Description:         "",
+		Description:         nil,
 		BillingType:         "",
 		ChargeType:          "",
-		EndDate:             nil,
-		Value:               0,
+		EndDate:             asaas.Date{},
+		Value:               nil,
 		DueDateLimitDays:    0,
-		SubscriptionCycle:   "",
+		SubscriptionCycle:   nil,
 		MaxInstallmentCount: 0,
-		NotificationEnabled: false,
+		NotificationEnabled: nil,
 		Callback:            nil,
 	})
 	if err != nil {
@@ -95,10 +95,10 @@ func getPaymentLinkById() {
 func getAllPaymentLink() {
 	resp, err := paymentLinkAsaas.GetAll(context.TODO(), asaas.GetAllPaymentLinksRequest{
 		Name:           "",
-		Active:         false,
-		IncludeDeleted: false,
+		Active:         nil,
+		IncludeDeleted: nil,
 		Offset:         0,
-		Limit:          10,
+		Limit:          0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

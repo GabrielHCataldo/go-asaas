@@ -2,7 +2,7 @@ package asaas
 
 import (
 	"context"
-	"github.com/mvrilo/go-cpf"
+	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"os"
 	"testing"
 	"time"
@@ -10,19 +10,18 @@ import (
 
 func TestSubaccountCreate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.Create(ctx, CreateSubaccountRequest{
 		Name:          "Unit test go",
-		Email:         "unittestgo@gmail.com",
+		Email:         util.GenerateEmail(),
 		LoginEmail:    "",
-		CpfCnpj:       cpf.Generate(),
-		BirthDate:     NewDate(1999, 1, 21, time.Local),
-		CompanyType:   "",
+		CpfCnpj:       "81452811000125",
+		BirthDate:     NewDate(1999, 6, 12, time.Local),
+		CompanyType:   CompanyTypeLimited,
 		Phone:         "",
-		MobilePhone:   "47997576131",
+		MobilePhone:   util.GenerateMobilePhone(),
 		Site:          "",
 		Address:       "Rua Maria de Souza Maba",
 		AddressNumber: "123",
@@ -35,57 +34,50 @@ func TestSubaccountCreate(t *testing.T) {
 }
 
 func TestSubaccountSendWhiteLabelDocument(t *testing.T) {
+	initSubaccountDocument()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	assertFatalStringBlank(t, accessToken)
-	initSubaccount()
-	subaccountId := getEnvValue(EnvSubaccountId)
-	assertFatalStringBlank(t, subaccountId)
-	f, err := os.Open(getEnvValue(EnvFileName))
-	assertFatalErrorNonnull(t, err)
+	subaccountDocumentId := getEnvValue(EnvSubaccountDocumentId)
+	subaccountDocumentType := getEnvValue(EnvSubaccountDocumentType)
+	f, _ := os.Open(getEnvValue(EnvImageName))
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.SendWhiteLabelDocument(ctx, subaccountId, SubaccountSendDocumentRequest{
-		Type:         SubaccountDocumentTypeCustom,
+	resp, err := nSubaccount.SendWhiteLabelDocument(ctx, subaccountDocumentId, SendWhiteLabelDocumentRequest{
+		Type:         SubaccountDocumentType(subaccountDocumentType),
 		DocumentFile: f,
 	})
 	assertResponseSuccess(t, resp, err)
 }
 
 func TestSubaccountUpdateWhiteLabelDocumentSentById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	assertFatalStringBlank(t, accessToken)
 	initSubaccount()
-	subaccountId := getEnvValue(EnvSubaccountId)
-	assertFatalStringBlank(t, subaccountId)
-	f, err := os.Open(getEnvValue(EnvFileName))
-	assertFatalErrorNonnull(t, err)
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	subaccountDocumentSentId := getEnvValue(EnvSubaccountDocumentSentId)
+	f, _ := os.Open(getEnvValue(EnvFileName))
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.UpdateWhiteLabelDocumentSentById(ctx, subaccountId, UpdateWhiteLabelDocumentSentRequest{
-		DocumentFile: f,
-	})
+	resp, err := nSubaccount.UpdateWhiteLabelDocumentSentById(ctx, subaccountDocumentSentId,
+		UpdateWhiteLabelDocumentSentRequest{
+			DocumentFile: f,
+		})
 	assertResponseSuccess(t, resp, err)
 }
 
 func TestSubaccountDeleteWhiteLabelDocumentSentById(t *testing.T) {
+	initSubaccountDocumentSent()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	assertFatalStringBlank(t, accessToken)
-	initSubaccountDocument()
-	subaccountDocumentSendId := getEnvValue(EnvSubaccountDocumentSentId)
-	assertFatalStringBlank(t, subaccountDocumentSendId)
+	subaccountDocumentSentId := getEnvValue(EnvSubaccountDocumentSentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.DeleteWhiteLabelDocumentSentById(ctx, subaccountDocumentSendId)
+	resp, err := nSubaccount.DeleteWhiteLabelDocumentSentById(ctx, subaccountDocumentSentId)
 	assertResponseSuccess(t, resp, err)
 }
 
 func TestSubaccountGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	assertFatalStringBlank(t, accessToken)
 	initSubaccount()
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	subaccountId := getEnvValue(EnvSubaccountId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -95,25 +87,23 @@ func TestSubaccountGetById(t *testing.T) {
 }
 
 func TestSubaccountGetDocumentSentById(t *testing.T) {
+	initSubaccountDocumentSent()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	assertFatalStringBlank(t, accessToken)
-	initSubaccountDocument()
-	subaccountDocumentSendId := getEnvValue(EnvSubaccountDocumentSentId)
+	subaccountDocumentSentId := getEnvValue(EnvSubaccountDocumentSentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.GetDocumentSentById(ctx, subaccountDocumentSendId)
+	resp, err := nSubaccount.GetDocumentSentById(ctx, subaccountDocumentSentId)
 	assertResponseSuccess(t, resp, err)
 }
 
 func TestSubaccountGetAll(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubaccount()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, errAsaas := nSubaccount.GetAll(ctx, GetAllSubaccountsRequest{
+	resp, err := nSubaccount.GetAll(ctx, GetAllSubaccountsRequest{
 		CpfCnpj:  "",
 		Email:    "",
 		Name:     "",
@@ -121,13 +111,12 @@ func TestSubaccountGetAll(t *testing.T) {
 		Offset:   0,
 		Limit:    10,
 	})
-	assertResponseSuccess(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, err)
 }
 
 func TestSubaccountGetPendingDocuments(t *testing.T) {
+	initSubaccountDocumentSent()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	assertFatalStringBlank(t, accessToken)
-	initSubaccountDocument()
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)

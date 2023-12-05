@@ -18,9 +18,9 @@ func main() {
 
 func getCreditBureauReport() {
 	resp, err := creditBureauAsaas.GetReport(context.TODO(), asaas.GetReportRequest{
-		Customer: "cus_000005791749",
+		Customer: "",
 		CpfCnpj:  "",
-		State:    "SP",
+		State:    "",
 	})
 	if err != nil {
 		fmt.Println("error:", err)
@@ -46,10 +46,10 @@ func getCreditBureauReportById() {
 
 func getAllCreditBureauReports() {
 	resp, err := creditBureauAsaas.GetAllReports(context.TODO(), asaas.GetAllReportsRequest{
-		StartDate: nil,
-		EndDate:   nil,
+		StartDate: asaas.Date{},
+		EndDate:   asaas.Date{},
 		Offset:    0,
-		Limit:     10,
+		Limit:     0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

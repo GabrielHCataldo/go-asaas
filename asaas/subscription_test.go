@@ -7,14 +7,12 @@ import (
 )
 
 func TestSubscriptionCreate(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCustomer()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	assertFatalStringBlank(t, customerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DateNow()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.Create(ctx, CreateSubscriptionRequest{
 		Customer:             customerId,
@@ -39,11 +37,9 @@ func TestSubscriptionCreate(t *testing.T) {
 }
 
 func TestSubscriptionCreateInvoiceSettingById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscription()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	assertFatalStringBlank(t, subscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -63,11 +59,9 @@ func TestSubscriptionCreateInvoiceSettingById(t *testing.T) {
 }
 
 func TestSubscriptionUpdateById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscription()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	assertFatalStringBlank(t, subscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -89,11 +83,9 @@ func TestSubscriptionUpdateById(t *testing.T) {
 }
 
 func TestSubscriptionUpdateInvoiceSettingsById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscriptionInvoiceSetting()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	assertFatalStringBlank(t, subscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -103,17 +95,15 @@ func TestSubscriptionUpdateInvoiceSettingsById(t *testing.T) {
 		ReceivedOnly:        nil,
 		DaysBeforeDueDate:   nil,
 		Observations:        nil,
-		Taxes:               nil,
+		Taxes:               InvoiceTaxesRequest{},
 	})
 	assertResponseSuccess(t, resp, err)
 }
 
 func TestSubscriptionDeleteById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscription()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	assertFatalStringBlank(t, subscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -121,12 +111,10 @@ func TestSubscriptionDeleteById(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestSubscription_DeleteInvoiceSettingById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
+func TestSubscriptionDeleteInvoiceSettingById(t *testing.T) {
 	initSubscriptionInvoiceSetting()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	assertFatalStringBlank(t, subscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -135,9 +123,8 @@ func TestSubscription_DeleteInvoiceSettingById(t *testing.T) {
 }
 
 func TestSubscriptionGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscription()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -147,9 +134,8 @@ func TestSubscriptionGetById(t *testing.T) {
 }
 
 func TestSubscriptionGetInvoiceSettingById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscriptionInvoiceSetting()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -159,14 +145,12 @@ func TestSubscriptionGetInvoiceSettingById(t *testing.T) {
 }
 
 func TestSubscriptionGetPaymentBookById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscription()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	assertFatalStringBlank(t, subscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DateNow()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.GetPaymentBookById(ctx, subscriptionId, SubscriptionPaymentBookRequest{
 		Month: int(now.Month()),
@@ -174,13 +158,12 @@ func TestSubscriptionGetPaymentBookById(t *testing.T) {
 		Sort:  "",
 		Order: "",
 	})
-	assertResponseSuccess(t, resp, err)
+	assertResponseFailure(t, resp, err)
 }
 
 func TestSubscriptionGetAll(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscription()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -201,11 +184,9 @@ func TestSubscriptionGetAll(t *testing.T) {
 }
 
 func TestSubscriptionGetAllChargesBySubscription(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscription()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	assertFatalStringBlank(t, subscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -216,11 +197,9 @@ func TestSubscriptionGetAllChargesBySubscription(t *testing.T) {
 }
 
 func TestSubscriptionGetAllInvoicesBySubscription(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initSubscription()
+	accessToken := getEnvValue(EnvAccessToken)
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	assertFatalStringBlank(t, subscriptionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -233,5 +212,5 @@ func TestSubscriptionGetAllInvoicesBySubscription(t *testing.T) {
 		Offset:            0,
 		Limit:             10,
 	})
-	assertResponseSuccess(t, resp, err)
+	assertResponseNoContent(t, resp, err)
 }

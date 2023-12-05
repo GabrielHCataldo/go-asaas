@@ -7,11 +7,9 @@ import (
 )
 
 func TestInvoiceSchedule(t *testing.T) {
+	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
-	initCreditCardCharge(true, false)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
@@ -35,11 +33,9 @@ func TestInvoiceSchedule(t *testing.T) {
 }
 
 func TestInvoiceAuthorizeById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initInvoice()
+	accessToken := getEnvValue(EnvAccessToken)
 	invoiceId := getEnvValue(EnvCreditCardChargeId)
-	assertFatalStringBlank(t, invoiceId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
@@ -48,11 +44,9 @@ func TestInvoiceAuthorizeById(t *testing.T) {
 }
 
 func TestInvoiceUpdateById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initInvoice()
+	accessToken := getEnvValue(EnvAccessToken)
 	invoiceId := getEnvValue(EnvCreditCardChargeId)
-	assertFatalStringBlank(t, invoiceId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
@@ -73,11 +67,9 @@ func TestInvoiceUpdateById(t *testing.T) {
 }
 
 func TestInvoiceCancelById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initInvoice()
+	accessToken := getEnvValue(EnvAccessToken)
 	invoiceId := getEnvValue(EnvCreditCardChargeId)
-	assertFatalStringBlank(t, invoiceId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
@@ -86,9 +78,8 @@ func TestInvoiceCancelById(t *testing.T) {
 }
 
 func TestInvoiceGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initInvoice()
+	accessToken := getEnvValue(EnvAccessToken)
 	invoiceId := getEnvValue(EnvCreditCardChargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -98,13 +89,12 @@ func TestInvoiceGetById(t *testing.T) {
 }
 
 func TestInvoiceGetAll(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initInvoice()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInvoice := NewInvoice(EnvSandbox, accessToken)
-	resp, errAsaas := nInvoice.GetAll(ctx, GetAllInvoicesRequest{
+	resp, err := nInvoice.GetAll(ctx, GetAllInvoicesRequest{
 		EffectiveDateGE:   Date{},
 		EffectiveDateLE:   Date{},
 		Payment:           "",
@@ -115,5 +105,5 @@ func TestInvoiceGetAll(t *testing.T) {
 		Offset:            0,
 		Limit:             10,
 	})
-	assertResponseSuccess(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, err)
 }

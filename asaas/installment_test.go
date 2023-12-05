@@ -7,33 +7,30 @@ import (
 )
 
 func TestInstallmentUpdateSplitsById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initBankSlipCharge(true)
+	accessToken := getEnvValue(EnvAccessToken)
 	installmentId := getEnvValue(EnvChargeInstallmentId)
-	assertFatalStringBlank(t, installmentId)
 	walletIdSecondary := getEnvValue(EnvWalletIdSecondary)
-	assertFatalStringBlank(t, walletIdSecondary)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInstallment := NewInstallment(EnvSandbox, accessToken)
-	resp, err := nInstallment.UpdateSplitsById(ctx, installmentId, []SplitRequest{
-		{
-			WalletId:        walletIdSecondary,
-			FixedValue:      0,
-			PercentualValue: 50,
-			TotalFixedValue: 0,
+	resp, err := nInstallment.UpdateSplitsById(ctx, installmentId, UpdateSplitsRequest{
+		Splits: []SplitRequest{
+			{
+				WalletId:        walletIdSecondary,
+				FixedValue:      0,
+				PercentualValue: 50,
+				TotalFixedValue: 0,
+			},
 		},
 	})
 	assertResponseSuccess(t, resp, err)
 }
 
 func TestInstallmentDeleteById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initBankSlipCharge(true)
+	accessToken := getEnvValue(EnvAccessToken)
 	installmentId := getEnvValue(EnvChargeInstallmentId)
-	assertFatalStringBlank(t, installmentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInstallment := NewInstallment(EnvSandbox, accessToken)
@@ -42,11 +39,9 @@ func TestInstallmentDeleteById(t *testing.T) {
 }
 
 func TestInstallmentRefundById(t *testing.T) {
+	initCreditCardCharge(true)
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
-	initCreditCardCharge(false, true)
 	installmentId := getEnvValue(EnvChargeInstallmentId)
-	assertFatalStringBlank(t, installmentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInstallment := NewInstallment(EnvSandbox, accessToken)
@@ -55,9 +50,8 @@ func TestInstallmentRefundById(t *testing.T) {
 }
 
 func TestInstallmentGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initBankSlipCharge(true)
+	accessToken := getEnvValue(EnvAccessToken)
 	installmentId := getEnvValue(EnvChargeInstallmentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -67,11 +61,9 @@ func TestInstallmentGetById(t *testing.T) {
 }
 
 func TestInstallmentGetPaymentBookById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initBankSlipCharge(true)
+	accessToken := getEnvValue(EnvAccessToken)
 	installmentId := getEnvValue(EnvChargeInstallmentId)
-	assertFatalStringBlank(t, installmentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInstallment := NewInstallment(EnvSandbox, accessToken)
@@ -83,12 +75,11 @@ func TestInstallmentGetPaymentBookById(t *testing.T) {
 }
 
 func TestInstallmentGetAll(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initBankSlipCharge(true)
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nInstallment := NewInstallment(EnvSandbox, accessToken)
-	resp, errAsaas := nInstallment.GetAll(ctx, PageableDefaultRequest{})
-	assertResponseSuccess(t, resp, errAsaas)
+	resp, err := nInstallment.GetAll(ctx, PageableDefaultRequest{})
+	assertResponseSuccess(t, resp, err)
 }

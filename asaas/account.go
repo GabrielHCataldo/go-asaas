@@ -29,7 +29,7 @@ type UpdateAccountRequest struct {
 	// Tipo da empresa (somente quando Pessoa Jurídica)
 	CompanyType *CompanyType `json:"companyType,omitempty"`
 	// Email da conta
-	Email *string `json:"email,omitempty"`
+	Email string `json:"email,omitempty"`
 	// Telefone
 	Phone *string `json:"phone,omitempty"`
 	// Telefone celular
@@ -210,7 +210,7 @@ type AccountCreditCardFeesResponse struct {
 	DiscountOneInstallmentPercentage         float64 `json:"discountOneInstallmentPercentage"`
 	DiscountUpToSixInstallmentsPercentage    float64 `json:"discountUpToSixInstallmentsPercentage"`
 	DiscountUpToTwelveInstallmentsPercentage float64 `json:"discountUpToTwelveInstallmentsPercentage"`
-	DiscountExpiration                       float64 `json:"discountExpiration"`
+	DiscountExpiration                       Date    `json:"discountExpiration"`
 }
 
 type AccountDebitCardFeesResponse struct {
@@ -918,7 +918,7 @@ func (a account) GetAccountStatement(ctx context.Context, filter GetAccountState
 func (a account) GetPaymentStatistic(ctx context.Context, filter GetPaymentStatisticRequest) (
 	*PaymentStatisticResponse, error) {
 	req := NewRequest[PaymentStatisticResponse](ctx, a.env, a.accessToken)
-	return req.make(http.MethodGet, "/v3/payment/statistics", filter)
+	return req.make(http.MethodGet, "/v3/finance/payment/statistics", filter)
 }
 
 func (a account) GetInvoiceCustomization(ctx context.Context) (*InvoiceCustomizationResponse, error) {

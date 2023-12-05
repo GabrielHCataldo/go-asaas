@@ -7,11 +7,9 @@ import (
 )
 
 func TestPixPayQrCode(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPixCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	pixQrCodePayload := getEnvValue(EnvChargePixQrCodePayload)
-	assertFatalStringBlank(t, pixQrCodePayload)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
@@ -28,11 +26,9 @@ func TestPixPayQrCode(t *testing.T) {
 }
 
 func TestPixDecodeQrCode(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPixCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	pixQrCodePayload := getEnvValue(EnvChargePixQrCodePayload)
-	assertFatalStringBlank(t, pixQrCodePayload)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
@@ -44,11 +40,9 @@ func TestPixDecodeQrCode(t *testing.T) {
 }
 
 func TestPixCancelTransactionById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPixTransaction()
+	accessToken := getEnvValue(EnvAccessToken)
 	pixTransactionId := getEnvValue(EnvPixTransactionId)
-	assertFatalStringBlank(t, pixTransactionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
@@ -58,7 +52,6 @@ func TestPixCancelTransactionById(t *testing.T) {
 
 func TestPixCreateKey(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
@@ -68,10 +61,9 @@ func TestPixCreateKey(t *testing.T) {
 
 func TestPixCreateStaticKey(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DatetimeNow()
 	nPix := NewPix(EnvSandbox, accessToken)
 	resp, err := nPix.CreateStaticKey(ctx, CreatePixKeyStaticRequest{
 		AddressKey:  "",
@@ -87,11 +79,9 @@ func TestPixCreateStaticKey(t *testing.T) {
 }
 
 func TestPixDeleteKeyById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPixKey()
+	accessToken := getEnvValue(EnvAccessToken)
 	pixKeyId := getEnvValue(EnvPixKeyId)
-	assertFatalStringBlank(t, pixKeyId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
@@ -100,9 +90,8 @@ func TestPixDeleteKeyById(t *testing.T) {
 }
 
 func TestPixGetTransactionById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPixTransaction()
+	accessToken := getEnvValue(EnvAccessToken)
 	pixTransactionId := getEnvValue(EnvPixTransactionId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -112,9 +101,8 @@ func TestPixGetTransactionById(t *testing.T) {
 }
 
 func TestPixGetKeyById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPixKey()
+	accessToken := getEnvValue(EnvAccessToken)
 	pixKeyId := getEnvValue(EnvPixKeyId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -124,9 +112,8 @@ func TestPixGetKeyById(t *testing.T) {
 }
 
 func TestPixGetAllTransactions(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPixTransaction()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
@@ -141,17 +128,16 @@ func TestPixGetAllTransactions(t *testing.T) {
 }
 
 func TestPixGetAllKeys(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPixKey()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
-	resp, errAsaas := nPix.GetAllKeys(ctx, GetAllPixKeysRequest{
+	resp, err := nPix.GetAllKeys(ctx, GetAllPixKeysRequest{
 		Status:     "",
 		StatusList: "",
 		Offset:     0,
 		Limit:      10,
 	})
-	assertResponseSuccess(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, err)
 }

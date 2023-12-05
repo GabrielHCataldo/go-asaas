@@ -7,15 +7,13 @@ import (
 )
 
 func TestCreditCardTokenize(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCustomer()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	assertFatalStringBlank(t, customerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCreditCard := NewCreditCard(EnvSandbox, accessToken)
-	resp, errAsaas := nCreditCard.Tokenize(ctx, CreditCardTokenizeRequest{
+	resp, err := nCreditCard.Tokenize(ctx, CreditCardTokenizeRequest{
 		Customer: customerId,
 		CreditCard: CreditCardRequest{
 			HolderName:  "unit test go",
@@ -35,5 +33,5 @@ func TestCreditCardTokenize(t *testing.T) {
 			AddressComplement: "",
 		},
 	})
-	assertResponseSuccess(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, err)
 }

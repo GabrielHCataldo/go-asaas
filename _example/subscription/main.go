@@ -32,7 +32,7 @@ func createSubscription() {
 		CreditCard:           nil,
 		CreditCardHolderInfo: nil,
 		CreditCardToken:      "",
-		EndDate:              nil,
+		EndDate:              asaas.Date{},
 		MaxPayments:          0,
 		ExternalReference:    "",
 		Split:                nil,
@@ -52,16 +52,13 @@ func updateSubscriptionById() {
 		BillingType:           "",
 		Value:                 0,
 		Status:                "",
-		NextDueDate:           nil,
+		NextDueDate:           asaas.Date{},
 		Discount:              nil,
 		Interest:              nil,
 		Fine:                  nil,
 		Cycle:                 "",
-		Description:           "",
-		CreditCard:            nil,
-		CreditCardHolderInfo:  nil,
-		CreditCardToken:       "",
-		EndDate:               nil,
+		Description:           nil,
+		EndDate:               asaas.Date{},
 		UpdatePendingPayments: false,
 		ExternalReference:     "",
 	})
@@ -114,7 +111,7 @@ func getAllSubscription() {
 		Order:             "",
 		Sort:              "",
 		Offset:            0,
-		Limit:             10,
+		Limit:             0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

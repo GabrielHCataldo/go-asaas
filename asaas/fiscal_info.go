@@ -54,8 +54,8 @@ type FiscalInfoResponse struct {
 	RpsNumber                int             `json:"rpsNumber,omitempty"`
 	LoteNumber               int             `json:"loteNumber,omitempty"`
 	Username                 string          `json:"username,omitempty"`
-	PasswordSent             string          `json:"passwordSent,omitempty"`
-	AccessTokenSent          string          `json:"accessTokenSent,omitempty"`
+	PasswordSent             bool            `json:"passwordSent,omitempty"`
+	AccessTokenSent          bool            `json:"accessTokenSent,omitempty"`
 	CertificateSent          bool            `json:"certificateSent,omitempty"`
 	SpecialTaxRegime         string          `json:"specialTaxRegime,omitempty"`
 	Email                    string          `json:"email,omitempty"`
@@ -83,8 +83,8 @@ type MunicipalSettingsResponse struct {
 }
 
 type SpecialTaxRegimeResponse struct {
-	Label string  `json:"label,omitempty"`
-	Value float64 `json:"value,omitempty"`
+	Label string `json:"label,omitempty"`
+	Value string `json:"value,omitempty"`
 }
 
 type FiscalInfoServiceResponse struct {

@@ -93,7 +93,7 @@ func getAllInvoices() {
 		ExternalReference: "",
 		Status:            "",
 		Offset:            0,
-		Limit:             10,
+		Limit:             0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

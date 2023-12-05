@@ -21,7 +21,7 @@ type CreatePaymentLinkRequest struct {
 	// Valor do link de pagamentos, caso não informado o pagador poderá informar o quanto deseja pagar
 	Value float64 `json:"value,omitempty"`
 	// Caso seja possível o pagamento via boleto bancário, define a quantidade de dias úteis que o seu cliente poderá pagar o boleto após gerado
-	DueDateLimitDays int `json:"dueDateLimitDays,omitempty"`
+	DueDateLimitDays int `json:"dueDateLimitDays"`
 	// Periodicidade da cobrança (REQUIRED se ChargeType = ChargeTypeRecurrent)
 	SubscriptionCycle SubscriptionCycle `json:"subscriptionCycle,omitempty"`
 	// Quantidade máxima de parcelas que seu cliente poderá parcelar o valor do link de pagamentos (REQUIRED se ChargeType = ChargeTypeInstallment)
@@ -718,7 +718,7 @@ func (p paymentLink) UpdateImageAsMainById(ctx context.Context, paymentLinkId, i
 
 func (p paymentLink) RestoreById(ctx context.Context, paymentLinkId string) (*PaymentLinkResponse, error) {
 	req := NewRequest[PaymentLinkResponse](ctx, p.env, p.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/paymentLinks/%s", paymentLinkId), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/paymentLinks/%s/restore", paymentLinkId), nil)
 }
 
 func (p paymentLink) DeleteById(ctx context.Context, paymentLinkId string) (*DeleteResponse, error) {

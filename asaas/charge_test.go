@@ -7,12 +7,10 @@ import (
 	"time"
 )
 
-func TestChangeCreate(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
+func TestChargeCreate(t *testing.T) {
 	initCustomer()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	assertFatalStringBlank(t, customerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -40,31 +38,39 @@ func TestChangeCreate(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChangePayWithCreditCard(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
+func TestChargePayWithCreditCard(t *testing.T) {
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
-	resp, err := nCharge.PayWithCreditCard(ctx, chargeId, CreditCardRequest{
-		HolderName:  "unit test go",
-		Number:      "4000000000000010",
-		ExpiryMonth: "12",
-		ExpiryYear:  "2036",
-		Ccv:         "123",
+	resp, err := nCharge.PayWithCreditCard(ctx, chargeId, PayWithCreditCardRequest{
+		CreditCard: &CreditCardRequest{
+			HolderName:  "unit test go",
+			Number:      "4000000000000010",
+			ExpiryMonth: "05",
+			ExpiryYear:  "2035",
+			Ccv:         "318",
+		},
+		CreditCardHolderInfo: &CreditCardHolderInfoRequest{
+			Name:          "Unit Test Go",
+			CpfCnpj:       "24971563792",
+			Email:         "unittest@gmail.com",
+			Phone:         "4738010919",
+			MobilePhone:   "47998781877",
+			PostalCode:    "89223-005",
+			AddressNumber: "277",
+		},
+		CreditCardToken: "",
 	})
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChangeUpdateById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
+func TestChargeUpdateById(t *testing.T) {
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -78,12 +84,10 @@ func TestChangeUpdateById(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChangeDeleteById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
+func TestChargeDeleteById(t *testing.T) {
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -91,12 +95,10 @@ func TestChangeDeleteById(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChangeRestoreById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
+func TestChargeRestoreById(t *testing.T) {
 	initChargeDeleted()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvChargeDeletedId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -104,12 +106,10 @@ func TestChangeRestoreById(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChangeRefundById(t *testing.T) {
+func TestChargeRefundById(t *testing.T) {
+	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
-	initCreditCardCharge(true, false)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -120,16 +120,14 @@ func TestChangeRefundById(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChangeReceiveInCashById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
+func TestChargeReceiveInCashById(t *testing.T) {
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
-	now := time.Now()
+	now := DateNow()
 	resp, err := nCharge.ReceiveInCashById(ctx, chargeId, ChargeReceiveInCashRequest{
 		PaymentDate:    NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
 		Value:          100,
@@ -138,12 +136,10 @@ func TestChangeReceiveInCashById(t *testing.T) {
 	assertResponseSuccess(t, resp, err)
 }
 
-func TestChangeUndoReceivedInCashById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
+func TestChargeUndoReceivedInCashById(t *testing.T) {
 	initChargeReceivedInCash()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvChargeReceivedInCashId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -152,13 +148,10 @@ func TestChangeUndoReceivedInCashById(t *testing.T) {
 }
 
 func TestChargeUploadDocumentById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
-	f, err := os.Open(getEnvValue(EnvFileName))
-	assertFatalErrorNonnull(t, err)
+	f, _ := os.Open(getEnvValue(EnvFileName))
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -171,13 +164,10 @@ func TestChargeUploadDocumentById(t *testing.T) {
 }
 
 func TestChargeUpdateDocumentDefinitionsById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	docId := getEnvValue(EnvChargeDocumentId)
-	assertFatalStringBlank(t, docId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -189,13 +179,10 @@ func TestChargeUpdateDocumentDefinitionsById(t *testing.T) {
 }
 
 func TestChargeDeleteDocumentById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	docId := getEnvValue(EnvChargeDocumentId)
-	assertFatalStringBlank(t, docId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -204,11 +191,9 @@ func TestChargeDeleteDocumentById(t *testing.T) {
 }
 
 func TestChargeGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -218,7 +203,6 @@ func TestChargeGetById(t *testing.T) {
 
 func TestChargeGetCreationLimit(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -227,11 +211,9 @@ func TestChargeGetCreationLimit(t *testing.T) {
 }
 
 func TestChargeGetStatusById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -240,11 +222,9 @@ func TestChargeGetStatusById(t *testing.T) {
 }
 
 func TestChargeGetIdentificationFieldById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initBankSlipCharge(false)
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvBankSlipChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -253,11 +233,9 @@ func TestChargeGetIdentificationFieldById(t *testing.T) {
 }
 
 func TestChargeGetPixQrCodeById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initPixCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvPixChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -266,11 +244,9 @@ func TestChargeGetPixQrCodeById(t *testing.T) {
 }
 
 func TestChargeGetDocumentById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	docId := getEnvValue(EnvChargeDocumentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -280,9 +256,8 @@ func TestChargeGetDocumentById(t *testing.T) {
 }
 
 func TestChargeGetAll(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -315,11 +290,9 @@ func TestChargeGetAll(t *testing.T) {
 }
 
 func TestChargeGetAllDocumentsById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initChargeDocumentId()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)

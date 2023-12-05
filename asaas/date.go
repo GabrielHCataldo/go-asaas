@@ -30,19 +30,19 @@ func (d Date) MarshalJSON() ([]byte, error) {
 }
 
 func (d Date) Format() string {
-	t := time.Time(d)
+	t := d.Time()
 	if t.IsZero() {
 		return "null"
 	}
-	return time.Time(d).Format(dLayout)
-}
-
-func (d Date) Time() time.Time {
-	return time.Time(d)
+	return d.Time().Format(dLayout)
 }
 
 func NewDate(year int, month time.Month, day int, loc *time.Location) Date {
 	return Date(time.Date(year, month, day, 23, 59, 0, 0, loc))
+}
+
+func DateNow() Date {
+	return Date(time.Now())
 }
 
 func (d Date) Year() int {
@@ -61,14 +61,18 @@ func (d Date) Day() int {
 }
 
 func (d Date) Location() *time.Location {
-	return time.Time(d).Location()
+	return d.Time().Location()
 }
 
 func (d Date) IsZero() bool {
-	return time.Time(d).IsZero()
+	return d.Time().IsZero()
+}
+
+func (d Date) Time() time.Time {
+	return time.Time(d)
 }
 
 func (d Date) date() (year int, month time.Month, day int, yDay int) {
-	t := time.Time(d)
+	t := d.Time()
 	return t.Year(), t.Month(), t.Day(), t.YearDay()
 }

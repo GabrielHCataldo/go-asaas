@@ -97,7 +97,7 @@ type UpdateInvoiceSettingRequest struct {
 	// Observações adicionais da nota fiscal.
 	Observations *string `json:"observations,omitempty"`
 	// Impostos da nota fiscal.
-	Taxes *InvoiceTaxesRequest `json:"taxes,omitempty"`
+	Taxes InvoiceTaxesRequest `json:"taxes,omitempty"`
 }
 
 type InvoiceTaxesRequest struct {

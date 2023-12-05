@@ -8,6 +8,12 @@ type DeleteResponse struct {
 	Errors  []ErrorResponse `json:"errors,omitempty"`
 }
 
+type DeleteNumericResponse struct {
+	Id      int             `json:"id,omitempty"`
+	Deleted bool            `json:"deleted,omitempty"`
+	Errors  []ErrorResponse `json:"errors,omitempty"`
+}
+
 type response interface {
 	IsSuccess() bool
 	IsFailure() bool
@@ -557,6 +563,18 @@ func (d DeleteResponse) IsNoContent() bool {
 	return len(d.Errors) == 0 && util.IsBlank(&d.Id)
 }
 
+func (d DeleteNumericResponse) IsSuccess() bool {
+	return len(d.Errors) == 0 && d.Deleted && d.Id > 0
+}
+
+func (d DeleteNumericResponse) IsFailure() bool {
+	return !d.IsSuccess()
+}
+
+func (d DeleteNumericResponse) IsNoContent() bool {
+	return len(d.Errors) == 0 && d.Id == 0
+}
+
 func (c ChargeDocumentResponse) IsSuccess() bool {
 	return len(c.Errors) == 0 && util.IsNotBlank(&c.Id) && c.File != nil
 }
@@ -606,7 +624,7 @@ func (c ChargeCreationLimitResponse) IsNoContent() bool {
 }
 
 func (c ChargeStatusResponse) IsSuccess() bool {
-	return len(c.Errors) == 0 && c.Status.IsEnumValid()
+	return len(c.Errors) == 0 && c.Status != ""
 }
 
 func (c ChargeStatusResponse) IsFailure() bool {
@@ -614,7 +632,7 @@ func (c ChargeStatusResponse) IsFailure() bool {
 }
 
 func (c ChargeStatusResponse) IsNoContent() bool {
-	return len(c.Errors) == 0 && !c.Status.IsEnumValid()
+	return len(c.Errors) == 0 && c.Status == ""
 }
 
 func (c CreditCardTokenizeResponse) IsSuccess() bool {

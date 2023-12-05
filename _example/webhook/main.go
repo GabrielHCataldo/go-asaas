@@ -20,8 +20,8 @@ func saveWebhookSetting() {
 		Url:         "",
 		Email:       "",
 		ApiVersion:  "",
-		Enabled:     false,
-		Interrupted: false,
+		Enabled:     nil,
+		Interrupted: nil,
 		AuthToken:   "",
 	})
 	if err != nil {

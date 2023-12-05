@@ -8,11 +8,10 @@ import (
 
 func TestWebhookSaveSetting(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nWebhook := NewWebhook(EnvSandbox, accessToken)
-	resp, errAsaas := nWebhook.SaveSetting(ctx, WebhookTypePayment, SaveWebhookSettingRequest{
+	resp, err := nWebhook.SaveSetting(ctx, WebhookTypePayment, SaveWebhookSettingRequest{
 		Url:         "https://test.com",
 		Email:       "test@gmail.com",
 		ApiVersion:  "3",
@@ -20,16 +19,15 @@ func TestWebhookSaveSetting(t *testing.T) {
 		Interrupted: Pointer(false),
 		AuthToken:   "",
 	})
-	assertResponseNoContent(t, resp, errAsaas)
+	assertResponseSuccess(t, resp, err)
 }
 
 func TestWebhookGetSetting(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	assertFatalStringBlank(t, accessToken)
 	initWebhook()
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nWebhook := NewWebhook(EnvSandbox, accessToken)
-	resp, errAsaas := nWebhook.GetSetting(ctx, WebhookTypePayment)
-	assertResponseNoContent(t, resp, errAsaas)
+	resp, err := nWebhook.GetSetting(ctx, WebhookTypePayment)
+	assertResponseSuccess(t, resp, err)
 }

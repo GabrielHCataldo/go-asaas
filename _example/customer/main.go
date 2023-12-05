@@ -20,8 +20,8 @@ func main() {
 
 func createCustomer() {
 	resp, err := customerAsaas.Create(context.TODO(), asaas.CreateCustomerRequest{
-		Name:                 "Go Asaas Test",
-		CpfCnpj:              "85185238003",
+		Name:                 "",
+		CpfCnpj:              "",
 		Email:                "",
 		Phone:                "",
 		MobilePhone:          "",
@@ -49,7 +49,7 @@ func createCustomer() {
 }
 
 func updateCustomerById() {
-	resp, err := customerAsaas.UpdateById(context.TODO(), "cus_000005799255", asaas.UpdateCustomerRequest{
+	resp, err := customerAsaas.UpdateById(context.TODO(), "", asaas.UpdateCustomerRequest{
 		Name:                 "",
 		CpfCnpj:              nil,
 		Email:                nil,
@@ -79,7 +79,7 @@ func updateCustomerById() {
 }
 
 func deleteCustomerById() {
-	deleteResponse, err := customerAsaas.DeleteById(context.TODO(), "cus_000005791749")
+	deleteResponse, err := customerAsaas.DeleteById(context.TODO(), "")
 	if err != nil {
 		fmt.Println("error:", err)
 	} else if deleteResponse.IsSuccess() {
@@ -90,7 +90,7 @@ func deleteCustomerById() {
 }
 
 func getCustomerById() {
-	resp, err := customerAsaas.GetById(context.TODO(), "cus_000005799255")
+	resp, err := customerAsaas.GetById(context.TODO(), "")
 	if err != nil {
 		fmt.Println("error:", err)
 	} else if resp.IsSuccess() {
@@ -110,7 +110,7 @@ func getAllCustomers() {
 		GroupName:         "",
 		ExternalReference: "",
 		Offset:            0,
-		Limit:             10,
+		Limit:             0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

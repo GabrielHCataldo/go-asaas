@@ -58,7 +58,7 @@ func cancelNegativityById() {
 func getNegativityHistoryById() {
 	resp, err := negativityAsaas.GetHistoryById(context.TODO(), "", asaas.PageableDefaultRequest{
 		Offset: 0,
-		Limit:  10,
+		Limit:  0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
@@ -74,7 +74,7 @@ func getNegativityHistoryById() {
 func getChargesAvailableForDunning() {
 	resp, err := negativityAsaas.GetChargesAvailableForDunning(context.TODO(), asaas.PageableDefaultRequest{
 		Offset: 0,
-		Limit:  10,
+		Limit:  0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

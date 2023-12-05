@@ -59,7 +59,7 @@ func getInstallmentById() {
 func getAllInstallments() {
 	resp, err := installmentAsaas.GetAll(context.TODO(), asaas.PageableDefaultRequest{
 		Offset: 0,
-		Limit:  10,
+		Limit:  0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

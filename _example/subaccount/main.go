@@ -22,7 +22,7 @@ func createSubaccount() {
 		Email:         "",
 		LoginEmail:    "",
 		CpfCnpj:       "",
-		BirthDate:     nil,
+		BirthDate:     asaas.Date{},
 		CompanyType:   "",
 		Phone:         "",
 		MobilePhone:   "",
@@ -63,7 +63,7 @@ func getAllSubaccount() {
 		Name:     "",
 		WalletId: "",
 		Offset:   0,
-		Limit:    10,
+		Limit:    0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

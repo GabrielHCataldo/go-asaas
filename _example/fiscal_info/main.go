@@ -19,20 +19,20 @@ func main() {
 func saveFiscalInfo() {
 	resp, err := fiscalInfoAsaas.Save(context.TODO(), asaas.SaveFiscalInfoRequest{
 		Email:                    "",
-		MunicipalInscription:     "",
-		SimplesNacional:          false,
-		CulturalProjectsPromoter: false,
-		Cnae:                     "",
-		SpecialTaxRegime:         "",
-		ServiceListItem:          "",
-		RpsSerie:                 "",
-		RpsNumber:                0,
-		LoteNumber:               0,
-		Username:                 "",
-		Password:                 "",
-		AccessToken:              "",
+		MunicipalInscription:     nil,
+		SimplesNacional:          nil,
+		CulturalProjectsPromoter: nil,
+		Cnae:                     nil,
+		SpecialTaxRegime:         nil,
+		ServiceListItem:          nil,
+		RpsSerie:                 nil,
+		RpsNumber:                nil,
+		LoteNumber:               nil,
+		Username:                 nil,
+		Password:                 nil,
+		AccessToken:              nil,
 		CertificateFile:          nil,
-		CertificatePassword:      "",
+		CertificatePassword:      nil,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
@@ -60,7 +60,7 @@ func getAllFiscalInfoServices() {
 	resp, err := fiscalInfoAsaas.GetAllServices(context.TODO(), asaas.GetAllServicesRequest{
 		Description: "",
 		Offset:      0,
-		Limit:       10,
+		Limit:       0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

@@ -468,7 +468,7 @@ func (c customer) DeleteById(ctx context.Context, customerId string) (*DeleteRes
 
 func (c customer) RestoreById(ctx context.Context, customerId string) (*CustomerResponse, error) {
 	req := NewRequest[CustomerResponse](ctx, c.env, c.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s", customerId), nil)
+	return req.make(http.MethodPost, fmt.Sprintf("/v3/customers/%s/restore", customerId), nil)
 }
 
 func (c customer) GetById(ctx context.Context, customerId string) (*CustomerResponse, error) {

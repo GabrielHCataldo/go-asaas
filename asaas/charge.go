@@ -48,6 +48,15 @@ type CreateChargeRequest struct {
 	RemoteIp string `json:"remoteIp,omitempty"`
 }
 
+type PayWithCreditCardRequest struct {
+	// Informações do cartão de crédito (REQUIRED se CreditCardToken não for informado)
+	CreditCard *CreditCardRequest `json:"creditCard,omitempty"`
+	// Informações do titular do cartão de crédito (REQUIRED se CreditCardToken não for informado)
+	CreditCardHolderInfo *CreditCardHolderInfoRequest `json:"creditCardHolderInfo,omitempty"`
+	// Token do cartão de crédito para uso da funcionalidade de tokenização de cartão de crédito. Caso informado, os campos acima não são obrigatórios.
+	CreditCardToken string `json:"creditCardToken,omitempty"`
+}
+
 type UpdateChargeRequest struct {
 	// Identificador único do cliente no Asaas
 	Customer string `json:"customer,omitempty"`
@@ -370,7 +379,7 @@ type Charge interface {
 	// # DOCS
 	//
 	// Pagar uma cobrança com cartão de crédito: https://docs.asaas.com/reference/pagar-uma-cobranca-com-cartao-de-credito
-	PayWithCreditCard(ctx context.Context, chargeId string, body CreditCardRequest) (*ChargeResponse, error)
+	PayWithCreditCard(ctx context.Context, chargeId string, body PayWithCreditCardRequest) (*ChargeResponse, error)
 	// UpdateById (Atualizar cobrança existente)
 	//
 	// Somente é possível atualizar cobranças aguardando pagamento ou vencidas. Uma vez criada, não é possível alterar
@@ -1284,7 +1293,7 @@ func (c charge) Create(ctx context.Context, body CreateChargeRequest) (*ChargeRe
 	return req.make(http.MethodPost, "/v3/payments", body)
 }
 
-func (c charge) PayWithCreditCard(ctx context.Context, chargeId string, body CreditCardRequest) (*ChargeResponse,
+func (c charge) PayWithCreditCard(ctx context.Context, chargeId string, body PayWithCreditCardRequest) (*ChargeResponse,
 	error) {
 	req := NewRequest[ChargeResponse](ctx, c.env, c.accessToken)
 	return req.make(http.MethodPost, fmt.Sprintf(`/v3/payments/%s/payWithCreditCard`, chargeId), body)

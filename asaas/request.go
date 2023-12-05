@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"io"
@@ -174,24 +173,15 @@ func (r request[T]) createHttpRequestMultipartForm(
 }
 
 func (r request[T]) closeBody(Body io.ReadCloser) {
-	err := Body.Close()
-	if err != nil {
-		logError("error close read body:", err)
-	}
+	_ = Body.Close()
 }
 
 func (r request[T]) closeWriter(writer *multipart.Writer) {
-	err := writer.Close()
-	if err != nil {
-		logError("error close writer:", err)
-	}
+	_ = writer.Close()
 }
 
 func (r request[T]) closeCloser(c io.Closer) {
-	err := c.Close()
-	if err != nil {
-		logError("error close reader closer:", err)
-	}
+	_ = c.Close()
 }
 
 func (r request[T]) readResponse(res *http.Response, result *T) error {
@@ -202,12 +192,14 @@ func (r request[T]) readResponse(res *http.Response, result *T) error {
 	logInfoSkipCaller(6, r.env, "response status:", res.StatusCode, "body:", string(respBody))
 	if len(respBody) == 0 {
 		return nil
-	} else if x, ok := any(*result).(FileTextPlainResponse); ok {
+	} else if x, ok := any(*result).(FileTextPlainResponse); ok && res.StatusCode == http.StatusOK {
 		x.Data = string(respBody)
 		*result = any(x).(T)
 		return nil
+	} else if util.IsJson(respBody) {
+		return json.Unmarshal(respBody, result)
 	}
-	return json.Unmarshal(respBody, result)
+	return nil
 }
 
 func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader, error) {
@@ -222,14 +214,9 @@ func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader
 		}
 		k := util.GetJsonFieldNameByReflect(ft)
 		vf := util.GetValueByReflect(fd)
-		if util.IsBlank(&k) || vf == nil {
-			continue
-		}
 		var b bool
 		var s string
 		var in int
-		var in32 int32
-		var in64 int64
 		var f *os.File
 		var fs []*os.File
 		var ok bool
@@ -239,21 +226,18 @@ func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader
 			multipartPayload[k] = []io.Reader{strings.NewReader(s)}
 		} else if in, ok = vf.(int); ok {
 			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.Itoa(in))}
-		} else if in32, ok = vf.(int32); ok {
-			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.Itoa(int(in32)))}
-		} else if in64, ok = vf.(int64); ok {
-			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.Itoa(int(in64)))}
 		} else if f, ok = vf.(*os.File); ok && f != nil {
 			multipartPayload[k] = []io.Reader{f}
 		} else if fs, ok = vf.([]*os.File); ok && fs != nil {
 			var files []io.Reader
 			for _, file := range fs {
-				if file == nil {
-					continue
+				if file != nil {
+					files = append(files, file)
 				}
-				files = append(files, file)
 			}
 			multipartPayload[k] = files
+		} else if vf != nil {
+			multipartPayload[k] = []io.Reader{strings.NewReader(fmt.Sprintf(`%s`, vf))}
 		}
 	}
 	return multipartPayload, nil
@@ -281,9 +265,7 @@ func (r request[T]) prepareResponseUnexpected(res *http.Response) (*T, error) {
 	var respBody T
 	rv := reflect.ValueOf(&respBody)
 	fv := rv.Elem().FieldByName("Errors")
-	if rv.Kind() == reflect.Struct && fv.Kind() != reflect.Slice {
-		return nil, errors.New("poorly formatted response structure, does not contain the errors field")
-	} else if fv.Kind() == reflect.Slice {
+	if fv.Kind() == reflect.Slice {
 		fv.Set(reflect.MakeSlice(fv.Type(), 1, 1))
 		fv.Index(0).Set(reflect.ValueOf(ErrorResponse{
 			Code:        res.Status,

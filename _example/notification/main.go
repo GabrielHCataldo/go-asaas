@@ -18,14 +18,14 @@ func main() {
 
 func updateNotificationById() {
 	resp, err := negativityAsaas.UpdateById(context.TODO(), "", asaas.UpdateNotificationRequest{
-		Enabled:                     false,
-		EmailEnabledForProvider:     false,
-		SmsEnabledForProvider:       false,
-		EmailEnabledForCustomer:     false,
-		SmsEnabledForCustomer:       false,
-		PhoneCallEnabledForCustomer: false,
-		WhatsappEnabledForCustomer:  false,
-		ScheduleOffset:              0,
+		Enabled:                     nil,
+		EmailEnabledForProvider:     nil,
+		SmsEnabledForProvider:       nil,
+		EmailEnabledForCustomer:     nil,
+		SmsEnabledForCustomer:       nil,
+		PhoneCallEnabledForCustomer: nil,
+		WhatsappEnabledForCustomer:  nil,
+		ScheduleOffset:              nil,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
@@ -44,14 +44,14 @@ func updateNotificationManyByCustomer() {
 		Notifications: []asaas.UpdateManyNotificationRequest{
 			{
 				Id:                          "",
-				Enabled:                     false,
-				EmailEnabledForProvider:     false,
-				SmsEnabledForProvider:       false,
-				EmailEnabledForCustomer:     false,
-				SmsEnabledForCustomer:       false,
-				PhoneCallEnabledForCustomer: false,
-				WhatsappEnabledForCustomer:  false,
-				ScheduleOffset:              0,
+				Enabled:                     nil,
+				EmailEnabledForProvider:     nil,
+				SmsEnabledForProvider:       nil,
+				EmailEnabledForCustomer:     nil,
+				SmsEnabledForCustomer:       nil,
+				PhoneCallEnabledForCustomer: nil,
+				WhatsappEnabledForCustomer:  nil,
+				ScheduleOffset:              nil,
 			},
 		},
 	})

@@ -2,8 +2,6 @@ package util
 
 import (
 	"encoding/json"
-	"github.com/klassmann/cpfcnpj"
-	"github.com/nyaruka/phonenumbers"
 	"os"
 	"path"
 	"reflect"
@@ -13,68 +11,6 @@ import (
 	"strings"
 	"time"
 )
-
-func GetFileJson(uriFile string, dest any) error {
-	bytes, err := os.ReadFile(uriFile)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(bytes, dest)
-}
-
-func IsPhoneNumber(value string) bool {
-	num, err := phonenumbers.Parse(value, "BR")
-	if err == nil {
-		return phonenumbers.IsValidNumber(num)
-	}
-	return false
-}
-
-func IsCpfCnpj(value string) bool {
-	return cpfcnpj.ValidateCPF(cpfcnpj.Clean(value)) || cpfcnpj.ValidateCNPJ(cpfcnpj.Clean(value))
-}
-
-func ValidateFullName(value string) bool {
-	regex := regexp.MustCompile(`^([a-zA-Z]{2,}\s[a-zA-Z]+'?-?[a-zA-Z]+\s?([a-zA-Z]+)?)`)
-	return regex.MatchString(value)
-}
-
-func ValidatePostalCode(v string) bool {
-	regex := regexp.MustCompile(`^\d{5}-\d{3}?$`)
-	return regex.MatchString(v)
-}
-
-func ValidateIp(v string) bool {
-	regex := regexp.MustCompile(`\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.|$)){4}\b`)
-	return regex.MatchString(v)
-}
-
-func ValidateExpirationCreditCard(expiryYear, expiryMonth string) bool {
-	exp, err := time.Parse("2006-01-02", expiryYear+"-"+expiryMonth+"-01")
-	if err != nil || time.Now().UTC().After(exp.UTC()) {
-		return false
-	}
-	return true
-}
-
-func ValidateState(v string) bool {
-	var brazilStates []map[string]string
-	err := GetFileJson("resource/brazil-states.json", &brazilStates)
-	if err == nil {
-		return true
-	}
-	for _, state := range brazilStates {
-		if state["abbreviation"] == v {
-			return true
-		}
-	}
-	return false
-}
-
-func ValidateColorHex(v string) bool {
-	r := regexp.MustCompile(`^#(?:[0-9a-fA-F]{3}){1,2}$`)
-	return r.MatchString(v)
-}
 
 func IsBlank(value *string) bool {
 	return value == nil || len(strings.TrimSpace(*value)) == 0
@@ -124,4 +60,19 @@ func GetJsonFieldNameByReflect(f reflect.StructField) string {
 		return sk[0]
 	}
 	return ""
+}
+
+func GenerateEmail() string {
+	randomNumber := strconv.Itoa(int(time.Now().UnixNano()))
+	return "unit" + randomNumber + "@gmail.com"
+}
+
+func GenerateMobilePhone() string {
+	randomNumber := strconv.Itoa(int(time.Now().UnixNano()))
+	return "4799" + randomNumber[len(randomNumber)-7:]
+}
+
+func IsJson(v []byte) bool {
+	var data map[string]any
+	return json.Unmarshal(v, &data) == nil
 }

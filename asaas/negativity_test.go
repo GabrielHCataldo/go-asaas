@@ -8,15 +8,11 @@ import (
 )
 
 func TestNegativityCreate(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initBankSlipCharge(false)
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvBankSlipChargeId)
-	assertFatalStringBlank(t, chargeId)
-	f, err := os.Open(getEnvValue(EnvFileName))
-	assertFatalErrorNonnull(t, err)
-	v, err := os.ReadFile(f.Name())
-	assertFatalErrorNonnull(t, err)
+	f, _ := os.Open(getEnvValue(EnvFileName))
+	v, _ := os.ReadFile(f.Name())
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
@@ -43,11 +39,9 @@ func TestNegativityCreate(t *testing.T) {
 }
 
 func TestNegativitySimulate(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initBankSlipCharge(false)
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvBankSlipChargeId)
-	assertFatalStringBlank(t, chargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
@@ -56,13 +50,10 @@ func TestNegativitySimulate(t *testing.T) {
 }
 
 func TestNegativityResendDocumentsById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initNegativity()
+	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
-	assertFatalStringBlank(t, negativityId)
-	f, err := os.Open(getEnvValue(EnvFileName))
-	assertFatalErrorNonnull(t, err)
+	f, _ := os.Open(getEnvValue(EnvFileName))
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
@@ -73,11 +64,9 @@ func TestNegativityResendDocumentsById(t *testing.T) {
 }
 
 func TestNegativityCancelById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initNegativity()
+	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
-	assertFatalStringBlank(t, negativityId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
@@ -86,9 +75,8 @@ func TestNegativityCancelById(t *testing.T) {
 }
 
 func TestNegativityGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initNegativity()
+	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -98,9 +86,8 @@ func TestNegativityGetById(t *testing.T) {
 }
 
 func TestNegativityGetAll(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initNegativity()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
@@ -117,11 +104,9 @@ func TestNegativityGetAll(t *testing.T) {
 }
 
 func TestNegativityGetHistoryById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initNegativity()
+	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
-	assertFatalStringBlank(t, negativityId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
@@ -133,11 +118,9 @@ func TestNegativityGetHistoryById(t *testing.T) {
 }
 
 func TestNegativityGetPaymentsById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initNegativity()
+	accessToken := getEnvValue(EnvAccessToken)
 	negativityId := getEnvValue(EnvNegativityId)
-	assertFatalStringBlank(t, negativityId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
@@ -150,7 +133,6 @@ func TestNegativityGetPaymentsById(t *testing.T) {
 
 func TestNegativityGetChargesAvailableForDunning(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)

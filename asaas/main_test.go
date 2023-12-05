@@ -41,6 +41,9 @@ const EnvPaymentLinkImageId = "ASAAS_PAYMENT_LINK_IMAGE_ID"
 const EnvPixKeyId = "ASAAS_PIX_KEY_ID"
 const EnvPixTransactionId = "ASAAS_PIX_TRANSACTION_ID"
 const EnvSubaccountId = "ASAAS_SUBACCOUNT_ID"
+const EnvSubaccountAccessToken = "ASAAS_SUBACCOUNT_ACCESS_TOKEN"
+const EnvSubaccountDocumentId = "ASAAS_SUBACCOUNT_DOCUMENT_ID"
+const EnvSubaccountDocumentType = "ASAAS_SUBACCOUNT_DOCUMENT_TYPE"
 const EnvSubaccountDocumentSentId = "ASAAS_SUBACCOUNT_DOCUMENT_SENT_ID"
 const EnvTransferId = "ASAAS_TRANSFER_ID"
 const EnvSubscriptionId = "ASAAS_SUBSCRIPTION_ID"
@@ -76,7 +79,8 @@ func TestMain(m *testing.M) {
 func getEnvValue(env string) string {
 	v := os.Getenv(env)
 	if util.IsBlank(&v) {
-		logError("error getEnvValue:", env, " is required env")
+		logErrorSkipCaller(4, "error getEnvValue:", env, "is required env")
+		return "undefined"
 	}
 	return v
 }
@@ -96,11 +100,8 @@ func setEnv(env, v string) bool {
 }
 
 func initCustomer() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	clearCustomerId()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	customerAsaas := NewCustomer(EnvSandbox, accessToken)
@@ -113,7 +114,7 @@ func initCustomer() {
 		Address:       "Rua General Osório",
 		AddressNumber: "1500",
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -121,40 +122,28 @@ func initCustomer() {
 }
 
 func initCustomerDeleted() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	initCustomer()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	if util.IsBlank(&customerId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	customerAsaas := NewCustomer(EnvSandbox, accessToken)
 	resp, err := customerAsaas.DeleteById(ctx, customerId)
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
-	setEnv(EnvCustomerDeletedId, resp.Id)
+	setEnv(EnvCustomerDeletedId, customerId)
 }
 
-func initCreditCardCharge(capture bool, withInstallment bool) {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	clearCreditCardChargeId()
+func initCreditCardCharge(withInstallment bool) {
 	initCustomer()
+	clearCreditCardChargeId()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	if util.IsBlank(&customerId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DateNow()
 	req := CreateChargeRequest{
 		Customer:    customerId,
 		BillingType: BillingTypeCreditCard,
@@ -177,7 +166,7 @@ func initCreditCardCharge(capture bool, withInstallment bool) {
 			PostalCode:    "89223-005",
 			AddressNumber: "277",
 		},
-		AuthorizeOnly: !capture,
+		AuthorizeOnly: false,
 		RemoteIp:      "191.253.125.194",
 	}
 	if withInstallment {
@@ -186,50 +175,37 @@ func initCreditCardCharge(capture bool, withInstallment bool) {
 	}
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
 	resp, err := chargeAsaas.Create(ctx, req)
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
-	success := setEnv(EnvCreditCardChargeId, resp.Id)
-	if !success {
-		return
-	}
-	if withInstallment {
-		setEnv(EnvChargeInstallmentId, resp.Installment)
-	}
+	setEnv(EnvCreditCardChargeId, resp.Id)
+	setEnv(EnvChargeInstallmentId, resp.Installment)
 }
 
 func initPixCharge() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	clearPixChargeId()
 	initCustomer()
+	clearPixChargeId()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	if util.IsBlank(&customerId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DateNow()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
 	resp, err := chargeAsaas.Create(ctx, CreateChargeRequest{
+		Customer:    customerId,
 		BillingType: BillingTypePix,
 		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
 		Value:       100,
 		Description: "Cobrança via teste unitário em Golang",
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
-	success := setEnv(EnvPixChargeId, resp.Id)
-	if !success {
-		return
-	}
+	setEnv(EnvPixChargeId, resp.Id)
 	pixQrCodeResp, err := chargeAsaas.GetPixQrCodeById(ctx, resp.Id)
-	if err != nil || pixQrCodeResp.IsFailure() {
+	if err != nil || pixQrCodeResp.IsNoContent() || pixQrCodeResp.IsFailure() {
 		logError("error resp:", pixQrCodeResp, "err: ", err)
 		return
 	}
@@ -237,20 +213,15 @@ func initPixCharge() {
 }
 
 func initBankSlipCharge(withInstallment bool) {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	clearBankSlipChargeId()
 	initCustomer()
+	clearBankSlipChargeId()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	if util.IsBlank(&customerId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DateNow()
 	req := CreateChargeRequest{
+		Customer:    customerId,
 		BillingType: BillingTypeBankSlip,
 		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
 		Value:       100,
@@ -262,39 +233,28 @@ func initBankSlipCharge(withInstallment bool) {
 	}
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
 	resp, err := chargeAsaas.Create(ctx, req)
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
-	success := setEnv(EnvBankSlipChargeId, resp.Id)
-	if !success {
-		return
-	}
+	setEnv(EnvBankSlipChargeId, resp.Id)
 	identificationFieldResp, err := chargeAsaas.GetIdentificationFieldById(ctx, resp.Id)
-	if err != nil || identificationFieldResp.IsFailure() {
+	if err != nil || identificationFieldResp.IsNoContent() || identificationFieldResp.IsFailure() {
 		logError("error resp:", identificationFieldResp, "err: ", err)
 		return
 	}
 	setEnv(EnvChargeIdentificationField, identificationFieldResp.IdentificationField)
-	if withInstallment {
-		setEnv(EnvChargeInstallmentId, resp.Installment)
-	}
+	setEnv(EnvChargeInstallmentId, resp.Installment)
 }
 
 func initUndefinedCharge() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	clearUndefinedChargeId()
 	initCustomer()
+	clearUndefinedChargeId()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	if util.IsBlank(&customerId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DateNow()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
 	resp, err := chargeAsaas.Create(ctx, CreateChargeRequest{
 		Customer:    customerId,
@@ -303,7 +263,7 @@ func initUndefinedCharge() {
 		DueDate:     NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
 		Description: "Cobrança via teste unitário em Golang",
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -311,45 +271,33 @@ func initUndefinedCharge() {
 }
 
 func initChargeDeleted() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	if util.IsBlank(&chargeId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
 	resp, err := chargeAsaas.DeleteById(ctx, chargeId)
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
-	setEnv(EnvChargeDeletedId, resp.Id)
+	setEnv(EnvChargeDeletedId, chargeId)
 }
 
 func initChargeReceivedInCash() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	if util.IsBlank(&chargeId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DateNow()
 	chargeAsaas := NewCharge(EnvSandbox, accessToken)
 	resp, err := chargeAsaas.ReceiveInCashById(ctx, chargeId, ChargeReceiveInCashRequest{
 		PaymentDate: NewDate(now.Year(), now.Month(), now.Day(), now.Location()),
 		Value:       100,
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -357,19 +305,10 @@ func initChargeReceivedInCash() {
 }
 
 func initChargeDocumentId() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	initUndefinedCharge()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvUndefinedChargeId)
-	if util.IsBlank(&chargeId) {
-		return
-	}
 	f, err := os.Open(getEnvValue(EnvFileName))
-	if err != nil {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCharge := NewCharge(EnvSandbox, accessToken)
@@ -377,7 +316,7 @@ func initChargeDocumentId() {
 		Type: DocumentTypeDocument,
 		File: f,
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -385,22 +324,16 @@ func initChargeDocumentId() {
 }
 
 func initAnticipation() {
+	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	initCreditCardCharge(true, false)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
-	if util.IsBlank(&chargeId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	anticipationAsaas := NewAnticipation(EnvSandbox, accessToken)
 	resp, err := anticipationAsaas.Request(ctx, AnticipationRequest{
 		Payment: chargeId,
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -408,29 +341,19 @@ func initAnticipation() {
 }
 
 func initBillPayment() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	clearBillPaymentId()
 	initBankSlipCharge(false)
-	chargeId := getEnvValue(EnvBankSlipChargeId)
-	if util.IsBlank(&chargeId) {
-		return
-	}
+	clearBillPaymentId()
+	accessToken := getEnvValue(EnvAccessToken)
 	identificationField := getEnvValue(EnvChargeIdentificationField)
-	if util.IsBlank(&chargeId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DateNow()
 	billPaymentAsaas := NewBillPayment(EnvSandbox, accessToken)
 	resp, err := billPaymentAsaas.Create(ctx, CreateBillPaymentRequest{
 		IdentificationField: identificationField,
 		ScheduleDate:        NewDate(now.Year(), now.Month(), now.Day()+1, now.Location()),
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error create bill payment resp:", resp, "err: ", err)
 		return
 	}
@@ -456,15 +379,9 @@ func initImage() {
 }
 
 func initCreditBureauReport() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	initCustomer()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	if util.IsBlank(&customerId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCreditBureau := NewCreditBureau(EnvSandbox, accessToken)
@@ -473,7 +390,7 @@ func initCreditBureauReport() {
 		CpfCnpj:  "",
 		State:    "SP",
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -482,9 +399,6 @@ func initCreditBureauReport() {
 
 func initFiscalInfo() {
 	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
@@ -494,30 +408,27 @@ func initFiscalInfo() {
 		SimplesNacional:          Pointer(true),
 		CulturalProjectsPromoter: nil,
 		Cnae:                     Pointer("6201501"),
-		SpecialTaxRegime:         nil,
+		SpecialTaxRegime:         Pointer("test"),
 		ServiceListItem:          nil,
-		RpsSerie:                 nil,
+		RpsSerie:                 Pointer("E"),
 		RpsNumber:                Pointer(21),
-		LoteNumber:               nil,
+		LoteNumber:               Pointer(21),
 		Username:                 nil,
 		Password:                 Pointer("test"),
 		AccessToken:              nil,
 		CertificateFile:          nil,
 		CertificatePassword:      nil,
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
 }
 
 func initInvoice() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
+	initCreditCardCharge(false)
 	clearInvoiceId()
-	initCreditCardCharge(true, false)
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvCreditCardChargeId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -538,7 +449,7 @@ func initInvoice() {
 		UpdatePayment:        false,
 		Taxes:                InvoiceTaxesRequest{},
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -546,11 +457,8 @@ func initInvoice() {
 }
 
 func initMobilePhoneRecharge() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	clearMobilePhoneRechargeId()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nMobilePhone := NewMobilePhone(EnvSandbox, accessToken)
@@ -558,7 +466,7 @@ func initMobilePhoneRecharge() {
 		PhoneNumber: "47997576130",
 		Value:       20,
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -566,16 +474,10 @@ func initMobilePhoneRecharge() {
 }
 
 func initNegativity() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	clearNegativityId()
 	initBankSlipCharge(false)
+	clearNegativityId()
+	accessToken := getEnvValue(EnvAccessToken)
 	chargeId := getEnvValue(EnvBankSlipChargeId)
-	if util.IsBlank(&chargeId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNegativity := NewNegativity(EnvSandbox, accessToken)
@@ -591,7 +493,7 @@ func initNegativity() {
 		CustomerAddressNumber: "150",
 		CustomerProvince:      "Centro",
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -599,20 +501,14 @@ func initNegativity() {
 }
 
 func initNotification() {
+	initCreditCardCharge(false)
 	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	initCreditCardCharge(false, false)
 	customerId := getEnvValue(EnvCustomerId)
-	if util.IsBlank(&customerId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nNotification := NewNotification(EnvSandbox, accessToken)
 	resp, err := nNotification.GetAllByCustomer(ctx, customerId)
-	if err != nil || resp.IsFailure() || resp.IsNoContent() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -620,11 +516,8 @@ func initNotification() {
 }
 
 func initPaymentLink() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	clearPaymentLinkId()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -633,7 +526,7 @@ func initPaymentLink() {
 		BillingType: BillingTypeUndefined,
 		ChargeType:  ChargeTypeDetached,
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -641,41 +534,25 @@ func initPaymentLink() {
 }
 
 func initPaymentLinkDeleted() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	initPaymentLink()
+	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
-	if util.IsBlank(&paymentLinkId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
 	resp, err := nPaymentLink.DeleteById(ctx, paymentLinkId)
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
-	setEnv(EnvPaymentLinkDeletedId, resp.Id)
+	setEnv(EnvPaymentLinkDeletedId, paymentLinkId)
 }
 
 func initPaymentLinkImage() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	initPaymentLink()
+	accessToken := getEnvValue(EnvAccessToken)
 	paymentLinkId := getEnvValue(EnvPaymentLinkId)
-	if util.IsBlank(&paymentLinkId) {
-		return
-	}
-	f, err := os.Open(getEnvValue(EnvImageName))
-	if err != nil {
-		logError("error open image:", err)
-		return
-	}
+	f, _ := os.Open(getEnvValue(EnvImageName))
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPaymentLink := NewPaymentLink(EnvSandbox, accessToken)
@@ -683,7 +560,7 @@ func initPaymentLinkImage() {
 		Main:  false,
 		Image: f,
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -691,16 +568,13 @@ func initPaymentLinkImage() {
 }
 
 func initPixKey() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	clearPixKeyId()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
 	resp, err := nPix.CreateKey(ctx)
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -708,16 +582,10 @@ func initPixKey() {
 }
 
 func initPixTransaction() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	clearPixTransactionId()
 	initPixCharge()
+	clearPixTransactionId()
+	accessToken := getEnvValue(EnvAccessToken)
 	pixQrCodePayload := getEnvValue(EnvChargePixQrCodePayload)
-	if util.IsBlank(&pixQrCodePayload) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nPix := NewPix(EnvSandbox, accessToken)
@@ -730,7 +598,7 @@ func initPixTransaction() {
 		Description:  "",
 		ScheduleDate: Date{},
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -738,56 +606,71 @@ func initPixTransaction() {
 }
 
 func initSubaccount() {
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	clearSubaccount()
+	accessToken := getEnvValue(EnvAccessTokenSecondary)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
 	resp, err := nSubaccount.Create(ctx, CreateSubaccountRequest{
 		Name:          "Unit test go",
-		Email:         "unittestgo@gmail.com",
-		CpfCnpj:       cpf.Generate(),
-		BirthDate:     NewDate(1999, 1, 21, time.Local),
-		MobilePhone:   "47997576131",
+		Email:         util.GenerateEmail(),
+		CpfCnpj:       "69257172000141",
+		CompanyType:   CompanyTypeLimited,
+		MobilePhone:   util.GenerateMobilePhone(),
 		Address:       "Rua Maria de Souza Maba",
 		AddressNumber: "123",
 		Province:      "Fortaleza",
 		PostalCode:    "89056-220",
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
 	setEnv(EnvSubaccountId, resp.Id)
+	setEnv(EnvSubaccountAccessToken, resp.ApiKey)
 }
 
 func initSubaccountDocument() {
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	clearSubaccountDocumentSentId()
 	initSubaccount()
-	subaccountId := getEnvValue(EnvSubaccountId)
-	if util.IsBlank(&subaccountId) {
-		return
-	}
-	f, err := os.Open(getEnvValue(EnvFileName))
-	if err != nil {
-		logError("error open file:", err)
-		return
-	}
+	subaccountAccessToken := getEnvValue(EnvSubaccountAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.SendWhiteLabelDocument(ctx, subaccountId, SubaccountSendDocumentRequest{
-		Type:         SubaccountDocumentTypeCustom,
+	nSubaccount := NewSubaccount(EnvSandbox, subaccountAccessToken)
+	resp, err := nSubaccount.GetPendingDocuments(ctx)
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
+		logError("error resp:", resp, "err: ", err)
+		return
+	}
+	var subaccountDocument SubaccountDocumentResponse
+	for _, documentToSent := range resp.Data {
+		if documentToSent.Status == SubaccountDocumentStatusNotSent &&
+			documentToSent.Type != SubaccountDocumentTypeIdentification {
+			subaccountDocument = documentToSent
+		}
+	}
+	if util.IsBlank(&subaccountDocument.Id) {
+		logError("subaccountDocument not found")
+		return
+	}
+	setEnv(EnvSubaccountDocumentId, subaccountDocument.Id)
+	setEnv(EnvSubaccountDocumentType, string(subaccountDocument.Type))
+}
+
+func initSubaccountDocumentSent() {
+	initSubaccountDocument()
+	clearSubaccountDocumentSentId()
+	subaccountAccessToken := getEnvValue(EnvSubaccountAccessToken)
+	subaccountDocumentId := getEnvValue(EnvSubaccountDocumentId)
+	subaccountDocumentType := getEnvValue(EnvSubaccountDocumentType)
+	f, _ := os.Open(getEnvValue(EnvImageName))
+	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
+	defer cancel()
+	nSubaccount := NewSubaccount(EnvSandbox, subaccountAccessToken)
+	resp, err := nSubaccount.SendWhiteLabelDocument(ctx, subaccountDocumentId, SendWhiteLabelDocumentRequest{
+		Type:         SubaccountDocumentType(subaccountDocumentType),
 		DocumentFile: f,
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -795,15 +678,9 @@ func initSubaccountDocument() {
 }
 
 func initTransfer() {
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	clearTransferId()
+	accessToken := getEnvValue(EnvAccessToken)
 	walletId := getEnvValue(EnvWalletIdSecondary)
-	if util.IsBlank(&walletId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
@@ -811,7 +688,7 @@ func initTransfer() {
 		Value:    10,
 		WalletId: walletId,
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -820,9 +697,6 @@ func initTransfer() {
 
 func initWebhook() {
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nWebhook := NewWebhook(EnvSandbox, accessToken)
@@ -834,26 +708,20 @@ func initWebhook() {
 		Interrupted: Pointer(false),
 		AuthToken:   "",
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
 }
 
 func initSubscription() {
-	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	clearSubscriptionId()
 	initCustomer()
+	clearSubscriptionId()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	if util.IsBlank(&customerId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
-	now := time.Now()
+	now := DateNow()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
 	resp, err := nSubscription.Create(ctx, CreateSubscriptionRequest{
 		Customer:    customerId,
@@ -863,7 +731,7 @@ func initSubscription() {
 		Cycle:       SubscriptionCycleMonthly,
 		Description: "Unit test go",
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -872,14 +740,7 @@ func initSubscription() {
 
 func initSubscriptionInvoiceSetting() {
 	accessToken := getEnvValue(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
-	initSubscription()
 	subscriptionId := getEnvValue(EnvSubscriptionId)
-	if util.IsBlank(&subscriptionId) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nSubscription := NewSubscription(EnvSandbox, accessToken)
@@ -889,7 +750,7 @@ func initSubscriptionInvoiceSetting() {
 		EffectiveDatePeriod:  EffectiveDatePeriodOnNextMonth,
 		Observations:         "Unit test go",
 	})
-	if err != nil || resp.IsFailure() {
+	if err != nil || resp.IsNoContent() || resp.IsFailure() {
 		logError("error resp:", resp, "err: ", err)
 		return
 	}
@@ -897,9 +758,6 @@ func initSubscriptionInvoiceSetting() {
 
 func clearCustomerId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	customerId := getEnvValueWithoutLogger(EnvCustomerId)
@@ -913,9 +771,6 @@ func clearCustomerId() {
 
 func clearCreditCardChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	chargeId := getEnvValueWithoutLogger(EnvCreditCardChargeId)
@@ -926,15 +781,11 @@ func clearCreditCardChargeId() {
 	_, _ = chargeAsaas.RefundById(ctx, chargeId, RefundRequest{
 		Description: "unit test golang",
 	})
-	_, _ = chargeAsaas.DeleteById(ctx, chargeId)
 	_ = os.Unsetenv(EnvCreditCardChargeId)
 }
 
 func clearPixChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	chargeId := getEnvValueWithoutLogger(EnvCreditCardChargeId)
@@ -948,9 +799,6 @@ func clearPixChargeId() {
 
 func clearBankSlipChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	chargeId := getEnvValueWithoutLogger(EnvBankSlipChargeId)
@@ -964,9 +812,6 @@ func clearBankSlipChargeId() {
 
 func clearUndefinedChargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	chargeId := getEnvValueWithoutLogger(EnvBankSlipChargeId)
@@ -980,9 +825,6 @@ func clearUndefinedChargeId() {
 
 func clearBillPaymentId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	billPaymentId := getEnvValueWithoutLogger(EnvBillPaymentId)
@@ -1005,9 +847,6 @@ func clearFileName() {
 
 func clearInvoiceId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	invoiceId := getEnvValueWithoutLogger(EnvInvoiceId)
@@ -1021,9 +860,6 @@ func clearInvoiceId() {
 
 func clearMobilePhoneRechargeId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	rechargeId := getEnvValueWithoutLogger(EnvMobilePhoneRechargeId)
@@ -1037,9 +873,6 @@ func clearMobilePhoneRechargeId() {
 
 func clearNegativityId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	negativityId := getEnvValueWithoutLogger(EnvNegativityId)
@@ -1053,9 +886,6 @@ func clearNegativityId() {
 
 func clearPaymentLinkId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	paymentLinkId := getEnvValueWithoutLogger(EnvPaymentLinkId)
@@ -1069,9 +899,6 @@ func clearPaymentLinkId() {
 
 func clearPixTransactionId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	pixTransactionId := getEnvValueWithoutLogger(EnvPixTransactionId)
@@ -1085,9 +912,6 @@ func clearPixTransactionId() {
 
 func clearPixKeyId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	pixKeyId := getEnvValueWithoutLogger(EnvPixKeyId)
@@ -1100,8 +924,8 @@ func clearPixKeyId() {
 }
 
 func clearSubaccount() {
-	accessToken := getEnvValueWithoutLogger(EnvAccessTokenSecondary)
-	if util.IsBlank(&accessToken) {
+	subaccountAccessToken := getEnvValueWithoutLogger(EnvSubaccountAccessToken)
+	if util.IsBlank(&subaccountAccessToken) {
 		return
 	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
@@ -1110,7 +934,7 @@ func clearSubaccount() {
 	if util.IsBlank(&subaccountId) {
 		return
 	}
-	accountAsaas := NewAccount(EnvSandbox, accessToken)
+	accountAsaas := NewAccount(EnvSandbox, subaccountAccessToken)
 	_, _ = accountAsaas.DeleteWhiteLabelSubaccount(ctx, DeleteWhiteLabelSubaccountRequest{
 		RemoveReason: "Unit test go",
 	})
@@ -1118,26 +942,20 @@ func clearSubaccount() {
 }
 
 func clearSubaccountDocumentSentId() {
-	accessToken := getEnvValueWithoutLogger(EnvAccessTokenSecondary)
-	if util.IsBlank(&accessToken) {
-		return
-	}
+	subaccountAccessToken := getEnvValueWithoutLogger(EnvSubaccountAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	documentSentId := getEnvValueWithoutLogger(EnvSubaccountDocumentSentId)
 	if util.IsBlank(&documentSentId) {
 		return
 	}
-	subaccountAsaas := NewSubaccount(EnvSandbox, accessToken)
+	subaccountAsaas := NewSubaccount(EnvSandbox, subaccountAccessToken)
 	_, _ = subaccountAsaas.DeleteWhiteLabelDocumentSentById(ctx, documentSentId)
 	_ = os.Unsetenv(EnvSubaccountDocumentSentId)
 }
 
 func clearTransferId() {
-	accessToken := getEnvValueWithoutLogger(EnvAccessTokenSecondary)
-	if util.IsBlank(&accessToken) {
-		return
-	}
+	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	transferId := getEnvValueWithoutLogger(EnvTransferId)
@@ -1151,9 +969,6 @@ func clearTransferId() {
 
 func clearSubscriptionId() {
 	accessToken := getEnvValueWithoutLogger(EnvAccessToken)
-	if util.IsBlank(&accessToken) {
-		return
-	}
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	subscriptionId := getEnvValueWithoutLogger(EnvSubscriptionId)

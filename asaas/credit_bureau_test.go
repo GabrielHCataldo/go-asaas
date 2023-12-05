@@ -7,11 +7,9 @@ import (
 )
 
 func TestCreditBureauGetReport(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCustomer()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	assertFatalStringBlank(t, customerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCreditBureau := NewCreditBureau(EnvSandbox, accessToken)
@@ -24,9 +22,8 @@ func TestCreditBureauGetReport(t *testing.T) {
 }
 
 func TestCreditBureauGetReportById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCreditBureauReport()
+	accessToken := getEnvValue(EnvAccessToken)
 	reportId := getEnvValue(EnvCreditBureauReportId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -36,9 +33,8 @@ func TestCreditBureauGetReportById(t *testing.T) {
 }
 
 func TestCreditBureauGetAllReports(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCreditBureauReport()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCreditBureau := NewCreditBureau(EnvSandbox, accessToken)

@@ -21,13 +21,13 @@ type SaveWebhookSettingRequest struct {
 }
 
 type WebhookResponse struct {
-	Type        WebhookType     `json:"type,omitempty"`
 	Url         string          `json:"url,omitempty"`
 	Email       string          `json:"email,omitempty"`
-	ApiVersion  string          `json:"apiVersion,omitempty"`
+	ApiVersion  int             `json:"apiVersion,omitempty"`
 	Enabled     bool            `json:"enabled,omitempty"`
 	Interrupted bool            `json:"interrupted,omitempty"`
 	AuthToken   string          `json:"authToken,omitempty"`
+	Type        WebhookType     `json:"type,omitempty"`
 	Errors      []ErrorResponse `json:"errors,omitempty"`
 }
 

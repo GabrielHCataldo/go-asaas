@@ -98,7 +98,7 @@ type Installment interface {
 	// # DOCS
 	//
 	// Atualizar splits do parcelamento: https://docs.asaas.com/reference/atualizar-split-do-parcelamento
-	UpdateSplitsById(ctx context.Context, installmentId string, body []SplitRequest) (*UpdateInstallmentSplitsResponse,
+	UpdateSplitsById(ctx context.Context, installmentId string, body UpdateSplitsRequest) (*UpdateInstallmentSplitsResponse,
 		error)
 	// RefundById (Estornar parcelamento)
 	//
@@ -163,33 +163,33 @@ type Installment interface {
 	//
 	// # Resposta: 200
 	//
-	// DeleteResponse = not nil
+	// DeleteNumericResponse = not nil
 	//
 	// Error = nil
 	//
-	// Se DeleteResponse.IsSuccess() for true quer dizer que foi excluída.
+	// Se DeleteNumericResponse.IsSuccess() for true quer dizer que foi excluída.
 	//
-	// Se caso DeleteResponse.IsFailure() for true quer dizer que não foi excluída.
+	// Se caso DeleteNumericResponse.IsFailure() for true quer dizer que não foi excluída.
 	//
 	// # Resposta: 404
 	//
-	// DeleteResponse = not nil
+	// DeleteNumericResponse = not nil
 	//
 	// Error = nil
 	//
-	// DeleteResponse.IsNoContent() = true
+	// DeleteNumericResponse.IsNoContent() = true
 	//
 	// ID(s) informado no parâmetro não foi encontrado.
 	//
 	// # Resposta: 400/401/500
 	//
-	// DeleteResponse = not nil
+	// DeleteNumericResponse = not nil
 	//
 	// Error = nil
 	//
-	// DeleteResponse.IsFailure() = true
+	// DeleteNumericResponse.IsFailure() = true
 	//
-	// Para qualquer outra resposta inesperada da API, possuímos o campo DeleteResponse.Errors preenchido com as informações
+	// Para qualquer outra resposta inesperada da API, possuímos o campo DeleteNumericResponse.Errors preenchido com as informações
 	// de erro, sendo 400 retornado da API Asaas com as instruções de requisição conforme a documentação,
 	// diferente disso retornará uma mensagem padrão no index 0 do slice com campo ErrorResponse.Code retornando a
 	// descrição status http (Ex: "401 Unauthorized") e no campo ErrorResponse.Description retornará com o valor
@@ -197,7 +197,7 @@ type Installment interface {
 	//
 	// # Error
 	//
-	// DeleteResponse = nil
+	// DeleteNumericResponse = nil
 	//
 	// error = not nil
 	//
@@ -209,7 +209,7 @@ type Installment interface {
 	// # DOCS
 	//
 	// Remover parcelamento: https://docs.asaas.com/reference/remover-parcelamento
-	DeleteById(ctx context.Context, installmentId string) (*DeleteResponse, error)
+	DeleteById(ctx context.Context, installmentId string) (*DeleteNumericResponse, error)
 	// GetById (Recuperar um único parcelamento)
 	//
 	// O identificador único do parcelamento no Asaas pode ser obtido por meio do atributo installment,
@@ -376,10 +376,10 @@ func NewInstallment(env Env, accessToken string) Installment {
 	}
 }
 
-func (i installment) UpdateSplitsById(ctx context.Context, installmentId string, body []SplitRequest) (
+func (i installment) UpdateSplitsById(ctx context.Context, installmentId string, body UpdateSplitsRequest) (
 	*UpdateInstallmentSplitsResponse, error) {
 	req := NewRequest[UpdateInstallmentSplitsResponse](ctx, i.env, i.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/splits", installmentId), body)
+	return req.make(http.MethodPut, fmt.Sprintf("/v3/installments/%s/splits", installmentId), body)
 }
 
 func (i installment) RefundById(ctx context.Context, installmentId string) (*InstallmentResponse, error) {
@@ -387,8 +387,8 @@ func (i installment) RefundById(ctx context.Context, installmentId string) (*Ins
 	return req.make(http.MethodPost, fmt.Sprintf("/v3/installments/%s/refund", installmentId), nil)
 }
 
-func (i installment) DeleteById(ctx context.Context, installmentId string) (*DeleteResponse, error) {
-	req := NewRequest[DeleteResponse](ctx, i.env, i.accessToken)
+func (i installment) DeleteById(ctx context.Context, installmentId string) (*DeleteNumericResponse, error) {
+	req := NewRequest[DeleteNumericResponse](ctx, i.env, i.accessToken)
 	return req.make(http.MethodDelete, fmt.Sprintf("/v3/installments/%s", installmentId), nil)
 }
 

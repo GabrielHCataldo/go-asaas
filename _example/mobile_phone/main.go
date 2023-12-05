@@ -60,7 +60,7 @@ func getMobilePhoneProviderByPhoneNumber() {
 func getAllMobilePhoneRecharges() {
 	resp, err := mobilePhoneAsaas.GetAllRecharges(context.TODO(), asaas.PageableDefaultRequest{
 		Offset: 0,
-		Limit:  10,
+		Limit:  0,
 	})
 	if err != nil {
 		fmt.Println("error:", err)

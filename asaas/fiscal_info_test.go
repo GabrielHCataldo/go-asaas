@@ -8,7 +8,6 @@ import (
 
 func TestFiscalInfoSave(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
@@ -18,11 +17,11 @@ func TestFiscalInfoSave(t *testing.T) {
 		SimplesNacional:          Pointer(true),
 		CulturalProjectsPromoter: nil,
 		Cnae:                     Pointer("6201501"),
-		SpecialTaxRegime:         nil,
-		ServiceListItem:          nil,
-		RpsSerie:                 nil,
+		SpecialTaxRegime:         Pointer("test"),
+		ServiceListItem:          Pointer("test"),
+		RpsSerie:                 Pointer("E"),
 		RpsNumber:                Pointer(21),
-		LoteNumber:               nil,
+		LoteNumber:               Pointer(21),
 		Username:                 nil,
 		Password:                 Pointer("test"),
 		AccessToken:              nil,
@@ -34,7 +33,6 @@ func TestFiscalInfoSave(t *testing.T) {
 
 func TestFiscalInfoGet(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
@@ -44,7 +42,6 @@ func TestFiscalInfoGet(t *testing.T) {
 
 func TestFiscalInfoGetMunicipalSettings(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)
@@ -54,7 +51,6 @@ func TestFiscalInfoGetMunicipalSettings(t *testing.T) {
 
 func TestFiscalInfoGetAllServices(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nFiscalInfo := NewFiscalInfo(EnvSandbox, accessToken)

@@ -9,7 +9,6 @@ import (
 
 func TestCustomerCreate(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
@@ -37,11 +36,9 @@ func TestCustomerCreate(t *testing.T) {
 }
 
 func TestCustomerUpdateById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCustomer()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	assertFatalStringBlank(t, customerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
@@ -69,11 +66,9 @@ func TestCustomerUpdateById(t *testing.T) {
 }
 
 func TestCustomerDeleteById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCustomer()
+	accessToken := getEnvValue(EnvAccessToken)
 	customerId := getEnvValue(EnvCustomerId)
-	assertFatalStringBlank(t, customerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
@@ -82,11 +77,9 @@ func TestCustomerDeleteById(t *testing.T) {
 }
 
 func TestCustomerRestoreById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCustomerDeleted()
-	customerId := getEnvValue(EnvChargeDeletedId)
-	assertFatalStringBlank(t, customerId)
+	accessToken := getEnvValue(EnvAccessToken)
+	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
@@ -95,10 +88,9 @@ func TestCustomerRestoreById(t *testing.T) {
 }
 
 func TestCustomerGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCustomer()
-	customerId := getEnvValue(EnvChargeDeletedId)
+	accessToken := getEnvValue(EnvAccessToken)
+	customerId := getEnvValue(EnvCustomerId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
@@ -107,9 +99,8 @@ func TestCustomerGetById(t *testing.T) {
 }
 
 func TestCustomerGetAll(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initCustomer()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)

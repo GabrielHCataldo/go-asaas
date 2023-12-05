@@ -29,19 +29,19 @@ func getAccountBalance() {
 
 func updateAccount() {
 	resp, err := accountAsaas.Update(context.TODO(), asaas.UpdateAccountRequest{
-		PersonType:    asaas.PersonTypePhysical,
-		CpfCnpj:       "29376892000101",
+		PersonType:    "",
+		CpfCnpj:       "",
 		BirthDate:     asaas.Date{},
-		CompanyType:   asaas.CompanyTypeLimited,
-		Email:         "xxxxxx@gmail.com",
-		Phone:         "",
-		MobilePhone:   "",
-		Site:          "",
-		PostalCode:    "69620-970",
-		Address:       "Praça São Cristovão, s/n",
-		AddressNumber: "10",
-		Complement:    "",
-		Province:      "Centro",
+		CompanyType:   nil,
+		Email:         "",
+		Phone:         nil,
+		MobilePhone:   nil,
+		Site:          nil,
+		PostalCode:    "",
+		Address:       nil,
+		AddressNumber: nil,
+		Complement:    nil,
+		Province:      nil,
 	})
 	if err != nil {
 		fmt.Println("error:", err)
@@ -54,8 +54,8 @@ func updateAccount() {
 
 func getAccountStatement() {
 	resp, err := accountAsaas.GetAccountStatement(context.TODO(), asaas.GetAccountStatementRequest{
-		StartDate:  nil,
-		FinishDate: nil,
+		StartDate:  asaas.Date{},
+		FinishDate: asaas.Date{},
 		Offset:     0,
 		Limit:      10,
 		Order:      asaas.OrderDesc,

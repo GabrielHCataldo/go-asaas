@@ -9,7 +9,6 @@ import (
 
 func TestTransferTransferToBank(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
@@ -40,9 +39,7 @@ func TestTransferTransferToBank(t *testing.T) {
 
 func TestTransferTransferToAsaas(t *testing.T) {
 	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	walletId := getEnvValue(EnvWalletIdSecondary)
-	assertFatalStringBlank(t, walletId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
@@ -54,11 +51,9 @@ func TestTransferTransferToAsaas(t *testing.T) {
 }
 
 func TestTransferCancelById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initTransfer()
+	accessToken := getEnvValue(EnvAccessToken)
 	transferId := getEnvValue(EnvTransferId)
-	assertFatalStringBlank(t, transferId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)
@@ -67,9 +62,8 @@ func TestTransferCancelById(t *testing.T) {
 }
 
 func TestTransferGetById(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initTransfer()
+	accessToken := getEnvValue(EnvAccessToken)
 	transferId := getEnvValue(EnvTransferId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
@@ -79,9 +73,8 @@ func TestTransferGetById(t *testing.T) {
 }
 
 func TestTransferGetAll(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessToken)
-	assertFatalStringBlank(t, accessToken)
 	initTransfer()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 10*time.Second)
 	defer cancel()
 	nTransfer := NewTransfer(EnvSandbox, accessToken)

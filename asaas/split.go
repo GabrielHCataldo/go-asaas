@@ -11,6 +11,11 @@ type SplitRequest struct {
 	TotalFixedValue float64 `json:"totalFixedValue,omitempty"`
 }
 
+type UpdateSplitsRequest struct {
+	// Dados de split para atualizar (REQUIRED)
+	Splits []SplitRequest `json:"splits,omitempty"`
+}
+
 type SplitResponse struct {
 	Id              string             `json:"id,omitempty"`
 	WalletId        string             `json:"walletId,omitempty"`

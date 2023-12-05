@@ -352,10 +352,10 @@ func (b billPayment) CancelById(ctx context.Context, billPaymentId string) (*Bil
 
 func (b billPayment) GetById(ctx context.Context, billPaymentId string) (*BillPaymentResponse, error) {
 	req := NewRequest[BillPaymentResponse](ctx, b.env, b.accessToken)
-	return req.make(http.MethodPost, fmt.Sprintf("/v3/bill/%s", billPaymentId), nil)
+	return req.make(http.MethodGet, fmt.Sprintf("/v3/bill/%s", billPaymentId), nil)
 }
 
 func (b billPayment) GetAll(ctx context.Context, filter PageableDefaultRequest) (*Pageable[BillPaymentResponse], error) {
 	req := NewRequest[Pageable[BillPaymentResponse]](ctx, b.env, b.accessToken)
-	return req.make(http.MethodPost, "/v3/bill", filter)
+	return req.make(http.MethodGet, "/v3/bill", filter)
 }
