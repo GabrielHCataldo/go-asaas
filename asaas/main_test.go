@@ -607,7 +607,7 @@ func initPixTransaction() {
 
 func initSubaccount() {
 	clearSubaccount()
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)

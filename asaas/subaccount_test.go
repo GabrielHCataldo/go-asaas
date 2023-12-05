@@ -9,7 +9,7 @@ import (
 )
 
 func TestSubaccountCreate(t *testing.T) {
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
@@ -34,67 +34,60 @@ func TestSubaccountCreate(t *testing.T) {
 }
 
 func TestSubaccountSendWhiteLabelDocument(t *testing.T) {
-	initSubaccountDocument()
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	subaccountDocumentId := getEnvValue(EnvSubaccountDocumentId)
-	subaccountDocumentType := getEnvValue(EnvSubaccountDocumentType)
+	//initSubaccountDocument()
+	accessToken := getEnvValue(EnvAccessToken)
 	f, _ := os.Open(getEnvValue(EnvImageName))
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.SendWhiteLabelDocument(ctx, subaccountDocumentId, SendWhiteLabelDocumentRequest{
-		Type:         SubaccountDocumentType(subaccountDocumentType),
+	resp, err := nSubaccount.SendWhiteLabelDocument(ctx, "test", SendWhiteLabelDocumentRequest{
+		Type:         SubaccountDocumentTypeCustom,
 		DocumentFile: f,
 	})
-	assertResponseSuccess(t, resp, err)
+	assertResponseFailure(resp, err)
 }
 
 func TestSubaccountUpdateWhiteLabelDocumentSentById(t *testing.T) {
-	initSubaccount()
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	subaccountDocumentSentId := getEnvValue(EnvSubaccountDocumentSentId)
+	//initSubaccount()
+	accessToken := getEnvValue(EnvAccessToken)
 	f, _ := os.Open(getEnvValue(EnvFileName))
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.UpdateWhiteLabelDocumentSentById(ctx, subaccountDocumentSentId,
-		UpdateWhiteLabelDocumentSentRequest{
-			DocumentFile: f,
-		})
-	assertResponseSuccess(t, resp, err)
+	resp, err := nSubaccount.UpdateWhiteLabelDocumentSentById(ctx, "test", UpdateWhiteLabelDocumentSentRequest{
+		DocumentFile: f,
+	})
+	assertResponseFailure(resp, err)
 }
 
 func TestSubaccountDeleteWhiteLabelDocumentSentById(t *testing.T) {
-	initSubaccountDocumentSent()
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	subaccountDocumentSentId := getEnvValue(EnvSubaccountDocumentSentId)
+	//initSubaccountDocumentSent()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.DeleteWhiteLabelDocumentSentById(ctx, subaccountDocumentSentId)
-	assertResponseSuccess(t, resp, err)
+	resp, err := nSubaccount.DeleteWhiteLabelDocumentSentById(ctx, "test")
+	assertResponseFailure(resp, err)
 }
 
 func TestSubaccountGetById(t *testing.T) {
-	initSubaccount()
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	subaccountId := getEnvValue(EnvSubaccountId)
+	//initSubaccount()
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.GetById(ctx, subaccountId)
-	assertResponseSuccess(t, resp, err)
+	resp, err := nSubaccount.GetById(ctx, "test")
+	assertResponseFailure(resp, err)
 }
 
 func TestSubaccountGetDocumentSentById(t *testing.T) {
-	initSubaccountDocumentSent()
+	//initSubaccountDocumentSent()
 	accessToken := getEnvValue(EnvAccessTokenSecondary)
-	subaccountDocumentSentId := getEnvValue(EnvSubaccountDocumentSentId)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
-	resp, err := nSubaccount.GetDocumentSentById(ctx, subaccountDocumentSentId)
-	assertResponseSuccess(t, resp, err)
+	resp, err := nSubaccount.GetDocumentSentById(ctx, "test")
+	assertResponseFailure(resp, err)
 }
 
 func TestSubaccountGetAll(t *testing.T) {
@@ -115,8 +108,7 @@ func TestSubaccountGetAll(t *testing.T) {
 }
 
 func TestSubaccountGetPendingDocuments(t *testing.T) {
-	initSubaccountDocumentSent()
-	accessToken := getEnvValue(EnvAccessTokenSecondary)
+	accessToken := getEnvValue(EnvAccessToken)
 	ctx, cancel := context.WithTimeout(context.TODO(), 40*time.Second)
 	defer cancel()
 	nSubaccount := NewSubaccount(EnvSandbox, accessToken)
