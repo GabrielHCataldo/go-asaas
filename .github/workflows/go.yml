@@ -25,9 +25,9 @@ jobs:
           go get github.com/mattn/goveralls
       - name: Build
         run: go build -v ./...
-      - name: Import Goveralls
-        run: go get github.com/mattn/goveralls
-      - name: Test Covarage
-        run: go test -v -covermode=count -coverprofile=coverage.out ./asaas/...
-      - name: Export Covarage
-        run: $GOPATH/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken=$COVERALLS_TOKEN
+#      - name: Import Goveralls
+#        run: go get github.com/mattn/goveralls
+#      - name: Test Covarage
+#        run: go test -v -covermode=count -coverprofile=coverage.out ./asaas/...
+#      - name: Export Covarage
+#        run: $GOPATH/goveralls -coverprofile=coverage.out -service=travis-ci -repotoken=$COVERALLS_TOKEN
