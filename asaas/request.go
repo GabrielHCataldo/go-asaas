@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"fmt"
 	"github.com/GabrielHCataldo/go-asaas/internal/util"
 	"io"
 	"mime/multipart"
@@ -12,7 +11,6 @@ import (
 	"net/url"
 	"os"
 	"reflect"
-	"strconv"
 	"strings"
 )
 
@@ -94,12 +92,12 @@ func (r request[T]) createHttpRequest(ctx context.Context, method string, path s
 			for i := 0; i < rPayload.NumField(); i++ {
 				f := rPayload.Field(i)
 				ft := rtPayload.Field(i)
-				k := util.GetJsonFieldNameByReflect(ft)
-				v := util.GetValueByReflect(f)
+				k := util.GetJsonFieldNameByReflectField(ft)
+				v := util.GetValueByReflectField(f)
 				if util.IsBlank(&k) || v == nil {
 					continue
 				}
-				params.Add(k, fmt.Sprintf(`%s`, v))
+				params.Add(k, util.ConvertToString(v))
 			}
 			encode := params.Encode()
 			if util.IsNotBlank(&encode) {
@@ -193,26 +191,14 @@ func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader
 	for i := 0; i < rPayload.NumField(); i++ {
 		fd := rPayload.Field(i)
 		ft := rtPayload.Field(i)
-		if fd.IsZero() || !fd.IsValid() {
+		k := util.GetJsonFieldNameByReflectField(ft)
+		vf := util.GetValueByReflectField(fd)
+		if vf == nil {
 			continue
 		}
-		k := util.GetJsonFieldNameByReflect(ft)
-		vf := util.GetValueByReflect(fd)
-		var b bool
-		var s string
-		var in int
-		var f *os.File
-		var fs []*os.File
-		var ok bool
-		if b, ok = vf.(bool); ok {
-			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.FormatBool(b))}
-		} else if s, ok = vf.(string); ok {
-			multipartPayload[k] = []io.Reader{strings.NewReader(s)}
-		} else if in, ok = vf.(int); ok {
-			multipartPayload[k] = []io.Reader{strings.NewReader(strconv.Itoa(in))}
-		} else if f, ok = vf.(*os.File); ok && f != nil {
+		if f, fOk := vf.(*os.File); fOk && f != nil {
 			multipartPayload[k] = []io.Reader{f}
-		} else if fs, ok = vf.([]*os.File); ok && fs != nil {
+		} else if fs, fsOk := vf.([]*os.File); fsOk && fs != nil {
 			var files []io.Reader
 			for _, file := range fs {
 				if file != nil {
@@ -220,8 +206,8 @@ func (r request[T]) prepareMultipartPayload(payload any) (map[string][]io.Reader
 				}
 			}
 			multipartPayload[k] = files
-		} else if vf != nil {
-			multipartPayload[k] = []io.Reader{strings.NewReader(fmt.Sprintf(`%s`, vf))}
+		} else {
+			multipartPayload[k] = []io.Reader{strings.NewReader(util.ConvertToString(vf))}
 		}
 	}
 	return multipartPayload, nil

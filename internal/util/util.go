@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path"
 	"reflect"
@@ -41,20 +42,29 @@ func GetSystemInfo(skipCaller int) (fileName string, line string, funcName strin
 	return fileBase, strconv.Itoa(lineInt), nameFunc
 }
 
-func GetValueByReflect(f reflect.Value) any {
+func GetValueByReflectField(f reflect.Value) any {
 	if f.IsZero() || !f.IsValid() {
 		return nil
 	}
-	v := f.Interface()
-	if x, ok := v.(*os.File); ok {
-		v = x
+	k := f.Kind()
+	if x, ok := f.Interface().(*os.File); ok {
+		return x
 	} else if f.Kind() == reflect.Pointer {
-		v = f.Elem().Interface()
+		f = f.Elem()
+		k = f.Kind()
 	}
-	return v
+	switch k {
+	case reflect.String:
+		return f.String()
+	case reflect.Int:
+		return f.Int()
+	case reflect.Bool:
+		return f.Bool()
+	}
+	return f.Interface()
 }
 
-func GetJsonFieldNameByReflect(f reflect.StructField) string {
+func GetJsonFieldNameByReflectField(f reflect.StructField) string {
 	sk := strings.Split(f.Tag.Get("json"), ",")
 	return sk[0]
 }
@@ -75,4 +85,19 @@ func IsJson(v []byte) bool {
 		return json.Unmarshal(v, &data) == nil
 	}
 	return false
+}
+
+func ConvertToString(v any) string {
+	if v == nil {
+		return ""
+	} else if i, iOk := v.(int); iOk {
+		return strconv.Itoa(i)
+	} else if b, bOk := v.(bool); bOk {
+		return strconv.FormatBool(b)
+	} else if f64, f64Ok := v.(float64); f64Ok {
+		return strconv.FormatFloat(f64, 'f', -1, 64)
+	} else if s, sOk := v.(string); sOk {
+		return s
+	}
+	return fmt.Sprintf(`"%s"`, v)
 }
