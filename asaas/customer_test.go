@@ -105,11 +105,12 @@ func TestCustomerGetAll(t *testing.T) {
 	defer cancel()
 	nCustomer := NewCustomer(EnvSandbox, accessToken)
 	resp, err := nCustomer.GetAll(ctx, GetAllCustomersRequest{
-		Name:              "",
+		Name:              "test",
 		Email:             "",
 		CpfCnpj:           "",
 		GroupName:         "",
 		ExternalReference: "",
+		Test:              Pointer(true),
 		Offset:            0,
 		Limit:             10,
 	})
