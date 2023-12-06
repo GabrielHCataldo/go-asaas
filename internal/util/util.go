@@ -60,6 +60,8 @@ func GetValueByReflectField(f reflect.Value) any {
 		return f.Int()
 	case reflect.Bool:
 		return f.Bool()
+	case reflect.Float32, reflect.Float64:
+		return f.Float()
 	}
 	return f.Interface()
 }
@@ -92,8 +94,14 @@ func ConvertToString(v any) string {
 		return ""
 	} else if i, iOk := v.(int); iOk {
 		return strconv.Itoa(i)
+	} else if i32, i32Ok := v.(int32); i32Ok {
+		return strconv.Itoa(int(i32))
+	} else if i64, i64Ok := v.(int64); i64Ok {
+		return strconv.Itoa(int(i64))
 	} else if b, bOk := v.(bool); bOk {
 		return strconv.FormatBool(b)
+	} else if f32, f32Ok := v.(float32); f32Ok {
+		return strconv.FormatFloat(float64(f32), 'f', -1, 32)
 	} else if f64, f64Ok := v.(float64); f64Ok {
 		return strconv.FormatFloat(f64, 'f', -1, 64)
 	} else if s, sOk := v.(string); sOk {
