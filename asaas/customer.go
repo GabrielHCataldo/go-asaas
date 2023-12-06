@@ -95,7 +95,6 @@ type GetAllCustomersRequest struct {
 	GroupName string `json:"groupName,omitempty"`
 	// Filtrar pelo Identificador do seu sistema
 	ExternalReference string `json:"externalReference,omitempty"`
-	Test              *bool  `json:"test,omitempty"`
 	// Elemento inicial da lista
 	Offset int `json:"offset,omitempty"`
 	// Número de elementos da lista (max: 100)
