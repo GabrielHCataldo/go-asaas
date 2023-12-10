@@ -6,6 +6,5 @@ type InterestRequest struct {
 }
 
 type InterestResponse struct {
-	Value float64      `json:"value,omitempty"`
-	Type  InterestType `json:"type,omitempty"`
+	Value float64 `json:"value,omitempty"`
 }

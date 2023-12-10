@@ -62,8 +62,9 @@ func GetValueByReflectField(f reflect.Value) any {
 		return f.Bool()
 	case reflect.Float32, reflect.Float64:
 		return f.Float()
+	default:
+		return f.Interface()
 	}
-	return f.Interface()
 }
 
 func GetJsonFieldNameByReflectField(f reflect.StructField) string {
