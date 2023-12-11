@@ -6,12 +6,12 @@ go-asaas
 [![Go Report Card](https://goreportcard.com/badge/github.com/GabrielHCataldo/go-asaas)](https://goreportcard.com/report/github.com/GabrielHCataldo/go-asaas)
 [![Coverage Status](https://coveralls.io/repos/GabrielHCataldo/go-asaas/badge.svg?branch=main&service=github)](https://coveralls.io/github/GabrielHCataldo/go-asaas?branch=main)
 [![Open Source Helpers](https://www.codetriage.com/gabrielhcataldo/go-asaas/badges/users.svg)](https://www.codetriage.com/gabrielhcataldo/go-asaas)
-[![TODOs](https://badgen.net/https/api.tickgit.com/badgen/github.com/GabrielHCataldo/go-asaas/asaas)](https://www.tickgit.com/browse?repo=github.com/GabrielHCataldo/go-asaas)
 [![GoDoc](https://godoc.org/github/GabrielHCataldo/go-asaas?status.svg)](https://pkg.go.dev/github.com/GabrielHCataldo/go-asaas/asaas)
 ![License](https://img.shields.io/dub/l/vibe-d.svg)
 
 [//]: # ([![build workflow]&#40;https://github.com/GabrielHCataldo/go-asaas/actions/workflows/go.yml/badge.svg&#41;]&#40;https://github.com/GabrielHCataldo/go-asaas/actions&#41;)
 [//]: # ([![Source graph]&#40;https://sourcegraph.com/github.com/go-asaas/asaas/-/badge.svg&#41;]&#40;https://sourcegraph.com/github.com/go-asaas/asaas?badge&#41;)
+[//]: # ([![TODOs]&#40;https://badgen.net/https/api.tickgit.com/badgen/github.com/GabrielHCataldo/go-asaas/asaas&#41;]&#40;https://www.tickgit.com/browse?repo=github.com/GabrielHCataldo/go-asaas&#41;)
 
 Projeto go-asaas contem todas as interações financeiras com o Gateway de Pagamento Asaas
 facilitando a implementação de pagamentos no seu projeto Go.
